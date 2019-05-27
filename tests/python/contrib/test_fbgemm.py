@@ -94,21 +94,21 @@ def test_fbgemm_packed_weights(m, n, k):
     s = tvm.create_schedule(C.op)
     f = tvm.build(s, [X, B, C], target="llvm", name="packedmatmul")
     #print(tvm.lower(s, [X, B, C], simple_mode=True))
-    #f_evaluator = f.time_evaluator(f.entry_name, ctx, 10)
+    f_evaluator = f.time_evaluator(f.entry_name, ctx, 10)
     
     x = tvm.nd.array(np.random.uniform(2, 2, size=(m, k)).astype(X.dtype), ctx)
     b = tvm.nd.array(np.random.uniform(0, 0, size=(n,)).astype(B.dtype), ctx)
     y = tvm.nd.array(np.zeros((m, n), dtype=C.dtype), ctx)
     f(x,b,y)
 
-   # result = f_evaluator(x,b,y)
-   # print(result)
-   # gops_per_mm = 2*m*n*k
-   # gops_per_sec = gops_per_mm/result.mean/1e9
-   # print("M:{}, N:{}, K:{}".format(m,n,k))
-   # print(gops_per_sec)
+    result = f_evaluator(x,b,y)
+    print(result)
+    gops_per_mm = 2*m*n*k
+    gops_per_sec = gops_per_mm/result.mean/1e9
+    print("M:{}, N:{}, K:{}".format(m,n,k))
+    print(gops_per_sec)
 
-    tvm.testing.assert_allclose(
+    np.allclose(
            y.asnumpy(), np.matmul(x.asnumpy(), w.asnumpy()) + b.asnumpy(), rtol=1e-5)
 
 if __name__ == "__main__":
