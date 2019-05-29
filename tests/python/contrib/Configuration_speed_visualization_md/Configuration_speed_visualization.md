@@ -55,7 +55,7 @@ for i in range(len(config_lst)):
         new_runtime_lst.append(runtime_lst[i])
 ```
 
-In evaluation of performance, we use GOPS (Giga Operations Per Second), which is calculated by number of operations / runtime. The number of operations of matrix multiplication C = A * B is estimated by 2 * m * n * k, because for each entry (i, j) in C, we need k multication and k addition, and we have m * n such entries. 
+In evaluation of performance, we use GOPS (Giga Operations Per Second), which is calculated by number of operations / runtime. The number of operations of matrix multiplication C = A * B is estimated by 2 * m * n * k, because for each entry (i, j) in C, we need k multication and k addition, and we have m * n such entries.
 
 
 ```python
@@ -643,7 +643,7 @@ for mcb in MCBs:
 
 ## 4. Visualizing high dimensional data - All at once!
 
-Finally, here comes the really exciting part!! Thanks to amazing Protonu's amazing friend (thanks, friend!), who reveals the existence of Advanced Parallel Coordinates Plot in plotly, we can visualize the effect of 5-dim data on Gops all at once. 
+Finally, here comes the really exciting part!! Thanks to amazing Protonu's amazing friend (thanks, friend!), who reveals the existence of Advanced Parallel Coordinates Plot in plotly, we can visualize the effect of 5-dim data on Gops all at once.
 
 How does the graph work? In the graph below, each vertical line represents one dimension, i.e. one of MCB, NCB, KCB, MR and NR. For each configuration, which is essentially a tuple of (MCB, NCB, KCB, MR, NR), we use a zigzag line to connect values on the axises together. That line represents a data point for one particular configuration. Yet how to represent Gops? By the color of the line! On the rightmost side, it indicates what color corresponds to higher/lower value. Intuitively red lines represents higher Gops and blue lines represents lower Gops.
 
@@ -662,7 +662,7 @@ import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
 
-import pandas as pd 
+import pandas as pd
 
 df = new_config_lst
 df['Gops'] = np.log10(df['Gops'])
@@ -718,38 +718,7 @@ data = [
 py.iplot(data, filename = 'configuration')
 ```
 
-    /anaconda3/lib/python3.7/site-packages/IPython/core/display.py:689: UserWarning:
-    
-    Consider using IPython.display.IFrame instead
-    
-
-
-
-
-
-<iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://plot.ly/~huihanl/2.embed" height="525px" width="100%"></iframe>
-
-
-
-
-```python
-from IPython.display import IFrame
-IFrame('https://plot.ly/~huihanl/2.embed', width=1000, height=550)
-```
-
-
-
-
-
-        <iframe
-            width="1000"
-            height="550"
-            src="https://plot.ly/~huihanl/2.embed"
-            frameborder="0"
-            allowfullscreen
-        ></iframe>
-        
-
+![png](img.png)
 
 
 ## 5. Other random fun things
@@ -767,7 +736,7 @@ log_Gops = [math.log(i) for i in new_Gops_lst]
 reg = LinearRegression().fit(new_config_x, log_Gops)
 score = reg.score(new_config_x, log_Gops)
 coef = reg.coef_
-interc = reg.intercept_ 
+interc = reg.intercept_
 print(score, coef, interc)
 ```
 
@@ -804,4 +773,3 @@ for mr in MRs:
 
 
 ![png](output_50_0.png)
-
