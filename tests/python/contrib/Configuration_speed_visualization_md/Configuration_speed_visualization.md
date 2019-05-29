@@ -731,6 +731,27 @@ py.iplot(data, filename = 'configuration')
 
 
 
+
+```python
+from IPython.display import IFrame
+IFrame('https://plot.ly/~huihanl/2.embed', width=1000, height=550)
+```
+
+
+
+
+
+        <iframe
+            width="1000"
+            height="550"
+            src="https://plot.ly/~huihanl/2.embed"
+            frameborder="0"
+            allowfullscreen
+        ></iframe>
+        
+
+
+
 ## 5. Other random fun things
 
 ### 1) The use of Linear Regression or other higher order modelling techniques
@@ -782,5 +803,5 @@ for mr in MRs:
 ```
 
 
-![png](output_49_0.png)
+![png](output_50_0.png)
 
