@@ -718,7 +718,7 @@ data = [
 py.iplot(data, filename = 'configuration')
 ```
 
-![png](img.png)
+![png](image.png)
 
 
 ## 5. Other random fun things
