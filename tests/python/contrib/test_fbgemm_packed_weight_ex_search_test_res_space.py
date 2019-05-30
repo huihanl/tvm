@@ -51,7 +51,8 @@ def tune_fbgemm_packed_weights(m, n, k):
     valid_configs.append((56,32,256,14,32,16,4))
 
     configs = autotvm.get_config()
-    configs.define_knob("VAL_CNFG", valid_configs)
+    validate_func = lambda conf: isValidConfig(conf[0], conf[1], conf[2], conf[3], conf[4], conf[5], conf[6])
+    configs.define_knob("VAL_CNFG", valid_configs, validate_func)
     configs.add_flop(2 * m * n * k)
 
     ctx = tvm.cpu(0)
