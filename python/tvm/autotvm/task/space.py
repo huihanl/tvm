@@ -674,11 +674,14 @@ class ConfigSpace(object):
             list of candidates
         """
         valid_candidate = []
-        for cand in candidate:
-            if validate_func(cand):
-                valid_candidate.append(cand)
+        if validate_func:
+            for cand in candidate:
+                if validate_func(cand):
+                    valid_candidate.append(cand)
 
-        return self._add_new_transform(OtherOptionSpace, name, [], None, candidate=valid_candidate)
+            return self._add_new_transform(OtherOptionSpace, name, [], None, candidate=valid_candidate)
+        else:
+            return self._add_new_transform(OtherOptionSpace, name, [], None, candidate=candidate)
 
     def add_flop(self, flop):
         """Add float operation statistics for this tuning task
