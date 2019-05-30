@@ -673,6 +673,7 @@ class ConfigSpace(object):
         candidate: list
             list of candidates
         """
+        print("aaa")
         valid_candidate = []
         if validate_func:
             for cand in candidate:
