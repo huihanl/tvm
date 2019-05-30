@@ -678,6 +678,8 @@ class ConfigSpace(object):
             for cand in candidate:
                 if validate_func(cand):
                     valid_candidate.append(cand)
+            with open('out.txt', 'w') as f:
+                print(valid_candidate, file=f)
             return self._add_new_transform(OtherOptionSpace, name, [], None, candidate=valid_candidate)
 
         else:
