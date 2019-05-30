@@ -44,15 +44,15 @@ def tune_fbgemm_packed_weights(m, n, k):
             for kcb in KCBs:
                 for mr in MRs:
                     for nr in NRs:
-                        if (isValidConfig(mcb, ncb, kcb, mr, nr, 16, 4)):
-		            valid_configs.append((mcb, ncb, kcb, mr, nr, 16, 4))
-    with open('out_b.txt', 'w') as f:
-        print >> f, valid_configs
+                        #if (isValidConfig(mcb, ncb, kcb, mr, nr, 16, 4)):
+		                valid_configs.append((mcb, ncb, kcb, mr, nr, 16, 4))
+
    #adding the default search point
     valid_configs.append((56,32,256,14,32,16,4))
 
     configs = autotvm.get_config()
-    configs.define_knob("VAL_CNFG", valid_configs)
+    validate_func = lambda conf: isValidConfig(conf[0], conf[1], conf[2], conf[3], conf[4], conf[5], conf[6])
+    configs.define_knob("VAL_CNFG", valid_configs, validate_func=validate_func)
     configs.add_flop(2 * m * n * k)
 
     ctx = tvm.cpu(0)
@@ -133,21 +133,19 @@ if __name__ == "__main__":
        # [102,    512,    256],
          #[1,    800,    3200],
          #[1,    800,    8000],)
-       # [16,    256,    1500],
-       # [16,    256,    1567],
-       # [1,    128,    2876],
-       # [16,    128,    1567],
-       # [1,    128,    2722])
-	[156800, 16, 36],
-	[102, 2323, 256])
-
+        [16,    256,    1500],
+        [16,    256,    1567],
+        #[1,    128,    2876]
+        [16,    128,    1567]
+       # [1,    128,    2722]
+	)
     if False:
          #fbgemm_packed_weights(156800, 4, 36)
          for shape in shapes_others:
               fbgemm_packed_weights(shape[0], shape[1], shape[2])
-   
+
     else:
-    
+
          for shape in shapes_others:
               task = autotvm.task.create(
                   tune_fbgemm_packed_weights, args=(
