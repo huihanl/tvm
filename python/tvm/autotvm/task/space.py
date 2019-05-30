@@ -663,7 +663,7 @@ class ConfigSpace(object):
         """
         return self._add_new_transform(AnnotateSpace, name, axes, policy, **kwargs)
 
-    def define_knob(self, name, candidate):
+    def define_knob(self, name, candidate, validate_func):
         """Define a tunable knob with a list of candidates
 
         Parameters
@@ -673,7 +673,12 @@ class ConfigSpace(object):
         candidate: list
             list of candidates
         """
-        return self._add_new_transform(OtherOptionSpace, name, [], None, candidate=candidate)
+        valid_candidate = []
+        for cand in candidate:
+            if validate_func(cand):
+                valid_candidate.append(cand)
+
+        return self._add_new_transform(OtherOptionSpace, name, [], None, candidate=valid_candidate)
 
     def add_flop(self, flop):
         """Add float operation statistics for this tuning task
