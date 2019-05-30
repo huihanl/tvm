@@ -673,14 +673,13 @@ class ConfigSpace(object):
         candidate: list
             list of candidates
         """
-        print("aaa")
         valid_candidate = []
         if validate_func:
             for cand in candidate:
                 if validate_func(cand):
                     valid_candidate.append(cand)
-
             return self._add_new_transform(OtherOptionSpace, name, [], None, candidate=valid_candidate)
+
         else:
             return self._add_new_transform(OtherOptionSpace, name, [], None, candidate=candidate)
 
