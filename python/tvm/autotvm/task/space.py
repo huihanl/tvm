@@ -235,7 +235,7 @@ class SplitEntity(object):
 
         Returns
         -------
-        axes : list of Axis
+       axes : list of Axis
             The transformed axes.
         """
         ret = []
