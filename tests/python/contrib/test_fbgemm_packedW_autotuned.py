@@ -165,7 +165,7 @@ def fbgemm_packed_weights(m, n, k):
 def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val):
     ctx = tvm.cpu(0)
     W = tvm.placeholder((k, n), name='W', dtype="uint8")
-    w = tvm.nd.array(np.random.uniform(float(w_val), float(w_val), size=(k, n)).astype(W.dtype), ctx)
+    w = tvm.nd.array(np.random.uniform(w_val - 1, w_val + 2, size=(k, n)).astype(W.dtype), ctx)
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8")
     ww = my_packedw(w, 1)
 
@@ -188,8 +188,8 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val):
     #print(tvm.lower(s, [X, B, C], simple_mode=True))
     f_evaluator = f.time_evaluator(f.entry_name, ctx, 10)
 
-    x = tvm.nd.array(np.random.uniform(float(x_val), float(x_val), size=(m, k)).astype(X.dtype), ctx)
-    b = tvm.nd.array(np.random.uniform(float(b_val), float(b_val), size=(n,)).astype(B.dtype), ctx)
+    x = tvm.nd.array(np.random.uniform(x_val - 1, x_val + 2), size=(m, k)).astype(X.dtype), ctx)
+    b = tvm.nd.array(np.random.uniform(b_val - 1, b_val + 2), size=(n,)).astype(B.dtype), ctx)
     y = tvm.nd.array(np.zeros((m, n), dtype=C.dtype), ctx)
     f(x,b,y)
 
@@ -250,7 +250,7 @@ if __name__ == "__main__":
 
     if True:
 
-         
+
 	 shapes = (
 		[4, 8, 2],
 		[2, 16, 1],
@@ -260,7 +260,7 @@ if __name__ == "__main__":
 		[16, 2, 2],
 		[8, 2, 4],
 		[2, 2, 8])
-	
+
 
 	 values = (
 		[1.0, 2.0, 0.0],
@@ -277,7 +277,7 @@ if __name__ == "__main__":
 			c = shape + value
 			print(c)
 			comb.append(c)
-				
+
          for c in comb:
 	 	test_fbgemm_packed_weights_with_requant(c[0], c[1], c[2], c[3], c[4], c[5])
          #fbgemm_packed_weights(16, 4, 8)
