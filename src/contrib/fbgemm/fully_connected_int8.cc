@@ -62,59 +62,124 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.print_col_offsets")
 
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
-      DLTensor* W = args[0];  // N*K quantized int8 weight
-      int threads = args[1];
+      bool trans = args[2];
+      if (!trans) {  //K * N, not transposed
+        DLTensor* W = args[0];
+        int threads = args[1];
 
-      CHECK_EQ(W->ndim, 2);
+        CHECK_EQ(W->ndim, 2);
 
-      int k = W->shape[0];
-      int n = W->shape[1];
+        int k = W->shape[0];
+        int n = W->shape[1];
 
-      BlockingFactors params;
-      if (args.size() > 2) {
-        int cntr = 2;
-        params.MCB = args[cntr];
-        params.NCB = args[cntr + 1];
-        params.KCB = args[cntr + 2];
-        params.MR = args[cntr + 3];
-        params.NR = args[cntr + 4];
-        params.NR_MIN = args[cntr + 5];
-        params.ROW_INTERLEAVE = args[cntr + 6];
+        BlockingFactors params;
+        if (args.size() > 3) {
+          int cntr = 3;
+          params.MCB = args[cntr];
+          params.NCB = args[cntr + 1];
+          params.KCB = args[cntr + 2];
+          params.MR = args[cntr + 3];
+          params.NR = args[cntr + 4];
+          params.NR_MIN = args[cntr + 5];
+          params.ROW_INTERLEAVE = args[cntr + 6];
 
-        auto packB = new PackBMatrix<std::int8_t, std::int32_t>(
-            matrix_op_t::NoTranspose, k, n,
-            reinterpret_cast<const std::int8_t*>(W->data), n, nullptr, 1,
-            &params);
-       //packB->printPackedMatrix("packingB");
-        *ret = packB;
-      } else {
-        auto packB = new PackBMatrix<std::int8_t, std::int32_t>(
-            matrix_op_t::NoTranspose, k, n,
-            reinterpret_cast<const std::int8_t*>(W->data), n, nullptr, 1);
-        *ret = packB;
+          auto packB = new PackBMatrix<std::int8_t, std::int32_t>(
+              matrix_op_t::NoTranspose, k, n,
+              reinterpret_cast<const std::int8_t*>(W->data), n, nullptr, 1,
+              &params);
+         //packB->printPackedMatrix("packingB");
+          *ret = packB;
+        } else {
+          auto packB = new PackBMatrix<std::int8_t, std::int32_t>(
+              matrix_op_t::NoTranspose, k, n,
+              reinterpret_cast<const std::int8_t*>(W->data), n, nullptr, 1);
+          *ret = packB;
+        }
+
+      } else { // N*K quantized int8 weight, transposed
+        DLTensor* W = args[0];
+        int threads = args[1];
+
+        CHECK_EQ(W->ndim, 2);
+
+        int k = W->shape[1];
+        int n = W->shape[0];
+
+        BlockingFactors params;
+        if (args.size() > 3) {
+          int cntr = 3;
+          params.MCB = args[cntr];
+          params.NCB = args[cntr + 1];
+          params.KCB = args[cntr + 2];
+          params.MR = args[cntr + 3];
+          params.NR = args[cntr + 4];
+          params.NR_MIN = args[cntr + 5];
+          params.ROW_INTERLEAVE = args[cntr + 6];
+
+          auto packB = new PackBMatrix<std::int8_t, std::int32_t>(
+              matrix_op_t::Transpose, k, n,
+              reinterpret_cast<const std::int8_t*>(W->data), n, nullptr, 1,
+              &params);
+         //packB->printPackedMatrix("packingB");
+          *ret = packB;
+        } else {
+          auto packB = new PackBMatrix<std::int8_t, std::int32_t>(
+              matrix_op_t::Transpose, k, n,
+              reinterpret_cast<const std::int8_t*>(W->data), n, nullptr, 1);
+          *ret = packB;
+        }
+
       }
+
     });
 
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
-      DLTensor* W = args[0];  // N*K quantized int8 weight
-      int threads = args[1];
-      std::int32_t w_zero_point = args[2];
 
-      //std::cout << W->shape << ' ';
-      CHECK_EQ(W->ndim, 2);
-      int k = W->shape[0];
-      int n = W->shape[1];
+      bool trans = args[3];
 
-      std::vector<TensorQuantizationParams> temp_qparams;
-      temp_qparams.push_back(TensorQuantizationParams{1.0, w_zero_point});
+      if (!trans) { // K * N; not transposed
+        DLTensor* W = args[0];
+        int threads = args[1];
+        std::int32_t w_zero_point = args[2];
 
-      std::vector<std::int32_t>* column_offsets_ =
-          new std::vector<std::int32_t>;
-      ComputeColumnOffsets<std::int8_t>(
-          k, n, reinterpret_cast<const std::int8_t*>(W->data), temp_qparams,
-          *column_offsets_);
-      *ret = column_offsets_;
+        //std::cout << W->shape << ' ';
+        CHECK_EQ(W->ndim, 2);
+        int k = W->shape[0];
+        int n = W->shape[1];
+
+        std::vector<TensorQuantizationParams> temp_qparams;
+        temp_qparams.push_back(TensorQuantizationParams{1.0, w_zero_point});
+
+        std::vector<std::int32_t>* column_offsets_ =
+            new std::vector<std::int32_t>;
+        ComputeColumnOffsets<std::int8_t>(
+            k, n, reinterpret_cast<const std::int8_t*>(W->data), temp_qparams,
+            *column_offsets_);
+        *ret = column_offsets_;
+
+      } else { // N * K quantized int8 weight; transposed
+        DLTensor* W = args[0];
+        int threads = args[1];
+        std::int32_t w_zero_point = args[2];
+
+        //std::cout << W->shape << ' ';
+        CHECK_EQ(W->ndim, 2);
+        int k = W->shape[1];
+        int n = W->shape[0];
+
+        std::vector<TensorQuantizationParams> temp_qparams;
+        temp_qparams.push_back(TensorQuantizationParams{1.0, w_zero_point});
+
+        std::vector<std::int32_t>* column_offsets_ =
+            new std::vector<std::int32_t>;
+        ComputeColumnOffsets<std::int8_t>(
+            k, n, reinterpret_cast<const std::int8_t*>(W->data), temp_qparams,
+            *column_offsets_);
+        *ret = column_offsets_;
+
+      }
+
     });
 
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt")
@@ -198,8 +263,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant")
       packbmatrix* packB =
           reinterpret_cast<PackBMatrix<std::int8_t, std::int32_t>*>(weight);
 
-      packB->printPackedMatrix("packB");
-
       DLTensor* B = args[2];  // N quantized int8 bias
       // ignore the axis and axis_w now for testing purpose
       DLTensor* Y = args[3];
@@ -243,10 +306,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant")
 
       std::vector<std::int32_t>* column_offsets_ =
           reinterpret_cast<std::vector<std::int32_t>*>(co);
-
-      for(int i=0; i<column_offsets_->size(); i++) {
-            std::cout << column_offsets_->at(i) << ' ';
-      }
 
       std::vector<TensorQuantizationParams> temp_qparams;
       temp_qparams.push_back(TensorQuantizationParams{1.0, w_zero_point});

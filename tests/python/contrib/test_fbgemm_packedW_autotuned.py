@@ -10,7 +10,6 @@ import os
 #raw_input("dummy breakpoint")
 QuantParams = namedtuple("QuantParams", "scale zero_point")
 
-
 @autotvm.template
 def tune_fbgemm_packed_weights(m, n, k):
 
@@ -163,14 +162,15 @@ def fbgemm_packed_weights(m, n, k):
            y.asnumpy(), np.matmul(x.asnumpy(), w.asnumpy()) + b.asnumpy(), rtol=1e-5)
 
 def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val):
+    W_trans = False
     ctx = tvm.cpu(0)
     W = tvm.placeholder((k, n), name='W', dtype="uint8")
     w = tvm.nd.array(np.random.uniform(w_val - 1, w_val + 2, size=(k, n)).astype(W.dtype), ctx)
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8")
-    ww = my_packedw(w, 1)
+    ww = my_packedw(w, 1, W_trans)
 
     get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8")
-    co = get_co_offsets(w,1,1)
+    co = get_co_offsets(w,1,1, W_trans)
 
     X = tvm.placeholder((m, k), name='X', dtype="int8")
     B = tvm.placeholder((n,), name='B', dtype="int")
