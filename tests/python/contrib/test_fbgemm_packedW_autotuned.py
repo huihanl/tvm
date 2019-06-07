@@ -188,8 +188,8 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val):
     #print(tvm.lower(s, [X, B, C], simple_mode=True))
     f_evaluator = f.time_evaluator(f.entry_name, ctx, 10)
 
-    x = tvm.nd.array(np.random.uniform(x_val - 1, x_val + 2), size=(m, k)).astype(X.dtype), ctx)
-    b = tvm.nd.array(np.random.uniform(b_val - 1, b_val + 2), size=(n,)).astype(B.dtype), ctx)
+    x = tvm.nd.array(np.random.uniform(x_val - 1, x_val + 2, size=(m, k)).astype(X.dtype), ctx)
+    b = tvm.nd.array(np.random.uniform(b_val - 1, b_val + 2, size=(n,)).astype(B.dtype), ctx)
     y = tvm.nd.array(np.zeros((m, n), dtype=C.dtype), ctx)
     f(x,b,y)
 
