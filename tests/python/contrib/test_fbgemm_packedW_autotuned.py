@@ -205,6 +205,77 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val):
     tvm.testing.assert_allclose(
            y.asnumpy(), np.matmul(x.asnumpy(), w.asnumpy()) + b.asnumpy(), rtol=1e-5)
 
+def test_fbgemm_conv_int8(shape):
+    if (conv_p.IC % conv_p.G != 0 || conv_p.OC % conv_p.G != 0) {
+      // invalid shapes
+      continue;
+    }
+    int im_in_dim = accumulate(
+        conv_p.IN_DIM.begin(), conv_p.IN_DIM.end(), 1, multiplies<int>());
+    aligned_vector<uint8_t> Aint8(conv_p.MB * im_in_dim * conv_p.IC);
+
+    int kernel_dim =
+        accumulate(conv_p.K.begin(), conv_p.K.end(), 1, multiplies<int>());
+    aligned_vector<int8_t> Bint8(
+        kernel_dim * conv_p.IC * (conv_p.OC / conv_p.G));
+
+    int im_out_dim = accumulate(
+        conv_p.OUT_DIM.begin(), conv_p.OUT_DIM.end(), 1, multiplies<int>());
+    aligned_vector<int32_t> Cint32_ref(conv_p.MB * im_out_dim * conv_p.OC);
+    aligned_vector<uint8_t> Cint8_ref(Cint32_ref.size(), 0);
+    aligned_vector<int32_t> Cint32_fb(Cint32_ref.size());
+    aligned_vector<uint8_t> Cint8_fb(Cint32_ref.size(), 0);
+    aligned_vector<uint8_t> Cint8_fb2(Cint32_ref.size(), 0);
+    aligned_vector<int32_t> Cint32_fb2(Cint32_ref.size());
+
+    // A matrix (input activations)
+    randFill<uint8_t>(Aint8, 0, 5);
+    int32_t Aint8_zero_point = 4;
+
+    // B matrix (weights)
+    randFill<int8_t>(Bint8, -4, 4);
+    aligned_vector<int32_t> Bint8_zero_point(1);
+    randFill(Bint8_zero_point, -3, -1);
+
+    aligned_vector<float> C_multiplier(Bint8_zero_point.size());
+    randFill(C_multiplier, 0.1234f / 2, 0.1234f * 3 / 2);
+    int32_t C_zero_point = 5;
+
+    aligned_vector<float> Bfp32(Bint8.begin(), Bint8.end());
+
+
+
+
+
+
+
+
+    PackWeightsForConv<SPATIAL_DIM> packedB(conv_p, Bint8.data());
+
+    // no-op output process objects
+    DoNothing<> doNothingObj{};
+    ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
+        doNothingObj,
+        C_multiplier.data(),
+        C_zero_point,
+        Aint8_zero_point,
+        Bint8_zero_point.data(),
+        nullptr, // row offsets
+        col_offsets.data(),
+        nullptr, // bias
+        conv_p.OC,
+        conv_p.G);
+
+    fbgemmConv(
+      conv_p,
+      Aint8.data(),
+      packedB,
+      Cint8_fb.data(),
+      Cint32_fb.data(),
+      outputProcObj,
+      0,
+      1);
+
 
 if __name__ == "__main__":
     shapes = (
