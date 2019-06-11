@@ -6,8 +6,8 @@ from tvm import autotvm
 import sys
 import logging
 import os
-
-#raw_input("dummy breakpoint")
+print(os.getpid())
+raw_input("dummy breakpoint")
 QuantParams = namedtuple("QuantParams", "scale zero_point")
 
 @autotvm.template
@@ -205,6 +205,91 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val):
     tvm.testing.assert_allclose(
            y.asnumpy(), np.matmul(x.asnumpy(), w.asnumpy()) + b.asnumpy(), rtol=1e-5)
 
+def test_fbgemm_conv_int8():
+    ctx = tvm.cpu(0)
+      #MB, IC, OC, {IT, IH, IW}, G, {KT, KH, KW}, {stride_t, stride_h, stride_w},
+      #{pad_prev, pad_h_top, pad_w_left, pad_next, pad_h_bottom, pad_w_right}
+
+    spatial_dim = 2
+
+    MB = 1
+    IC = 128
+    OC = 128
+    #IN_DIM = [56, 56]
+    IN_DIM = tvm.nd.array([56, 56], ctx)
+    G = 1
+    K = tvm.nd.array([3, 3], ctx)
+    stride = tvm.nd.array([1, 1], ctx)
+    #pad = [1, 1, 1, 1]
+    pad = tvm.nd.array([1, 1, 1, 1], ctx)
+    # conv_params = [1, 128, 128, [56, 56], 1, [3, 3], [1, 1], [1, 1, 1, 1]]
+
+    conv_params = [MB, IC, OC, IN_DIM, G, K, stride, pad]
+
+
+    # compute out_dim, i.e. shape for Y (the output for convolution)
+    IN_DIMP = [0, 0]
+    OUT_DIM = [0, 0]
+
+    IN_DIM1 = [56, 56]
+    K1 = [3, 3]
+    stride1 = [1, 1]
+    pad1 = [1, 1, 1, 1]
+
+    IN_DIMP[0] = IN_DIM1[0] + pad1[0] + pad1[2];
+    OUT_DIM[0] = (IN_DIMP[0] - K1[0]) / stride1[0] + 1;
+
+    IN_DIMP[1] = IN_DIM1[1] + pad1[1] + pad1[3];
+    OUT_DIM[1] = (IN_DIMP[1] - K1[1]) / stride1[1] + 1;
+
+    # shapes
+    input_shape = (MB, IN_DIM1[0], IN_DIM1[1], IC) #NHWC
+    W_shape = (K1[0], K1[1], IC, OC / G) #RSCK
+    Y_shape = (MB, OUT_DIM[0], OUT_DIM[1], OC) #NHWK
+
+    # weight
+    W = tvm.placeholder(W_shape, name='W', dtype="uint8")
+    w = tvm.nd.array(np.random.uniform(1, 3, size=W_shape).astype(W.dtype), ctx)
+
+    # packing of weight
+    my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
+    ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
+
+    # bias
+    #B = tvm.placeholder((n,), name='B', dtype="int")
+
+    # input (X)
+    X = tvm.placeholder((2, 3), name='X', dtype="int8")
+
+    # quantization parameters will be got from Operator arguments
+    X_zero_point = 4
+    W_zero_point = tvm.nd.array([1], ctx)
+    Y_zero_point = 5
+
+
+    # column offset
+    get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
+    co = get_co_offsets(w, W_zero_point, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
+
+
+    # ReQuant Multiplier
+    #C_multiplier = np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,))
+    C_multiplier = tvm.nd.array([0.1234], ctx)
+    # formula for calculation
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W_zero_point, Y_zero_point, C_multiplier, conv_params, co)
+    #C = fbgemm.conv_int8(X)
+
+    s = tvm.create_schedule(C.op)
+    f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
+
+    # applying the formula
+    #x = tvm.nd.array(np.random.uniform(1, 3, size=input_shape).astype(X.dtype), ctx)
+    x = tvm.nd.array(np.random.uniform(1, 3, size=(2, 3)).astype(X.dtype), ctx)
+    #b = tvm.nd.array(np.random.uniform(b_val - 1, b_val + 2, size=(n,)).astype(B.dtype), ctx)
+    #y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
+    y = tvm.nd.array(np.zeros((2, 3), dtype=C.dtype), ctx)
+
+    f(x,y)
 
 if __name__ == "__main__":
     shapes = (
@@ -248,6 +333,8 @@ if __name__ == "__main__":
         [1,    128,    2722])
 
 
+    test_fbgemm_conv_int8()
+    """
     if True:
 
 
@@ -305,3 +392,4 @@ if __name__ == "__main__":
               tuner.tune(n_trial=150,
                          measure_option=measure_option,
                          callbacks=[autotvm.callback.log_to_file(log_file_name)])
+    """
