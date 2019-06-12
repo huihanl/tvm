@@ -8,6 +8,7 @@
 #include <fbgemm/Fbgemm.h>
 #include <fbgemm/FbgemmFP16.h>
 #include <fbgemm/QuantUtilsAvx2.h>
+#include <fbgemm/AlignedVec.h>
 
 #include <tvm/runtime/packed_func.h>
 #include <tvm/runtime/registry.h>
@@ -549,8 +550,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
 
     std::uint64_t zp_addr = args[4];
     void* zp = reinterpret_cast<void*>(static_cast<uint64_t>(zp_addr));
-    std::vector<int32_t>* Bint8_zero_point =
-        reinterpret_cast<std::vector<int32_t>*>(zp);
+    aligned_vector<int32_t>* Bint8_zero_point =
+        reinterpret_cast<aligned_vector<int32_t>*>(zp);
 
     std::int32_t C_zero_point = args[5];
 
@@ -559,8 +560,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
 
     std::uint64_t mul_addr = args[6];
     void* mula = reinterpret_cast<void*>(static_cast<uint64_t>(mul_addr));
-    std::vector<float>* C_multiplier =
-        reinterpret_cast<std::vector<float>*>(mula);
+    aligned_vector<float>* C_multiplier =
+        reinterpret_cast<aligned_vector<float>*>(mula);
 
     int cntr = 7;
     int MB = args[cntr];
@@ -612,7 +613,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
           OC_per_G,
           reinterpret_cast<std::int8_t*>(B->data) + g * KDimPerGroup * OC_per_G,
           //Bint8_zero_point.data(),
-          Bint8_zero_point,
+          Bint8_zero_point->data(),
           col_offsets.data() + g * OC_per_G,
           conv_p.OC);
     }
@@ -627,11 +628,11 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
         doNothingObj,
         //C_multiplier.data(),
-        C_multiplier,
+        C_multiplier->data(),
         C_zero_point,
         Aint8_zero_point,
         //Bint8_zero_point.data(),
-        Bint8_zero_point,
+        Bint8_zero_point->data(),
         nullptr, // row offsets
         col_offsets.data(),
         nullptr, // bias
