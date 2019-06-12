@@ -594,8 +594,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
           KDimPerGroup,
           OC_per_G,
           OC_per_G,
-          Bint8.data() + g * KDimPerGroup * OC_per_G,
-          Bint8_zero_point.data(),
+          reinterpret_cast<std::uint8_t*>(B->data) + g * KDimPerGroup * OC_per_G,
+          //Bint8_zero_point.data(),
           col_offsets.data() + g * OC_per_G,
           conv_p.OC);
     }
@@ -609,10 +609,12 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     DoNothing<> doNothingObj{};
     ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
         doNothingObj,
-        C_multiplier.data(),
+        //C_multiplier.data(),
+        &C_multiplier,
         C_zero_point,
         Aint8_zero_point,
-        Bint8_zero_point.data(),
+        //Bint8_zero_point.data(),
+        &Bint8_zero_point,
         nullptr, // row offsets
         col_offsets.data(),
         nullptr, // bias
