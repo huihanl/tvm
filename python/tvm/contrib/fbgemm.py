@@ -134,6 +134,7 @@ def conv_int8(Y_shape, X, X_qparams, W, W_qparams,
                          	autotune = False, MCB = 56, NCB = 32, KCB = 256,
                                 MR = 14, NR = 32, NR_MIN = 16, ROW_INTERLEAVE = 4):
 
+    print("BREAKPOINT: 5")
     if autotune:
          return _api.extern(
                  Y_shape, [X],
