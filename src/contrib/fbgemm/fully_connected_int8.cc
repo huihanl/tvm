@@ -517,205 +517,115 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.fully_connected_int8")
       }
     });
 
-
 void col_offsets_with_zero_pt_s8acc32_ref(
-        int K,
-        int N,
-        int ld,
-        const int8_t* Bint8,
-        const int32_t* B_zero_point,
-        int32_t* col_offsets,
-        int ncols_per_quant_group) {
-      for (int j = 0; j < N; ++j) {
-        int32_t sum = 0;
-        for (int k = 0; k < K; ++k) {
-          sum += Bint8[k * ld + j];
-        }
-        col_offsets[j] = sum - B_zero_point[j / ncols_per_quant_group] * K;
-      }
-    }
-
-template <typename T>
-int compare_buffers(
-    const T* ref,
-    const T* test,
-    int m,
-    int n,
+    int K,
+    int N,
     int ld,
-    int max_mismatches_to_report,
-    float atol /*=1e-3*/) {
-  size_t mismatches = 0;
-  for (int i = 0; i < m; ++i) {
-    for (int j = 0; j < n; ++j) {
-      T reference = ref[i * ld + j], actual = test[i * ld + j];
-      if (std::abs(reference - actual) > atol) {
-        std::cout << "\tmismatch at (" << i << ", " << j << ")" << std::endl;
-        if (std::is_integral<T>::value) {
-          std::cout << "\t  reference:" << static_cast<int64_t>(reference)
-                    << " test:" << static_cast<int64_t>(actual) << std::endl;
-        } else {
-          std::cout << "\t  reference:" << reference << " test:" << actual
-                    << std::endl;
-        }
-
-        mismatches++;
-        if (mismatches > max_mismatches_to_report) {
-          return 1;
-        }
-      }
+    const int8_t* Bint8,
+    const int32_t* B_zero_point,
+    int32_t* col_offsets,
+    int ncols_per_quant_group) {
+  for (int j = 0; j < N; ++j) {
+    int32_t sum = 0;
+    for (int k = 0; k < K; ++k) {
+      sum += Bint8[k * ld + j];
     }
+    col_offsets[j] = sum - B_zero_point[j / ncols_per_quant_group] * K;
   }
-  return 0;
 }
 
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
 
-    // Input shapes for the test
-    vector<conv_param_t<2>> shapes = {
-    // MB, IC, OC, IH, IW, G, KH, KW, stride_h, stride_w,
-    // pad_h_top, pad_w_left, pad_h_bottom, pad_w_right
-    // 2D convolutions
-    // regular
-    conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1}),
-    // groupwise
-    conv_param_t<>(1, 128, 128, {56, 56}, 32, {3, 3}, {1, 1}, {1, 1, 1, 1}),
-    // DW
-    conv_param_t<>(1, 272, 272, {47, 125}, 272, {3, 3}, {1, 1}, {1, 1, 1, 1}),
-    };
+    DLTensor* A = arg[0];
+    DLTensor* B = arg[1];
+    DLTensor* Y = arg[2];
+    std::int32_t Aint8_zero_point = arg[3];
+    std::int32_t Bint8_zero_point = arg[4];
+    std::int32_t C_zero_point = arg[5];
+    int C_multiplier = arg[6];
+    shape = arg[7]; // edit array representation ISSUE 1
+    std::cout  << typeid(shape).name() << '\n';
+    std::cout  << typeid(shape[3]).name() << '\n';
+    std::cout  << shape[3] << '\n';
+    int nthreads = arg[8];
 
+    //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
+    //ISSUE 2
+    conv_param_t<> conv_p = conv_param_t<>(shape[0],
+                                          shape[1],
+                                          shape[2],
+                                          shape[3],
+                                          shape[4],
+                                          shape[5],
+                                          shape[6],
+                                          shape[7]);
 
-    for (auto conv_p : shapes) {
-      if (conv_p.IC % conv_p.G != 0 || conv_p.OC % conv_p.G != 0) {
-        // invalid shapes
-        continue;
-      }
-      int im_in_dim = accumulate(
-          conv_p.IN_DIM.begin(), conv_p.IN_DIM.end(), 1, multiplies<int>());
-      aligned_vector<uint8_t> Aint8(conv_p.MB * im_in_dim * conv_p.IC);
+    CHECK_EQ(conv_p.IC % conv_p.G, 0);
+    CHECK_EQ(conv_p.OC % conv_p.G, 0);
+    //if (conv_p.IC % conv_p.G != 0 || conv_p.OC % conv_p.G != 0) {
+      // invalid shapes
+      //continue;
+    //}
 
-      int kernel_dim =
-          accumulate(conv_p.K.begin(), conv_p.K.end(), 1, multiplies<int>());
-      aligned_vector<int8_t> Bint8(
-          kernel_dim * conv_p.IC * (conv_p.OC / conv_p.G));
+    int im_in_dim = accumulate(
+        conv_p.IN_DIM.begin(), conv_p.IN_DIM.end(), 1, multiplies<int>());
 
-      int im_out_dim = accumulate(
-          conv_p.OUT_DIM.begin(), conv_p.OUT_DIM.end(), 1, multiplies<int>());
-      aligned_vector<int32_t> Cint32_ref(conv_p.MB * im_out_dim * conv_p.OC);
-      aligned_vector<uint8_t> Cint8_ref(Cint32_ref.size(), 0);
-      aligned_vector<int32_t> Cint32_fb(Cint32_ref.size());
-      aligned_vector<uint8_t> Cint8_fb(Cint32_ref.size(), 0);
-      aligned_vector<uint8_t> Cint8_fb2(Cint32_ref.size(), 0);
-      aligned_vector<int32_t> Cint32_fb2(Cint32_ref.size());
+    int kernel_dim =
+        accumulate(conv_p.K.begin(), conv_p.K.end(), 1, multiplies<int>());
 
-      // A matrix (input activations)
-      randFill<uint8_t>(Aint8, 0, 5);
-      int32_t Aint8_zero_point = 4;
+    int im_out_dim = accumulate(
+        conv_p.OUT_DIM.begin(), conv_p.OUT_DIM.end(), 1, multiplies<int>());
 
-      // B matrix (weights)
-      randFill<int8_t>(Bint8, -4, 4);
-      aligned_vector<int32_t> Bint8_zero_point(1);
-      randFill(Bint8_zero_point, -3, -1);
+    aligned_vector<int32_t> Cint32_fb(conv_p.MB * im_out_dim * conv_p.OC);
+    aligned_vector<uint8_t> Cint8_fb(conv_p.MB * im_out_dim * conv_p.OC, 0);
 
-      aligned_vector<float> C_multiplier(Bint8_zero_point.size());
-      randFill(C_multiplier, 0.1234f / 2, 0.1234f * 3 / 2);
-      int32_t C_zero_point = 5;
+    // matrix dimensions after im2col
+    int MDim = conv_p.MB * im_out_dim;
+    int NDim = conv_p.OC / conv_p.G;
+    int KDim = kernel_dim * conv_p.IC;
+    int KDimPerGroup = KDim / conv_p.G;
+    int OC_per_G = conv_p.OC / conv_p.G;
 
-      aligned_vector<float> Bfp32(Bint8.begin(), Bint8.end());
-
-      // reference implementation
-      conv_ref(
-          conv_p,
-          Aint8.data(),
-          Aint8_zero_point,
-          Bint8.data(),
-          Cint32_ref.data());
-
-      // matrix dimensions after im2col
-      int MDim = conv_p.MB * im_out_dim;
-      int NDim = conv_p.OC / conv_p.G;
-      int KDim = kernel_dim * conv_p.IC;
-      int KDimPerGroup = KDim / conv_p.G;
-
-      int OC_per_G = conv_p.OC / conv_p.G;
-
-      // computing row offset
-      vector<int32_t> row_offsets(MDim);
-      vector<uint8_t> Aint8_im2col(MDim * KDim);
-      im2col_ref(conv_p, Aint8.data(), Aint8_zero_point, Aint8_im2col.data());
-
-      // computing column offset
-      vector<int32_t> col_offsets(conv_p.OC);
-      for (int g = 0; g < conv_p.G; ++g) {
-        col_offsets_with_zero_pt_s8acc32_ref(
-            KDimPerGroup,
-            OC_per_G,
-            OC_per_G,
-            Bint8.data() + g * KDimPerGroup * OC_per_G,
-            Bint8_zero_point.data(),
-            col_offsets.data() + g * OC_per_G,
-            conv_p.OC);
-      }
-
-      for (int g = 0; g < conv_p.G; ++g) {
-        row_offsets_u8acc32_ref(
-            MDim,
-            KDimPerGroup,
-            KDim,
-            Aint8_im2col.data() + g * KDimPerGroup,
-            row_offsets.data());
-
-        requantize_u8acc32_ref(
-            MDim,
-            NDim,
-            conv_p.G * NDim,
-            Cint32_ref.data() + g * NDim,
-            Cint8_ref.data() + g * NDim,
-            C_multiplier.data() + g * NDim / conv_p.OC,
-            C_zero_point,
-            Aint8_zero_point,
-            Bint8_zero_point.data() + g * NDim / conv_p.OC,
-            row_offsets.data(),
-            col_offsets.data() + g * NDim,
-            nullptr,
-            conv_p.OC);
-      }
-
-      PackWeightsForConv<SPATIAL_DIM> packedB(conv_p, Bint8.data());
-
-      // no-op output process objects
-      DoNothing<> doNothingObj{};
-      ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
-          doNothingObj,
-          C_multiplier.data(),
-          C_zero_point,
-          Aint8_zero_point,
+    // computing column offset
+    vector<int32_t> col_offsets(conv_p.OC);
+    for (int g = 0; g < conv_p.G; ++g) {
+      col_offsets_with_zero_pt_s8acc32_ref(
+          KDimPerGroup,
+          OC_per_G,
+          OC_per_G,
+          Bint8.data() + g * KDimPerGroup * OC_per_G,
           Bint8_zero_point.data(),
-          nullptr, // row offsets
-          col_offsets.data(),
-          nullptr, // bias
-          conv_p.OC,
-          conv_p.G);
+          col_offsets.data() + g * OC_per_G,
+          conv_p.OC);
+    }
 
-      fbgemmConv(
-          conv_p,
-          Aint8.data(),
-          packedB,
-          Cint8_fb.data(),
-          Cint32_fb.data(),
-          outputProcObj,
-          0,
-          1);
+    PackWeightsForConv<SPATIAL_DIM> packedB(conv_p, Bint8.data());
 
-      compare_buffers(
-        Cint8_ref.data(),
+    // no-op output process objects
+    DoNothing<> doNothingObj{};
+    ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
+        doNothingObj,
+        C_multiplier.data(),
+        C_zero_point,
+        Aint8_zero_point,
+        Bint8_zero_point.data(),
+        nullptr, // row offsets
+        col_offsets.data(),
+        nullptr, // bias
+        conv_p.OC,
+        conv_p.G);
+
+    fbgemmConv(
+        conv_p,
+        Aint8.data(),
+        packedB,
         Cint8_fb.data(),
-        MDim,
-        NDim * conv_p.G,
-        NDim * conv_p.G,
-        5);
-
-    });
+        Cint32_fb.data(),
+        outputProcObj,
+        0,
+        1);
+    );
 
 }  // namespace contrib
 }  // namespace tvm
