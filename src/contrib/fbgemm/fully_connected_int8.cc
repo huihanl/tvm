@@ -549,15 +549,15 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     std::int32_t C_zero_point = args[5];
     int C_multiplier = args[6];
     int cntr = 7;
-    int MB = shape[cntr];
-    int IC = shape[cntr + 1];
-    int OC = shape[cntr + 2];
-    std::array<int, 2> IN_DIM = shape[cntr + 3];
-    int G = shape[cntr + 4];
-    std::array<int, 2> K = shape[cntr + 5];
-    std::array<int, 2> stride = shape[cntr + 6];
-    std::array<int, 4> pad = shape[cntr + 7];
-    //int nthreads = arg[cntr + 8];
+    int MB = args[cntr];
+    int IC = args[cntr + 1];
+    int OC = args[cntr + 2];
+    std::array<int, 2> IN_DIM = args[cntr + 3];
+    int G = args[cntr + 4];
+    std::array<int, 2> K = args[cntr + 5];
+    std::array<int, 2> stride = args[cntr + 6];
+    std::array<int, 4> pad = args[cntr + 7];
+    //int nthreads = args[cntr + 8];
 
     //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
     //ISSUE 2
@@ -596,14 +596,14 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
           KDimPerGroup,
           OC_per_G,
           OC_per_G,
-          reinterpret_cast<std::uint8_t*>(B->data) + g * KDimPerGroup * OC_per_G,
+          reinterpret_cast<std::int8_t*>(B->data) + g * KDimPerGroup * OC_per_G,
           //Bint8_zero_point.data(),
           &Bint8_zero_point,
           col_offsets.data() + g * OC_per_G,
           conv_p.OC);
     }
 
-    PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::uint8_t*>(B->data));
+    PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(B->data));
 
 
     std::vector<std::int32_t> Y_int32_(conv_p.MB * im_out_dim * conv_p.OC);
