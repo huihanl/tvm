@@ -20,9 +20,12 @@
 #include <unistd.h>
 #include <chrono>
 
+
 namespace tvm {
 namespace runtime {
+
 using namespace fbgemm;
+using namespace std;
 
 using packbmatrix = PackBMatrix<std::int8_t, std::int32_t>;
 template <>
