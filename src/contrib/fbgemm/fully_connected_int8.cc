@@ -549,8 +549,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
 
     std::uint64_t zp_addr = args[4];
     void* zp = reinterpret_cast<void*>(static_cast<uint64_t>(zp_addr));
-    aligned_vector<int32_t>* Bint8_zero_point =
-        reinterpret_cast<aligned_vector<int32_t>*>(zp);
+    std::vector<int32_t>* Bint8_zero_point =
+        reinterpret_cast<std::vector<int32_t>*>(zp);
 
     std::int32_t C_zero_point = args[5];
 
@@ -559,8 +559,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
 
     std::uint64_t mul_addr = args[6];
     void* mula = reinterpret_cast<void*>(static_cast<uint64_t>(mul_addr));
-    aligned_vector<float>* C_multiplier =
-        reinterpret_cast<aligned_vector<float>*>(mula);
+    std::vector<float>* C_multiplier =
+        reinterpret_cast<std::vector<float>*>(mula);
 
     int cntr = 7;
     int MB = args[cntr];
