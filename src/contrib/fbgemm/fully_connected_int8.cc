@@ -541,14 +541,14 @@ void col_offsets_with_zero_pt_s8acc32_ref(
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
 
-    DLTensor* A = arg[0];
-    DLTensor* B = arg[1];
-    DLTensor* Y = arg[2];
-    std::int32_t Aint8_zero_point = arg[3];
-    std::int32_t Bint8_zero_point = arg[4];
-    std::int32_t C_zero_point = arg[5];
-    int C_multiplier = arg[6];
-    shape = arg[7]; // edit array representation ISSUE 1
+    DLTensor* A = args[0];
+    DLTensor* B = args[1];
+    DLTensor* Y = args[2];
+    std::int32_t Aint8_zero_point = args[3];
+    std::int32_t Bint8_zero_point = args[4];
+    std::int32_t C_zero_point = args[5];
+    int C_multiplier = args[6];
+    std::int32_t* shape = args[7]; // edit array representation ISSUE 1
     std::cout  << typeid(shape).name() << '\n';
     std::cout  << typeid(shape[3]).name() << '\n';
     std::cout  << shape[3] << '\n';
@@ -605,7 +605,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
           conv_p.OC);
     }
 
-    PackWeightsForConv<2> packedB(conv_p, B->data);
+    PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::uint8_t*>(B->data));
 
 
     std::vector<std::int32_t> Y_int32_(conv_p.MB * im_out_dim * conv_p.OC);
