@@ -600,6 +600,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
           OC_per_G,
           reinterpret_cast<std::uint8_t*>(B->data) + g * KDimPerGroup * OC_per_G,
           //Bint8_zero_point.data(),
+          &Bint8_zero_point,
           col_offsets.data() + g * OC_per_G,
           conv_p.OC);
     }
