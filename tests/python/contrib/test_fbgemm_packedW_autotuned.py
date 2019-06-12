@@ -236,9 +236,6 @@ def test_fbgemm_conv_int8():
     W = tvm.placeholder(W_shape, name='W', dtype="uint8")
     w = tvm.nd.array(np.random.uniform(w_val - 1, w_val + 2, size=W_shape).astype(W.dtype), ctx)
 
-    # ReQuant Multiplier
-    C_multiplier = tvm.nd.array(np.random.uniform(0.1234f / 2, 0.1234f * 3 / 2, size=(1,)), ctx)
-
     # packing of weight
     #my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8")
     #ww = my_packedw(w, 1, W_trans)
@@ -252,12 +249,15 @@ def test_fbgemm_conv_int8():
     X = tvm.placeholder(input_shape, name='X', dtype="int8")
 
     # quantization parameters will be got from Operator arguments
-    X_qparams = QuantParams(scale=1.0, zero_point=4)
-    W_qparams = QuantParams(scale=1.0, zero_point=1)
-    Y_qparams = QuantParams(scale=1.0, zero_point=5)
+    X_zero_point = 4
+    W_zero_point = [1]
+    Y_zero_point = 5
+
+    # ReQuant Multiplier
+    C_multiplier = tvm.nd.array(np.random.uniform(0.1234f / 2, 0.1234f * 3 / 2, size=(1,)), ctx)
 
     # formula for calculation
-    C = fbgemm.gemm_int8acc32_prepacked_with_requant(Y_shape, X, X_qparams, W, W_qparams, Y_qparams, C_multiplier, conv_params)
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, W, W_zero_point, Y_zero_point, C_multiplier, conv_params)
     s = tvm.create_schedule(C.op)
     f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
 
