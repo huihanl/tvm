@@ -209,7 +209,7 @@ def test_fbgemm_conv_int8():
 
       #MB, IC, OC, {IT, IH, IW}, G, {KT, KH, KW}, {stride_t, stride_h, stride_w},
       #{pad_prev, pad_h_top, pad_w_left, pad_next, pad_h_bottom, pad_w_right}
-
+    ctx = tvm.cpu(0)
     MB = 1
     IC = 128
     OC = 128
@@ -221,6 +221,8 @@ def test_fbgemm_conv_int8():
     # conv_params = [1, 128, 128, [56, 56], 1, [3, 3], [1, 1], [1, 1, 1, 1]]
     conv_params = [MB, IC, OC, IN_DIM, G, K, stride, pad]
 
+    IN_DIMP = [0, 0]    
+    OUT_DIM = [0, 0]
     IN_DIMP[0] = IN_DIM[0] + pad[0] + pad[2];
     OUT_DIM[0] = (IN_DIMP[0] - K[0]) / stride[0] + 1;
 
@@ -234,7 +236,7 @@ def test_fbgemm_conv_int8():
 
     # weight
     W = tvm.placeholder(W_shape, name='W', dtype="uint8")
-    w = tvm.nd.array(np.random.uniform(w_val - 1, w_val + 2, size=W_shape).astype(W.dtype), ctx)
+    w = tvm.nd.array(np.random.uniform(1, 3, size=W_shape).astype(W.dtype), ctx)
 
     # packing of weight
     #my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8")
@@ -254,7 +256,7 @@ def test_fbgemm_conv_int8():
     Y_zero_point = 5
 
     # ReQuant Multiplier
-    C_multiplier = tvm.nd.array(np.random.uniform(0.1234f / 2, 0.1234f * 3 / 2, size=(1,)), ctx)
+    C_multiplier = tvm.nd.array(np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,)), ctx)
 
     # formula for calculation
     C = fbgemm.conv_int8(Y_shape, X, X_zero_point, W, W_zero_point, Y_zero_point, C_multiplier, conv_params)
@@ -262,7 +264,7 @@ def test_fbgemm_conv_int8():
     f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
 
     # applying the formula
-    x = tvm.nd.array(np.random.uniform(x_val - 1, x_val + 2, size=input_shape).astype(X.dtype), ctx)
+    x = tvm.nd.array(np.random.uniform(1, 3, size=input_shape).astype(X.dtype), ctx)
     #b = tvm.nd.array(np.random.uniform(b_val - 1, b_val + 2, size=(n,)).astype(B.dtype), ctx)
     y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
 
@@ -309,6 +311,9 @@ if __name__ == "__main__":
         [16,    128,    1567],
         [1,    128,    2722])
 
+
+    test_fbgemm_conv_int8()
+    '''
 
     if True:
 
@@ -367,3 +372,5 @@ if __name__ == "__main__":
               tuner.tune(n_trial=150,
                          measure_option=measure_option,
                          callbacks=[autotvm.callback.log_to_file(log_file_name)])
+
+    '''
