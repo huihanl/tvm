@@ -128,4 +128,70 @@ def fully_connected_int8(X, X_qparams, W, W_qparams, B, Y_qparams, nthreads=1,
                 ins[0], ins[1], ins[2], outs[0], X_qparams.zero_point, W_qparams.zero_point, Y_qparams.zero_point, ReQuant_multiplier, nthreads), name="C", dtype="int8")
 
 
+
+def conv_int8(Y_shape, X, X_zero_point, W, W_zero_point,
+                                Y_zero_point, C_multiplier, column_offset, nthreads=1,
+                         	autotune = False, MCB = 56, NCB = 32, KCB = 256,
+                                MR = 14, NR = 32, NR_MIN = 16, ROW_INTERLEAVE = 4):
+
+    if autotune:
+         return _api.extern(
+                 Y_shape, [X],
+                 lambda ins, outs: _intrin.call_packed(
+             	    "tvm.contrib.fbgemm.conv_int8",
+                    ins[0], W, outs[0], X_zero_point,
+                    W_zero_point, Y_zero_point,
+                    C_multiplier,
+                    column_offset,
+                    conv_params[0],
+                    conv_params[1],
+                    conv_params[2],
+                    conv_params[3],
+                    conv_params[4],
+                    conv_params[5],
+                    conv_params[6],
+                    conv_params[7],
+                    nthreads,
+                    MCB, NCB, KCB, MR, NR, NR_MIN, ROW_INTERLEAVE),
+                    name="C", dtype="int8")
+    else:
+         return _api.extern(
+                 Y_shape, [X],
+                 lambda ins, outs: _intrin.call_packed(
+             	    "tvm.contrib.fbgemm.conv_int8",
+                    ins[0], W, outs[0], X_zero_point,
+                    W_zero_point, Y_zero_point,
+                    C_multiplier,
+                    column_offset,
+                    conv_params[0],
+                    conv_params[1],
+                    conv_params[2],
+                    conv_params[3],
+                    conv_params[4],
+                    conv_params[5],
+                    conv_params[6],
+                    conv_params[7],
+		            nthreads), name="C", dtype="int8")
+
+
+"""
+def conv_int8(X, autotune = False, MCB = 56, NCB = 32, KCB = 256,
+                                MR = 14, NR = 32, NR_MIN = 16, ROW_INTERLEAVE = 4):
+
+     return _api.extern(
+             (2, 3), [X],
+             lambda ins, outs: _intrin.call_packed(
+         	    "tvm.contrib.fbgemm.conv_int8",
+                ins[0], outs[0],
+                #conv_params[0],
+                #conv_params[1],
+                #conv_params[2],
+                #conv_params[3],
+                #conv_params[4],
+                #conv_params[5],
+                #conv_params[6],
+                #conv_params[7],
+	    ), name="C", dtype="int8")
+"""
+
 _init_api("tvm.contrib.fbgemm")

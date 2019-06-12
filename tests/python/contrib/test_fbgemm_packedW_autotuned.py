@@ -6,7 +6,7 @@ from tvm import autotvm
 import sys
 import logging
 import os
-
+#print(os.getpid())
 #raw_input("dummy breakpoint")
 QuantParams = namedtuple("QuantParams", "scale zero_point")
 
@@ -205,77 +205,91 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val):
     tvm.testing.assert_allclose(
            y.asnumpy(), np.matmul(x.asnumpy(), w.asnumpy()) + b.asnumpy(), rtol=1e-5)
 
-def test_fbgemm_conv_int8(shape):
-    if (conv_p.IC % conv_p.G != 0 || conv_p.OC % conv_p.G != 0) {
-      // invalid shapes
-      continue;
-    }
-    int im_in_dim = accumulate(
-        conv_p.IN_DIM.begin(), conv_p.IN_DIM.end(), 1, multiplies<int>());
-    aligned_vector<uint8_t> Aint8(conv_p.MB * im_in_dim * conv_p.IC);
+def test_fbgemm_conv_int8():
+    ctx = tvm.cpu(0)
+      #MB, IC, OC, {IT, IH, IW}, G, {KT, KH, KW}, {stride_t, stride_h, stride_w},
+      #{pad_prev, pad_h_top, pad_w_left, pad_next, pad_h_bottom, pad_w_right}
 
-    int kernel_dim =
-        accumulate(conv_p.K.begin(), conv_p.K.end(), 1, multiplies<int>());
-    aligned_vector<int8_t> Bint8(
-        kernel_dim * conv_p.IC * (conv_p.OC / conv_p.G));
+    spatial_dim = 2
 
-    int im_out_dim = accumulate(
-        conv_p.OUT_DIM.begin(), conv_p.OUT_DIM.end(), 1, multiplies<int>());
-    aligned_vector<int32_t> Cint32_ref(conv_p.MB * im_out_dim * conv_p.OC);
-    aligned_vector<uint8_t> Cint8_ref(Cint32_ref.size(), 0);
-    aligned_vector<int32_t> Cint32_fb(Cint32_ref.size());
-    aligned_vector<uint8_t> Cint8_fb(Cint32_ref.size(), 0);
-    aligned_vector<uint8_t> Cint8_fb2(Cint32_ref.size(), 0);
-    aligned_vector<int32_t> Cint32_fb2(Cint32_ref.size());
+    MB = 1
+    IC = 128
+    OC = 128
+    #IN_DIM = [56, 56]
+    IN_DIM = tvm.nd.array([56, 56], ctx)
+    G = 1
+    K = tvm.nd.array([3, 3], ctx)
+    stride = tvm.nd.array([1, 1], ctx)
+    #pad = [1, 1, 1, 1]
+    pad = tvm.nd.array([1, 1, 1, 1], ctx)
+    # conv_params = [1, 128, 128, [56, 56], 1, [3, 3], [1, 1], [1, 1, 1, 1]]
 
-    // A matrix (input activations)
-    randFill<uint8_t>(Aint8, 0, 5);
-    int32_t Aint8_zero_point = 4;
-
-    // B matrix (weights)
-    randFill<int8_t>(Bint8, -4, 4);
-    aligned_vector<int32_t> Bint8_zero_point(1);
-    randFill(Bint8_zero_point, -3, -1);
-
-    aligned_vector<float> C_multiplier(Bint8_zero_point.size());
-    randFill(C_multiplier, 0.1234f / 2, 0.1234f * 3 / 2);
-    int32_t C_zero_point = 5;
-
-    aligned_vector<float> Bfp32(Bint8.begin(), Bint8.end());
+    conv_params = [MB, IC, OC, IN_DIM, G, K, stride, pad]
 
 
+    # compute out_dim, i.e. shape for Y (the output for convolution)
+    IN_DIMP = [0, 0]
+    OUT_DIM = [0, 0]
+
+    IN_DIM1 = [56, 56]
+    K1 = [3, 3]
+    stride1 = [1, 1]
+    pad1 = [1, 1, 1, 1]
+
+    IN_DIMP[0] = IN_DIM1[0] + pad1[0] + pad1[2];
+    OUT_DIM[0] = (IN_DIMP[0] - K1[0]) / stride1[0] + 1;
+
+    IN_DIMP[1] = IN_DIM1[1] + pad1[1] + pad1[3];
+    OUT_DIM[1] = (IN_DIMP[1] - K1[1]) / stride1[1] + 1;
+
+    # shapes
+    input_shape = (MB, IN_DIM1[0], IN_DIM1[1], IC) #NHWC
+    W_shape = (K1[0], K1[1], IC, OC / G) #RSCK
+    Y_shape = (MB, OUT_DIM[0], OUT_DIM[1], OC) #NHWK
+
+    # weight
+    W = tvm.placeholder(W_shape, name='W', dtype="uint8")
+    w = tvm.nd.array(np.random.uniform(1, 3, size=W_shape).astype(W.dtype), ctx)
+
+    # packing of weight
+    my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
+    ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
+
+    # bias
+    #B = tvm.placeholder((n,), name='B', dtype="int")
+
+    # input (X)
+    X = tvm.placeholder((2, 3), name='X', dtype="int8")
+
+    # quantization parameters will be got from Operator arguments
+    X_zero_point = 4
+    W_zero_point = tvm.nd.array([1], ctx)
+    Y_zero_point = 5
 
 
+    # column offset
+    get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
+    co = get_co_offsets(w, W_zero_point, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
 
 
+    # ReQuant Multiplier
+    #C_multiplier = np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,))
+    C_multiplier = tvm.nd.array([0.1234], ctx)
+    # formula for calculation
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W_zero_point, Y_zero_point, C_multiplier, conv_params, co)
+    #C = fbgemm.conv_int8(X)
 
+    s = tvm.create_schedule(C.op)
+    f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
 
-    PackWeightsForConv<SPATIAL_DIM> packedB(conv_p, Bint8.data());
+    # applying the formula
+    #x = tvm.nd.array(np.random.uniform(1, 3, size=input_shape).astype(X.dtype), ctx)
+    x = tvm.nd.array(np.random.uniform(1, 3, size=(2, 3)).astype(X.dtype), ctx)
+    #b = tvm.nd.array(np.random.uniform(b_val - 1, b_val + 2, size=(n,)).astype(B.dtype), ctx)
+    #y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
+    y = tvm.nd.array(np.zeros((2, 3), dtype=C.dtype), ctx)
 
-    // no-op output process objects
-    DoNothing<> doNothingObj{};
-    ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
-        doNothingObj,
-        C_multiplier.data(),
-        C_zero_point,
-        Aint8_zero_point,
-        Bint8_zero_point.data(),
-        nullptr, // row offsets
-        col_offsets.data(),
-        nullptr, // bias
-        conv_p.OC,
-        conv_p.G);
-
-    fbgemmConv(
-      conv_p,
-      Aint8.data(),
-      packedB,
-      Cint8_fb.data(),
-      Cint32_fb.data(),
-      outputProcObj,
-      0,
-      1);
-
+    f(x,y)
 
 if __name__ == "__main__":
     shapes = (
@@ -319,6 +333,8 @@ if __name__ == "__main__":
         [1,    128,    2722])
 
 
+    test_fbgemm_conv_int8()
+    """
     if True:
 
 
@@ -376,3 +392,4 @@ if __name__ == "__main__":
               tuner.tune(n_trial=150,
                          measure_option=measure_option,
                          callbacks=[autotvm.callback.log_to_file(log_file_name)])
+    """
