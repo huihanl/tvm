@@ -577,8 +577,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     int im_out_dim = accumulate(
         conv_p.OUT_DIM.begin(), conv_p.OUT_DIM.end(), 1, multiplies<int>());
 
-    aligned_vector<int32_t> Cint32_fb(conv_p.MB * im_out_dim * conv_p.OC);
-    aligned_vector<uint8_t> Cint8_fb(conv_p.MB * im_out_dim * conv_p.OC, 0);
+    //aligned_vector<int32_t> Cint32_fb(conv_p.MB * im_out_dim * conv_p.OC);
+    //aligned_vector<uint8_t> Cint8_fb(conv_p.MB * im_out_dim * conv_p.OC, 0);
 
     // matrix dimensions after im2col
     int MDim = conv_p.MB * im_out_dim;
@@ -600,7 +600,10 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
           conv_p.OC);
     }
 
-    PackWeightsForConv<SPATIAL_DIM> packedB(conv_p, Bint8.data());
+    PackWeightsForConv<SPATIAL_DIM> packedB(conv_p, B.data());
+
+
+    std::vector<std::int32_t> Y_int32_(conv_p.MB * im_out_dim * conv_p.OC);
 
     // no-op output process objects
     DoNothing<> doNothingObj{};
@@ -618,14 +621,14 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
 
     fbgemmConv(
         conv_p,
-        Aint8.data(),
+        A.data(),
         packedB,
-        Cint8_fb.data(),
-        Cint32_fb.data(),
+        Y.data(),
+        Y_int32_.data(),
         outputProcObj,
         0,
         1);
-    );
+    });
 
 }  // namespace contrib
 }  // namespace tvm
