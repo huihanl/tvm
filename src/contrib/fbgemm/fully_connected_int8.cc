@@ -19,6 +19,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <chrono>
+#include <vector>
 
 
 namespace tvm {
