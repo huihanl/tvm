@@ -548,7 +548,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     std::cout  << typeid(shape).name() << '\n';
     std::cout  << typeid(shape[3]).name() << '\n';
     std::cout  << shape[3] << '\n';
-    int nthreads = arg[8];
+    //int nthreads = arg[8];
 
     //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
     //ISSUE 2
@@ -568,8 +568,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
       //continue;
     //}
 
-    int im_in_dim = accumulate(
-        conv_p.IN_DIM.begin(), conv_p.IN_DIM.end(), 1, multiplies<int>());
+    //int im_in_dim = accumulate(
+    //    conv_p.IN_DIM.begin(), conv_p.IN_DIM.end(), 1, multiplies<int>());
 
     int kernel_dim =
         accumulate(conv_p.K.begin(), conv_p.K.end(), 1, multiplies<int>());
@@ -581,8 +581,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     //aligned_vector<uint8_t> Cint8_fb(conv_p.MB * im_out_dim * conv_p.OC, 0);
 
     // matrix dimensions after im2col
-    int MDim = conv_p.MB * im_out_dim;
-    int NDim = conv_p.OC / conv_p.G;
+    //int MDim = conv_p.MB * im_out_dim;
+    //int NDim = conv_p.OC / conv_p.G;
     int KDim = kernel_dim * conv_p.IC;
     int KDimPerGroup = KDim / conv_p.G;
     int OC_per_G = conv_p.OC / conv_p.G;
@@ -600,7 +600,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
           conv_p.OC);
     }
 
-    PackWeightsForConv<SPATIAL_DIM> packedB(conv_p, B.data());
+    PackWeightsForConv<2> packedB(conv_p, B->data);
 
 
     std::vector<std::int32_t> Y_int32_(conv_p.MB * im_out_dim * conv_p.OC);
@@ -621,9 +621,9 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
 
     fbgemmConv(
         conv_p,
-        A.data(),
+        reinterpret_cast<const std::uint8_t*>(A->data),
         packedB,
-        Y.data(),
+        reinterpret_cast<std::uint8_t*>(Y->data),
         Y_int32_.data(),
         outputProcObj,
         0,
