@@ -548,22 +548,20 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     std::int32_t Bint8_zero_point = args[4];
     std::int32_t C_zero_point = args[5];
     int C_multiplier = args[6];
-    std::int32_t* shape = args[7]; // edit array representation ISSUE 1
-    std::cout  << typeid(shape).name() << '\n';
-    std::cout  << typeid(shape[3]).name() << '\n';
-    std::cout  << shape[3] << '\n';
-    //int nthreads = arg[8];
+    int cntr = 7;
+    int MB = shape[cntr];
+    int IC = shape[cntr + 1];
+    int OC = shape[cntr + 2];
+    std::array<int, 2> IN_DIM = shape[cntr + 3];
+    int G = shape[cntr + 4];
+    std::array<int, 2> K = shape[cntr + 5];
+    std::array<int, 2> stride = shape[cntr + 6];
+    std::array<int, 4> pad = shape[cntr + 7];
+    //int nthreads = arg[cntr + 8];
 
     //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
     //ISSUE 2
-    conv_param_t<> conv_p = conv_param_t<>(shape[0],
-                                          shape[1],
-                                          shape[2],
-                                          shape[3],
-                                          shape[4],
-                                          shape[5],
-                                          shape[6],
-                                          shape[7]);
+    conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
 
     CHECK_EQ(conv_p.IC % conv_p.G, 0);
     CHECK_EQ(conv_p.OC % conv_p.G, 0);
