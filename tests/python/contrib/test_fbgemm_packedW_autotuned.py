@@ -218,6 +218,7 @@ def test_fbgemm_conv_int8():
     G = 1
     K = tvm.nd.array([3, 3], ctx)
     stride = [1, 1]
+    #pad = [1, 1, 1, 1]
     pad = tvm.nd.array([1, 1, 1, 1], ctx)
     # conv_params = [1, 128, 128, [56, 56], 1, [3, 3], [1, 1], [1, 1, 1, 1]]
     conv_params = [MB, IC, OC, IN_DIM, G, K, stride, pad]
@@ -225,10 +226,12 @@ def test_fbgemm_conv_int8():
     IN_DIMP = [0, 0]
     OUT_DIM = [0, 0]
 
-    IN_DIMP[0] = IN_DIM[0] + pad[0] + pad[2];
+    pad1 = [1, 1, 1, 1]
+
+    IN_DIMP[0] = IN_DIM[0] + pad1[0] + pad1[2];
     OUT_DIM[0] = (IN_DIMP[0] - K[0]) / stride[0] + 1;
 
-    IN_DIMP[1] = IN_DIM[1] + pad[1] + pad[3];
+    IN_DIMP[1] = IN_DIM[1] + pad1[1] + pad1[3];
     OUT_DIM[1] = (IN_DIMP[1] - K[1]) / stride[1] + 1;
 
     # shapes
