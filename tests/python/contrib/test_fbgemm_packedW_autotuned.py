@@ -266,6 +266,7 @@ def test_fbgemm_conv_int8():
     # formula for calculation
     #C = fbgemm.conv_int8(Y_shape, X, X_zero_point, w, W_zero_point, Y_zero_point, C_multiplier, conv_params)
     C = fbgemm.conv_int8(X)
+
     s = tvm.create_schedule(C.op)
     f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
 
@@ -274,10 +275,10 @@ def test_fbgemm_conv_int8():
 
     # applying the formula
     #x = tvm.nd.array(np.random.uniform(1, 3, size=input_shape).astype(X.dtype), ctx)
-    x = np.random.uniform(1, 3, size=input_shape).astype(X.dtype)
+    x = tvm.nd.array(np.random.uniform(1, 3, size=(2, 3)).astype(X.dtype), ctx)
     #b = tvm.nd.array(np.random.uniform(b_val - 1, b_val + 2, size=(n,)).astype(B.dtype), ctx)
     #y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
-    y = np.zeros(Y_shape, dtype=C.dtype)
+    y = tvm.nd.array(np.zeros((2, 3), dtype=C.dtype), ctx)
 
     print("BREAKPOINT: 4")
     f(x,y)
