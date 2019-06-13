@@ -269,8 +269,6 @@ def test_fbgemm_conv_int8():
     W_zero_point = tvm.nd.array([1], ctx)
     Y_zero_point = 5
 
-    print("BREAKPOINT: 2")
-
     # ReQuant Multiplier
     #C_multiplier = np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,))
     C_multiplier = tvm.nd.array([0.1234], ctx)

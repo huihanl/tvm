@@ -171,14 +171,14 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
           params.NR_MIN = args[cntr + 5];
           params.ROW_INTERLEAVE = args[cntr + 6];
 
-          PackWeightsForConv<spatial_dim> packedB(conv_p, reinterpret_cast<std::int8_t*>(B->data), &params);
+          PackWeightsForConv<spatial_dim> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data), &params);
          //packB->printPackedMatrix("packingB");
-          *ret = packB;
+          *ret = packedB;
 
         } else {
 
-          PackWeightsForConv<spatial_dim> packedB(conv_p, reinterpret_cast<std::int8_t*>(B->data));
-          *ret = packB;
+          PackWeightsForConv<spatial_dim> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data));
+          *ret = packedB;
 
         }
 
@@ -691,7 +691,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     fbgemmConv(
         conv_p,
         reinterpret_cast<const std::uint8_t*>(A->data),
-        packedB,
+        *packedB,
         reinterpret_cast<std::uint8_t*>(Y->data),
         Y_int32_.data(),
         outputProcObj,
