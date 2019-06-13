@@ -144,17 +144,17 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
 
         DLTensor* W = args[0];
-        const spatial_dim = args[1];
+        int spatial_dim = args[1];
 
-        int cntr = 2;
+        int cntr = 2; //TODO: make changes on spatial_dim.
         int MB = args[cntr];
         int IC = args[cntr + 1];
         int OC = args[cntr + 2];
-        std::array<int, spatial_dim> IN_DIM = args[cntr + 3];
+        std::array<int, 2> IN_DIM = args[cntr + 3];
         int G = args[cntr + 4];
-        std::array<int, spatial_dim> K = args[cntr + 5];
-        std::array<int, spatial_dim> stride = args[cntr + 6];
-        std::array<int, spatial_dim * 2> pad = args[cntr + 7];
+        std::array<int, 2> K = args[cntr + 5];
+        std::array<int, 2> stride = args[cntr + 6];
+        std::array<int, 4> pad = args[cntr + 7];
 
         //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
         conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
@@ -172,7 +172,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
           params.ROW_INTERLEAVE = args[cntr + 6];
 
           PackWeightsForConv<spatial_dim> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data), &params);
-         //packB->printPackedMatrix("packingB");
+         //packB->printPackedMatrix("packingB"); invalid conversion from ‘int8_t* {aka signed char*}’ to ‘int’ [-fpermissive]
           *ret = packedB;
 
         } else {
