@@ -144,7 +144,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
 
         DLTensor* W = args[0];
-        int spatial_dim = args[1];
+        const spatial_dim = args[1];
 
         int cntr = 2;
         int MB = args[cntr];
@@ -161,7 +161,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
 
         BlockingFactors params;
 
-        if (args.size() > 10) {
+        if (args.size() > 11) {
           int cntr = 10;
           params.MCB = args[cntr];
           params.NCB = args[cntr + 1];
