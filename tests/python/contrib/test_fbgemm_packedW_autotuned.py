@@ -206,7 +206,7 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val):
            y.asnumpy(), np.matmul(x.asnumpy(), w.asnumpy()) + b.asnumpy(), rtol=1e-5)
 
 def test_fbgemm_conv_int8():
-
+    ctx = tvm.cpu(0)
       #MB, IC, OC, {IT, IH, IW}, G, {KT, KH, KW}, {stride_t, stride_h, stride_w},
       #{pad_prev, pad_h_top, pad_w_left, pad_next, pad_h_bottom, pad_w_right}
     print("BREAKPOINT: 0")
@@ -261,10 +261,10 @@ def test_fbgemm_conv_int8():
     print("BREAKPOINT: 2")
 
     # ReQuant Multiplier
-    C_multiplier = tvm.nd.array(np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,)), ctx)
-
+    #C_multiplier = np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,))
+    C_multiplier = [0.1234]
     # formula for calculation
-    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, W, W_zero_point, Y_zero_point, C_multiplier, conv_params)
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, w, W_zero_point, Y_zero_point, C_multiplier, conv_params)
     s = tvm.create_schedule(C.op)
     f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
 

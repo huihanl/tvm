@@ -1,0 +1,297 @@
+BREAKPOINT: 0
+BREAKPOINT: 1
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144b950>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144b9e0>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144bb00>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144ba70>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144b950>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144b9e0>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144bb00>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144ba70>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_4 object at 0x7f698144b950>
+<tvm._ffi._ctypes.function.c_int_Array_4 object at 0x7f698144b9e0>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_3 object at 0x7f698144b5f0>
+<tvm._ffi._ctypes.function.c_int_Array_3 object at 0x7f698144b830>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144b5f0>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144bd40>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144ba70>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144bb00>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144b5f0>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144bd40>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144ba70>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144bb00>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_4 object at 0x7f698144b5f0>
+<tvm._ffi._ctypes.function.c_int_Array_4 object at 0x7f698144bd40>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_3 object at 0x7f698144bb90>
+<tvm._ffi._ctypes.function.c_int_Array_3 object at 0x7f698144b830>
+c_int(0)
+BREAKPOINT: 2
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144bf80>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144b950>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_0 object at 0x7f698144b950>
+<tvm._ffi._ctypes.function.c_int_Array_0 object at 0x7f698144bf80>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_9 object at 0x7f698144b830>
+<tvm._ffi._ctypes.function.c_int_Array_9 object at 0x7f698144b9e0>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144ba70>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144bef0>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144bef0>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144ba70>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144bd40>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144b830>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144bef0>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144ba70>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144bd40>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144b830>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_4 object at 0x7f698144bef0>
+<tvm._ffi._ctypes.function.c_int_Array_4 object at 0x7f698144ba70>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_0 object at 0x7f698144b950>
+<tvm._ffi._ctypes.function.c_int_Array_0 object at 0x7f698144b5f0>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_9 object at 0x7f698144bb00>
+<tvm._ffi._ctypes.function.c_int_Array_9 object at 0x7f698144bb90>
+c_int(0)
+[<tvm._ffi._ctypes.function.TVMValue_Array_1 object at 0x7f698144b9e0>
+<tvm._ffi._ctypes.function.c_int_Array_1 object at 0x7f698144bd40>
+c_int(0)
+buffer(X, 0xc9d0c0)]
+[<tvm._ffi._ctypes.function.TVMValue_Array_1 object at 0x7f698144bb90>
+<tvm._ffi._ctypes.function.c_int_Array_1 object at 0x7f698144b830>
+c_int(0)
+buffer(C, 0xcbc610)]
+['tvm.contrib.fbgemm.conv_int8', <tvm._ffi._ctypes.function.TVMValue_Array_1 object at 0x7f698144b9e0>
+<tvm._ffi._ctypes.function.c_int_Array_1 object at 0x7f698144bd40>
+c_int(0)
+buffer(X, 0xc9d0c0), <tvm.NDArray shape=(3, 3, 128, 128), cpu(0)>
+array([[[[1, 1, 2, ..., 1, 2, 1],
+         [2, 1, 1, ..., 2, 1, 1],
+         [2, 1, 1, ..., 2, 2, 2],
+         ...,
+         [2, 2, 2, ..., 1, 1, 2],
+         [1, 2, 1, ..., 1, 2, 2],
+         [1, 2, 2, ..., 1, 1, 2]],
+
+        [[1, 2, 2, ..., 2, 1, 2],
+         [1, 2, 1, ..., 2, 1, 1],
+         [2, 2, 2, ..., 2, 2, 1],
+         ...,
+         [2, 2, 1, ..., 2, 1, 1],
+         [1, 1, 1, ..., 1, 2, 1],
+         [1, 1, 1, ..., 1, 2, 2]],
+
+        [[1, 1, 2, ..., 1, 2, 2],
+         [1, 2, 1, ..., 2, 2, 1],
+         [2, 2, 1, ..., 2, 2, 1],
+         ...,
+         [2, 1, 1, ..., 1, 1, 2],
+         [1, 1, 2, ..., 1, 1, 2],
+         [1, 1, 1, ..., 2, 1, 2]]],
+
+
+       [[[1, 2, 2, ..., 2, 1, 1],
+         [1, 2, 1, ..., 2, 1, 2],
+         [2, 1, 1, ..., 1, 1, 2],
+         ...,
+         [2, 1, 2, ..., 2, 1, 2],
+         [1, 2, 1, ..., 1, 1, 2],
+         [1, 1, 1, ..., 2, 2, 2]],
+
+        [[1, 1, 2, ..., 1, 1, 2],
+         [1, 2, 1, ..., 2, 1, 2],
+         [2, 1, 1, ..., 1, 2, 1],
+         ...,
+         [2, 2, 2, ..., 1, 2, 2],
+         [2, 1, 1, ..., 2, 2, 1],
+         [1, 2, 1, ..., 2, 2, 1]],
+
+        [[2, 1, 1, ..., 2, 2, 2],
+         [2, 2, 2, ..., 1, 1, 2],
+         [1, 2, 1, ..., 1, 2, 1],
+         ...,
+         [1, 2, 1, ..., 1, 1, 1],
+         [1, 2, 2, ..., 1, 2, 2],
+         [2, 1, 2, ..., 2, 2, 2]]],
+
+
+       [[[2, 2, 1, ..., 2, 2, 2],
+         [2, 1, 1, ..., 1, 1, 1],
+         [1, 1, 2, ..., 1, 2, 2],
+         ...,
+         [2, 1, 1, ..., 2, 1, 2],
+         [2, 2, 1, ..., 2, 2, 2],
+         [2, 2, 1, ..., 1, 2, 2]],
+
+        [[2, 1, 1, ..., 1, 2, 2],
+         [2, 1, 2, ..., 1, 2, 1],
+         [1, 2, 1, ..., 1, 1, 1],
+         ...,
+         [1, 1, 1, ..., 1, 2, 1],
+         [1, 1, 1, ..., 2, 1, 1],
+         [1, 1, 2, ..., 2, 1, 2]],
+
+        [[2, 2, 2, ..., 1, 1, 2],
+         [1, 2, 1, ..., 1, 1, 2],
+         [2, 2, 2, ..., 1, 2, 2],
+         ...,
+         [2, 2, 1, ..., 2, 1, 2],
+         [2, 2, 2, ..., 1, 1, 1],
+         [2, 2, 2, ..., 2, 2, 2]]]], dtype=uint8), <tvm._ffi._ctypes.function.TVMValue_Array_1 object at 0x7f698144b830>
+<tvm._ffi._ctypes.function.c_int_Array_1 object at 0x7f698144bd40>
+c_int(0)
+buffer(C, 0xcbc610), 4, [1], 5, [0.1234], 1, 128, 128, [56, 56], 1, [3, 3], [1, 1], [1, 1, 1, 1], 1]
+<tvm._ffi._ctypes.function.TVMValue_Array_1 object at 0x7f698144bd40>
+<tvm._ffi._ctypes.function.c_int_Array_1 object at 0x7f698144bb90>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_6 object at 0x7f698144b9e0>
+<tvm._ffi._ctypes.function.c_int_Array_6 object at 0x7f698144bb00>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_1 object at 0x7f698144b830>
+<tvm._ffi._ctypes.function.c_int_Array_1 object at 0x7f698144bd40>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_1 object at 0x7f698144bb00>
+<tvm._ffi._ctypes.function.c_int_Array_1 object at 0x7f698144b9e0>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144bb90>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144b950>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144b9e0>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144bef0>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144bef0>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144b9e0>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_6 object at 0x7f698144b9e0>
+<tvm._ffi._ctypes.function.c_int_Array_6 object at 0x7f698144bef0>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_6 object at 0x7f698144b950>
+<tvm._ffi._ctypes.function.c_int_Array_6 object at 0x7f698144b830>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_1 object at 0x7f698144bb00>
+<tvm._ffi._ctypes.function.c_int_Array_1 object at 0x7f698144ba70>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_6 object at 0x7f698144bd40>
+<tvm._ffi._ctypes.function.c_int_Array_6 object at 0x7f698144b9e0>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_1 object at 0x7f698144bb90>
+<tvm._ffi._ctypes.function.c_int_Array_1 object at 0x7f698144bb00>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_1 object at 0x7f698144b9e0>
+<tvm._ffi._ctypes.function.c_int_Array_1 object at 0x7f698144bd40>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144ba70>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144b830>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144bd40>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144b950>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_2 object at 0x7f698144b950>
+<tvm._ffi._ctypes.function.c_int_Array_2 object at 0x7f698144bd40>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_6 object at 0x7f698144bd40>
+<tvm._ffi._ctypes.function.c_int_Array_6 object at 0x7f698144b950>
+c_int(0)
+<tvm._ffi._ctypes.function.TVMValue_Array_6 object at 0x7f698144b830>
+<tvm._ffi._ctypes.function.c_int_Array_6 object at 0x7f698144bb90>
+c_int(0)
+['tvm.contrib.fbgemm.conv_int8', <tvm._ffi._ctypes.function.TVMValue_Array_1 object at 0x7f698144bb00>
+<tvm._ffi._ctypes.function.c_int_Array_1 object at 0x7f698144bef0>
+c_int(0)
+tvm_stack_make_array(X, tvm_stack_make_shape(1, 56, 56, 128), 0, 4, (int8)0, 0), <tvm.NDArray shape=(3, 3, 128, 128), cpu(0)>
+array([[[[1, 1, 2, ..., 1, 2, 1],
+         [2, 1, 1, ..., 2, 1, 1],
+         [2, 1, 1, ..., 2, 2, 2],
+         ...,
+         [2, 2, 2, ..., 1, 1, 2],
+         [1, 2, 1, ..., 1, 2, 2],
+         [1, 2, 2, ..., 1, 1, 2]],
+
+        [[1, 2, 2, ..., 2, 1, 2],
+         [1, 2, 1, ..., 2, 1, 1],
+         [2, 2, 2, ..., 2, 2, 1],
+         ...,
+         [2, 2, 1, ..., 2, 1, 1],
+         [1, 1, 1, ..., 1, 2, 1],
+         [1, 1, 1, ..., 1, 2, 2]],
+
+        [[1, 1, 2, ..., 1, 2, 2],
+         [1, 2, 1, ..., 2, 2, 1],
+         [2, 2, 1, ..., 2, 2, 1],
+         ...,
+         [2, 1, 1, ..., 1, 1, 2],
+         [1, 1, 2, ..., 1, 1, 2],
+         [1, 1, 1, ..., 2, 1, 2]]],
+
+
+       [[[1, 2, 2, ..., 2, 1, 1],
+         [1, 2, 1, ..., 2, 1, 2],
+         [2, 1, 1, ..., 1, 1, 2],
+         ...,
+         [2, 1, 2, ..., 2, 1, 2],
+         [1, 2, 1, ..., 1, 1, 2],
+         [1, 1, 1, ..., 2, 2, 2]],
+
+        [[1, 1, 2, ..., 1, 1, 2],
+         [1, 2, 1, ..., 2, 1, 2],
+         [2, 1, 1, ..., 1, 2, 1],
+         ...,
+         [2, 2, 2, ..., 1, 2, 2],
+         [2, 1, 1, ..., 2, 2, 1],
+         [1, 2, 1, ..., 2, 2, 1]],
+
+        [[2, 1, 1, ..., 2, 2, 2],
+         [2, 2, 2, ..., 1, 1, 2],
+         [1, 2, 1, ..., 1, 2, 1],
+         ...,
+         [1, 2, 1, ..., 1, 1, 1],
+         [1, 2, 2, ..., 1, 2, 2],
+         [2, 1, 2, ..., 2, 2, 2]]],
+
+
+       [[[2, 2, 1, ..., 2, 2, 2],
+         [2, 1, 1, ..., 1, 1, 1],
+         [1, 1, 2, ..., 1, 2, 2],
+         ...,
+         [2, 1, 1, ..., 2, 1, 2],
+         [2, 2, 1, ..., 2, 2, 2],
+         [2, 2, 1, ..., 1, 2, 2]],
+
+        [[2, 1, 1, ..., 1, 2, 2],
+         [2, 1, 2, ..., 1, 2, 1],
+         [1, 2, 1, ..., 1, 1, 1],
+         ...,
+         [1, 1, 1, ..., 1, 2, 1],
+         [1, 1, 1, ..., 2, 1, 1],
+         [1, 1, 2, ..., 2, 1, 2]],
+
+        [[2, 2, 2, ..., 1, 1, 2],
+         [1, 2, 1, ..., 1, 1, 2],
+         [2, 2, 2, ..., 1, 2, 2],
+         ...,
+         [2, 2, 1, ..., 2, 1, 2],
+         [2, 2, 2, ..., 1, 1, 1],
+         [2, 2, 2, ..., 2, 2, 2]]]], dtype=uint8), <tvm._ffi._ctypes.function.TVMValue_Array_1 object at 0x7f698144b9e0>
+<tvm._ffi._ctypes.function.c_int_Array_1 object at 0x7f698144bef0>
+c_int(0)
+tvm_stack_make_array(C, tvm_stack_make_shape(1, 56, 56, 128), 0, 4, (int8)0, 0), 4, [1], 5, [0.1234], 1, 128, 128, [56, 56], 1, [3, 3], [1, 1], [1, 1, 1, 1], 1]
+<tvm._ffi._ctypes.function.TVMValue_Array_1 object at 0x7f698144bef0>
+<tvm._ffi._ctypes.function.c_int_Array_1 object at 0x7f698144b9e0>
+c_int(0)
