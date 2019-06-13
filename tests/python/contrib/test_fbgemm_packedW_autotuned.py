@@ -217,7 +217,7 @@ def test_fbgemm_conv_int8():
     IN_DIM = tvm.nd.array([56, 56], ctx)
     G = 1
     K = tvm.nd.array([3, 3], ctx)
-    stride = [1, 1]
+    stride = tvm.nd.array([1, 1], ctx)
     #pad = [1, 1, 1, 1]
     pad = tvm.nd.array([1, 1, 1, 1], ctx)
     # conv_params = [1, 128, 128, [56, 56], 1, [3, 3], [1, 1], [1, 1, 1, 1]]
@@ -226,17 +226,21 @@ def test_fbgemm_conv_int8():
     IN_DIMP = [0, 0]
     OUT_DIM = [0, 0]
 
+
+    IN_DIM1 = [56, 56]
+    K1 = [3, 3]
+    stride1 = [1, 1]
     pad1 = [1, 1, 1, 1]
 
-    IN_DIMP[0] = IN_DIM[0] + pad1[0] + pad1[2];
-    OUT_DIM[0] = (IN_DIMP[0] - K[0]) / stride[0] + 1;
+    IN_DIMP[0] = IN_DIM1[0] + pad1[0] + pad1[2];
+    OUT_DIM[0] = (IN_DIMP[0] - K1[0]) / stride1[0] + 1;
 
-    IN_DIMP[1] = IN_DIM[1] + pad1[1] + pad1[3];
-    OUT_DIM[1] = (IN_DIMP[1] - K[1]) / stride[1] + 1;
+    IN_DIMP[1] = IN_DIM1[1] + pad1[1] + pad1[3];
+    OUT_DIM[1] = (IN_DIMP[1] - K1[1]) / stride1[1] + 1;
 
     # shapes
-    input_shape = (MB, IN_DIM[0], IN_DIM[1], IC) #NHWC
-    W_shape = (K[0], K[1], IC, OC / G) #RSCK
+    input_shape = (MB, IN_DIM1[0], IN_DIM1[1], IC) #NHWC
+    W_shape = (K1[0], K1[1], IC, OC / G) #RSCK
     Y_shape = (MB, OUT_DIM[0], OUT_DIM[1], OC) #NHWK
 
     print("BREAKPOINT: 1")
