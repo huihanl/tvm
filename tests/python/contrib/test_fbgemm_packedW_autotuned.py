@@ -209,7 +209,9 @@ def test_fbgemm_conv_int8():
     ctx = tvm.cpu(0)
       #MB, IC, OC, {IT, IH, IW}, G, {KT, KH, KW}, {stride_t, stride_h, stride_w},
       #{pad_prev, pad_h_top, pad_w_left, pad_next, pad_h_bottom, pad_w_right}
-    print("BREAKPOINT: 0")
+
+    spatial_dim = 2
+
     MB = 1
     IC = 128
     OC = 128
@@ -221,11 +223,13 @@ def test_fbgemm_conv_int8():
     #pad = [1, 1, 1, 1]
     pad = tvm.nd.array([1, 1, 1, 1], ctx)
     # conv_params = [1, 128, 128, [56, 56], 1, [3, 3], [1, 1], [1, 1, 1, 1]]
+
     conv_params = [MB, IC, OC, IN_DIM, G, K, stride, pad]
 
+
+    # compute out_dim, i.e. shape for Y (the output for convolution)
     IN_DIMP = [0, 0]
     OUT_DIM = [0, 0]
-
 
     IN_DIM1 = [56, 56]
     K1 = [3, 3]
@@ -243,15 +247,14 @@ def test_fbgemm_conv_int8():
     W_shape = (K1[0], K1[1], IC, OC / G) #RSCK
     Y_shape = (MB, OUT_DIM[0], OUT_DIM[1], OC) #NHWK
 
-    print("BREAKPOINT: 1")
-
     # weight
     W = tvm.placeholder(W_shape, name='W', dtype="uint8")
     w = tvm.nd.array(np.random.uniform(1, 3, size=W_shape).astype(W.dtype), ctx)
 
     # packing of weight
-    #my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8")
-    #ww = my_packedw(w, 1, W_trans)
+    my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
+    ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
+
     # column offset
     #get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8")
     #co = get_co_offsets(w,1,1, W_trans)
@@ -272,7 +275,7 @@ def test_fbgemm_conv_int8():
     #C_multiplier = np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,))
     C_multiplier = tvm.nd.array([0.1234], ctx)
     # formula for calculation
-    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, w, W_zero_point, Y_zero_point, C_multiplier, conv_params)
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W_zero_point, Y_zero_point, C_multiplier, conv_params)
     #C = fbgemm.conv_int8(X)
 
     s = tvm.create_schedule(C.op)

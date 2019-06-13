@@ -30,6 +30,7 @@ using namespace fbgemm;
 using namespace std;
 
 using packbmatrix = PackBMatrix<std::int8_t, std::int32_t>;
+
 template <>
 struct extension_class_info<packbmatrix> {
   static const int code = 19;
@@ -138,6 +139,51 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8")
       }
 
     });
+
+TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
+    .set_body([](TVMArgs args, TVMRetValue* ret) {
+
+        DLTensor* W = args[0];
+        int spatial_dim = args[1];
+
+        int cntr = 2;
+        int MB = args[cntr];
+        int IC = args[cntr + 1];
+        int OC = args[cntr + 2];
+        std::array<int, spatial_dim> IN_DIM = args[cntr + 3];
+        int G = args[cntr + 4];
+        std::array<int, spatial_dim> K = args[cntr + 5];
+        std::array<int, spatial_dim> stride = args[cntr + 6];
+        std::array<int, spatial_dim * 2> pad = args[cntr + 7];
+
+        //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
+        conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
+
+        BlockingFactors params;
+
+        if (args.size() > 10) {
+          int cntr = 10;
+          params.MCB = args[cntr];
+          params.NCB = args[cntr + 1];
+          params.KCB = args[cntr + 2];
+          params.MR = args[cntr + 3];
+          params.NR = args[cntr + 4];
+          params.NR_MIN = args[cntr + 5];
+          params.ROW_INTERLEAVE = args[cntr + 6];
+
+          PackWeightsForConv<spatial_dim> packedB(conv_p, reinterpret_cast<std::int8_t*>(B->data), &params);
+         //packB->printPackedMatrix("packingB");
+          *ret = packB;
+
+        } else {
+
+          PackWeightsForConv<spatial_dim> packedB(conv_p, reinterpret_cast<std::int8_t*>(B->data));
+          *ret = packB;
+
+        }
+
+    });
+
 
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
@@ -539,12 +585,17 @@ void col_offsets_with_zero_pt_s8acc32_ref(
   }
 }
 
-/*
+
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
 
     DLTensor* A = args[0];
-    DLTensor* B = args[1];
+
+    std::uint64_t wt = args[1];
+    void* weight = reinterpret_cast<void*>(static_cast<uint64_t>(wt));
+    PackWeightsForConv<2>* packedB =
+        reinterpret_cast<PackWeightsForConv<2>*>(weight);
+
     DLTensor* Y = args[2];
     std::int32_t Aint8_zero_point = args[3];
     //aligned_vector<float> Bint8_zero_point = args[4];
@@ -619,9 +670,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
           conv_p.OC);
     }
 
-    PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(B->data));
-
-
     std::vector<std::int32_t> Y_int32_(conv_p.MB * im_out_dim * conv_p.OC);
 
     // no-op output process objects
@@ -650,6 +698,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
         0,
         1);
     });
-*/
+
 }  // namespace contrib
 }  // namespace tvm
