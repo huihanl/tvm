@@ -6,8 +6,8 @@ from tvm import autotvm
 import sys
 import logging
 import os
-
-#raw_input("dummy breakpoint")
+print(os.getpid())
+raw_input("dummy breakpoint")
 QuantParams = namedtuple("QuantParams", "scale zero_point")
 
 @autotvm.template
@@ -264,7 +264,8 @@ def test_fbgemm_conv_int8():
     #C_multiplier = np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,))
     C_multiplier = [0.1234]
     # formula for calculation
-    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, w, W_zero_point, Y_zero_point, C_multiplier, conv_params)
+    #C = fbgemm.conv_int8(Y_shape, X, X_zero_point, w, W_zero_point, Y_zero_point, C_multiplier, conv_params)
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, w, 1, Y_zero_point, 0.1234, conv_params)
     s = tvm.create_schedule(C.op)
     f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
 

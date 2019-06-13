@@ -539,6 +539,7 @@ void col_offsets_with_zero_pt_s8acc32_ref(
   }
 }
 
+/*
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
 
@@ -649,6 +650,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
         0,
         1);
     });
-
+*/
 }  // namespace contrib
 }  // namespace tvm
