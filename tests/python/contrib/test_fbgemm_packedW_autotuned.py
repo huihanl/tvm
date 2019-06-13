@@ -216,7 +216,7 @@ def test_fbgemm_conv_int8():
     #IN_DIM = [56, 56]
     IN_DIM = tvm.nd.array([56, 56], ctx)
     G = 1
-    K = tvm.nd.array([[3, 3], ctx)
+    K = tvm.nd.array([3, 3], ctx)
     stride = [1, 1]
     pad = tvm.nd.array([1, 1, 1, 1], ctx)
     # conv_params = [1, 128, 128, [56, 56], 1, [3, 3], [1, 1], [1, 1, 1, 1]]
