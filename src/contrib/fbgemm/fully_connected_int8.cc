@@ -234,6 +234,74 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8")
 
     });
 
+
+void col_offsets_with_zero_pt_s8acc32_ref(
+    int K,
+    int N,
+    int ld,
+    const int8_t* Bint8,
+    const int32_t* B_zero_point,
+    int32_t* col_offsets,
+    int ncols_per_quant_group) {
+  for (int j = 0; j < N; ++j) {
+    int32_t sum = 0;
+    for (int k = 0; k < K; ++k) {
+      sum += Bint8[k * ld + j];
+    }
+    col_offsets[j] = sum - B_zero_point[j / ncols_per_quant_group] * K;
+  }
+}
+
+TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
+    .set_body([](TVMArgs args, TVMRetValue* ret) {
+
+      // ARGUMENTS
+      DLTensor* B = args[0]; // the weight
+      std::uint64_t zp_addr = args[1];
+      void* zp = reinterpret_cast<void*>(static_cast<uint64_t>(zp_addr));
+      aligned_vector<int32_t>* Bint8_zero_point =
+          reinterpret_cast<aligned_vector<int32_t>*>(zp);
+
+      // conv_p
+      int cntr = 3;
+      int MB = args[cntr];
+      int IC = args[cntr + 1];
+      int OC = args[cntr + 2];
+      std::array<int, 2> IN_DIM = args[cntr + 3];
+      int G = args[cntr + 4];
+      std::array<int, 2> K = args[cntr + 5];
+      std::array<int, 2> stride = args[cntr + 6];
+      std::array<int, 4> pad = args[cntr + 7];
+
+      conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
+
+      //CALCULATION
+      int kernel_dim =
+          accumulate(conv_p.K.begin(), conv_p.K.end(), 1, multiplies<int>());
+      int KDim = kernel_dim * conv_p.IC;
+      int KDimPerGroup = KDim / conv_p.G;
+      int OC_per_G = conv_p.OC / conv_p.G;
+
+      // COMPUTING column offset
+      vector<int32_t> col_offsets(conv_p.OC);
+      for (int g = 0; g < conv_p.G; ++g) {
+        col_offsets_with_zero_pt_s8acc32_ref(
+            KDimPerGroup,
+            OC_per_G,
+            OC_per_G,
+            reinterpret_cast<std::int8_t*>(B->data) + g * KDimPerGroup * OC_per_G,
+            //Bint8_zero_point.data(),
+            Bint8_zero_point->data(),
+            col_offsets.data() + g * OC_per_G,
+            conv_p.OC);
+      }
+      *ret = col_offsets;
+
+    });
+
+
+
+
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
       DLTensor* X = args[0];  // M*K quantized int8 input
@@ -568,22 +636,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.fully_connected_int8")
       }
     });
 
-void col_offsets_with_zero_pt_s8acc32_ref(
-    int K,
-    int N,
-    int ld,
-    const int8_t* Bint8,
-    const int32_t* B_zero_point,
-    int32_t* col_offsets,
-    int ncols_per_quant_group) {
-  for (int j = 0; j < N; ++j) {
-    int32_t sum = 0;
-    for (int k = 0; k < K; ++k) {
-      sum += Bint8[k * ld + j];
-    }
-    col_offsets[j] = sum - B_zero_point[j / ncols_per_quant_group] * K;
-  }
-}
 
 
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
@@ -655,20 +707,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     int KDim = kernel_dim * conv_p.IC;
     int KDimPerGroup = KDim / conv_p.G;
     int OC_per_G = conv_p.OC / conv_p.G;
-
-    // computing column offset
-    vector<int32_t> col_offsets(conv_p.OC);
-    for (int g = 0; g < conv_p.G; ++g) {
-      col_offsets_with_zero_pt_s8acc32_ref(
-          KDimPerGroup,
-          OC_per_G,
-          OC_per_G,
-          reinterpret_cast<std::int8_t*>(B->data) + g * KDimPerGroup * OC_per_G,
-          //Bint8_zero_point.data(),
-          Bint8_zero_point->data(),
-          col_offsets.data() + g * OC_per_G,
-          conv_p.OC);
-    }
 
     std::vector<std::int32_t> Y_int32_(conv_p.MB * im_out_dim * conv_p.OC);
 

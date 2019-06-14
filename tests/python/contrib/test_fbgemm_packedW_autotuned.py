@@ -255,9 +255,6 @@ def test_fbgemm_conv_int8():
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
     ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
 
-    # column offset
-    #get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8")
-    #co = get_co_offsets(w,1,1, W_trans)
     # bias
     #B = tvm.placeholder((n,), name='B', dtype="int")
 
@@ -268,6 +265,12 @@ def test_fbgemm_conv_int8():
     X_zero_point = 4
     W_zero_point = tvm.nd.array([1], ctx)
     Y_zero_point = 5
+
+
+    # column offset
+    get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
+    co = get_co_offsets(w, W_zero_point, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
+
 
     # ReQuant Multiplier
     #C_multiplier = np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,))
