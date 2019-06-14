@@ -276,14 +276,11 @@ def test_fbgemm_conv_int8():
     #C_multiplier = np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,))
     C_multiplier = tvm.nd.array([0.1234], ctx)
     # formula for calculation
-    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W_zero_point, Y_zero_point, C_multiplier, conv_params)
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W_zero_point, Y_zero_point, C_multiplier, conv_params, co)
     #C = fbgemm.conv_int8(X)
 
     s = tvm.create_schedule(C.op)
     f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
-
-
-    print("BREAKPOINT: 3")
 
     # applying the formula
     #x = tvm.nd.array(np.random.uniform(1, 3, size=input_shape).astype(X.dtype), ctx)
@@ -292,7 +289,6 @@ def test_fbgemm_conv_int8():
     #y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
     y = tvm.nd.array(np.zeros((2, 3), dtype=C.dtype), ctx)
 
-    print("BREAKPOINT: 4")
     f(x,y)
 
 if __name__ == "__main__":

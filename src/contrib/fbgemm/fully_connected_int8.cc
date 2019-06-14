@@ -423,7 +423,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant")
 
       std::uint64_t co_addr = args[8];
       void* co = reinterpret_cast<void*>(static_cast<uint64_t>(co_addr));
-
       std::vector<std::int32_t>* column_offsets_ =
           reinterpret_cast<std::vector<std::int32_t>*>(co);
 
@@ -667,7 +666,12 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     aligned_vector<float>* C_multiplier =
         reinterpret_cast<aligned_vector<float>*>(mula);
 
-    int cntr = 7;
+    std::uint64_t co_addr = args[7];
+    void* co = reinterpret_cast<void*>(static_cast<uint64_t>(co_addr));
+    std::vector<std::int32_t>* column_offsets_ =
+        reinterpret_cast<std::vector<std::int32_t>*>(co);
+
+    int cntr = 8;
     int MB = args[cntr];
     int IC = args[cntr + 1];
     int OC = args[cntr + 2];
@@ -721,7 +725,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
         //Bint8_zero_point.data(),
         Bint8_zero_point->data(),
         nullptr, // row offsets
-        col_offsets.data(),
+        (*column_offsets_).data(),
         nullptr, // bias
         conv_p.OC,
         conv_p.G);
