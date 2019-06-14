@@ -171,13 +171,13 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
           params.NR_MIN = args[cntr + 5];
           params.ROW_INTERLEAVE = args[cntr + 6];
 
-          PackWeightsForConv<spatial_dim> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data), &params);
+          PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data), &params);
          //packB->printPackedMatrix("packingB"); invalid conversion from ‘int8_t* {aka signed char*}’ to ‘int’ [-fpermissive]
           *ret = packedB;
 
         } else {
 
-          PackWeightsForConv<spatial_dim> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data));
+          PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data));
           *ret = packedB;
 
         }
