@@ -6,13 +6,7 @@ from tvm import autotvm
 import sys
 import logging
 import os
-<<<<<<< HEAD
-#print(os.getpid())
 #raw_input("dummy breakpoint")
-#=======
-#print(os.getpid())
-#raw_input("dummy breakpoint")
-#>>>>>>> da2ab91ceb481f792b2ef41ad3cec37c3a418eaf
 QuantParams = namedtuple("QuantParams", "scale zero_point")
 
 @autotvm.template
