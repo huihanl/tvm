@@ -3,24 +3,19 @@
 
 # # Perf. vs. Configuration High Dim Visualization
 
-# In[15]:
-
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import math
+import sys
 
-#import plotly
 # You will have to register for an account for plotly, which is free for 25 plots / month.
-#plotly.tools.set_credentials_file(username='huihanl', api_key='')
+# After you registered a username, it will then generate an api_key for you.
+# Then run plotly.tools.set_credentials_file(username='$USERNAME', api_key=$API_KEY)
 
 import plotly as py
 import plotly.graph_objs as go
 import pandas as pd
-
-
-# In[16]:
 
 
 def read_and_create_dataset(filepath, m, n, k):
@@ -43,6 +38,12 @@ def read_and_create_dataset(filepath, m, n, k):
             new_config_lst.append(config_lst[i])
             new_runtime_lst.append(runtime_lst[i])
 
+
+    #In evaluation of performance, we use GOPS (Giga Operations Per Second), which is calculated by
+    #number of operations / runtime. For each entry (i, j) in C, we need k multication and k addition,
+    #and we have m * n such entries. Thereforem the number of operations of matrix multiplication
+    #C = matmul(A, B) is estimated by 2 * m * n * k.
+
     no_ops = 2 * m * n * k
     Gops_lst = [no_ops / r / math.pow(10, 9) for r in new_runtime_lst]
 
@@ -56,9 +57,6 @@ def read_and_create_dataset(filepath, m, n, k):
     new_config_lst = new_config_lst.drop(["16", "4"], axis = 1)
     new_config_lst["Gops"] = new_Gops_lst
     return new_config_lst
-
-
-# In[17]:
 
 
 def plot_config_Gops(df, m, n, k):
@@ -104,22 +102,19 @@ def plot_config_Gops(df, m, n, k):
         )
     ]
 
-    layout = go.Layout(title="m1={}, n1={}, k1={}".format(m, n, k))
+    layout = go.Layout(title="m={}, n={}, k={}".format(m, n, k))
 
-    py.offline.plot({"data": data, "layout": layout}, filename = 'm1={}, n1={}, k1={}.html'.format(m, n, k), auto_open=True)
+    py.offline.plot({"data": data, "layout": layout},
+                    filename = 'm={}, n={}, k={}.html'.format(m, n, k), auto_open=True)
 
+if __name__ == "__main__":
 
-# In[20]:
+    for i in range(1, len(sys.argv)):
 
+        filepath = sys.argv[i]
+        words = filepath[15:][:-4]
+        words = words.split("_")
+        m, n, k = [int(w) for w in words]
 
-filepath1 = "fbgemm_results_156800_16_36.log"
-m1, n1, k1 = (156800, 16, 36)
-
-filepath2 = "fbgemm_results_102_2323_256.log"
-m2, n2, k2 = (102, 2323, 256)
-
-df = read_and_create_dataset(filepath1, m1, n1, k1)
-plot_config_Gops(df, m1, n1, k1)
-
-#df = read_and_create_dataset(filepath1, m2, n2, k2)
-#plot_config_Gops(df, m2, n2, k2)
+        df = read_and_create_dataset(filepath, m, n, k)
+        plot_config_Gops(df, m, n, k)
