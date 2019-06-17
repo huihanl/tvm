@@ -6,14 +6,6 @@ from tvm import autotvm
 import sys
 import logging
 import os
-<<<<<<< HEAD
-#raw_input("dummy breakpoint")
-=======
-print(os.getpid())
-raw_input("dummy breakpoint")
->>>>>>> b101b9b5b93bf0dcbdd6ade9290de6a19816a79d
-QuantParams = namedtuple("QuantParams", "scale zero_point")
-
 @autotvm.template
 def tune_fbgemm_packed_weights(m, n, k):
 

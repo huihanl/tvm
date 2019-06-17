@@ -30,15 +30,23 @@ using namespace fbgemm;
 using namespace std;
 
 using packbmatrix = PackBMatrix<std::int8_t, std::int32_t>;
+using packweight = PackWeightsForConv<2>;
 
 template <>
 struct extension_class_info<packbmatrix> {
   static const int code = 19;
 };
 
+template <>
+struct extension_class_info<packweight> {
+  static const int code = 20;
+};
+
 TVM_REGISTER_EXT_TYPE(packbmatrix);
+TVM_REGISTER_EXT_TYPE(packweight);
 }  // namespace runtime
 }  // namespace tvm
+
 
 namespace tvm {
 namespace contrib {
@@ -283,7 +291,9 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
       int OC_per_G = conv_p.OC / conv_p.G;
 
       // COMPUTING column offset
-      vector<int32_t> col_offsets(conv_p.OC);
+//      vector<int32_t> col_offsets(conv_p.OC);
+
+      std::vector<std::int32_t>* col_offsets = new std::vector<std::int32_t>;
       for (int g = 0; g < conv_p.G; ++g) {
         col_offsets_with_zero_pt_s8acc32_ref(
             KDimPerGroup,
@@ -292,7 +302,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
             reinterpret_cast<std::int8_t*>(B->data) + g * KDimPerGroup * OC_per_G,
             //Bint8_zero_point.data(),
             Bint8_zero_point->data(),
-            col_offsets.data() + g * OC_per_G,
+            col_offsets->data() + g * OC_per_G,
             conv_p.OC);
       }
       *ret = col_offsets;
