@@ -21,9 +21,16 @@ void ComputeColumnOffsets(
     int num_cols,
     const T* W,
     const vector<TensorQuantizationParams>& qparams,
-    vector<int32_t>& col_offsets) {
+    vector<int32_t>& col_offsets,
+    bool& trans) {
+  if (trans) {
+    int inter = num_rows;
+    num_rows = num_cols;
+    num_cols = inter;
+  }
   col_offsets.resize(num_cols);
   int num_quant_groups = qparams.size();
+
   for (int g = 0; g < num_quant_groups; ++g) {
     int j_begin = g * (num_cols / num_quant_groups);
     int j_end = j_begin + (num_cols / num_quant_groups);
@@ -43,14 +50,16 @@ template void ComputeColumnOffsets<int8_t>(
     int num_cols,
     const int8_t* W,
     const vector<TensorQuantizationParams>& qparams,
-    vector<int32_t>& col_offsets);
+    vector<int32_t>& col_offsets,
+    bool& trans);
 
 template void ComputeColumnOffsets<int16_t>(
     int num_rows,
     int num_cols,
     const int16_t* W,
     const vector<TensorQuantizationParams>& qparams,
-    vector<int32_t>& col_offsets);
+    vector<int32_t>& col_offsets,
+    bool& trans);
 
 }
 }

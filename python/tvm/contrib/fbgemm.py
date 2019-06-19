@@ -58,7 +58,8 @@ def gemm_int8acc32_prepacked(m, n, X, X_qparams, packedW, W_qparams,
 
 
 def gemm_int8acc32_prepacked_with_requant(m, n, X, X_qparams, packedW, W_qparams,
-                                B, Y_qparams, col_offsets, nthreads=1,
+                                B, Y_qparams, col_offsets, transA, 
+				nthreads=1,
                          	autotune = False, MCB = 56, NCB = 32, KCB = 256,
                                 MR = 14, NR = 32, NR_MIN = 16, ROW_INTERLEAVE = 4):
 
@@ -70,7 +71,8 @@ def gemm_int8acc32_prepacked_with_requant(m, n, X, X_qparams, packedW, W_qparams
              	    "tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant",
                     ins[0], packedW, ins[1], outs[0], X_qparams.zero_point,
                     W_qparams.zero_point, Y_qparams.zero_point,
-                    ReQuant_multiplier, col_offsets, nthreads,
+                    ReQuant_multiplier, col_offsets, transA, 
+		    nthreads,
                     MCB, NCB, KCB, MR, NR, NR_MIN, ROW_INTERLEAVE),
                     name="C", dtype="int8")
     else:
@@ -80,7 +82,8 @@ def gemm_int8acc32_prepacked_with_requant(m, n, X, X_qparams, packedW, W_qparams
              	    "tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant",
                     ins[0], packedW, ins[1], outs[0], X_qparams.zero_point,
                     W_qparams.zero_point, Y_qparams.zero_point,
-                    ReQuant_multiplier, col_offsets, nthreads), name="C", dtype="int8")
+                    ReQuant_multiplier, col_offsets, transA, 
+		    nthreads), name="C", dtype="int8")
 
 def gemm_int8acc32_prepacked_for_tuning(m, n, W, X, X_qparams, packedW, W_qparams,
                                 B, Y_qparams, col_offsets, nthreads=1,

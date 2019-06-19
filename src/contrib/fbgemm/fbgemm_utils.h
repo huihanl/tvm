@@ -27,7 +27,8 @@ void ComputeColumnOffsets(
     int num_cols,
     const T* W,
     const std::vector<TensorQuantizationParams>& qparams,
-    std::vector<std::int32_t>& col_offsets);
+    std::vector<std::int32_t>& col_offsets,
+    bool& trans);
 
 }
 }
