@@ -184,7 +184,7 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val):
     W_qparams = QuantParams(scale=1.0, zero_point=0)
     Y_qparams = QuantParams(scale=1.0, zero_point=0)
 
-    C = fbgemm.gemm_int8acc32_prepacked_with_requant(m, n, X, X_qparams, ww, W_qparams, 
+    C = fbgemm.gemm_int8acc32_prepacked_with_requant(m, n, X, X_qparams, ww, W_qparams,
 						     B, Y_qparams, co, A_trans)
     #Y = tvm.compute((m, n), lambda i, j: C[i][j], name="Y")
     #s = tvm.create_schedule(Y.op)
@@ -223,7 +223,6 @@ def test_fbgemm_conv_int8():
     OC = 128
     #IN_DIM = [56, 56]
     IN_DIM = tvm.nd.array(np.array([56, 56]).astype("int32"), ctx)
-    print(IN_DIM.dtype)
     G = 1
     K = tvm.nd.array(np.array([3, 3]).astype("int32"), ctx)
     stride = tvm.nd.array(np.array([1, 1]).astype("int32"), ctx)
@@ -257,20 +256,22 @@ def test_fbgemm_conv_int8():
     # weight
     W = tvm.placeholder(W_shape, name='W', dtype="int8")
     w = tvm.nd.array(np.random.uniform(1, 2, size=W_shape).astype(W.dtype), ctx)
-    print("before weight")
+
     # packing of weight
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
     ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
-    print("finish weight")
+
     # bias
     #B = tvm.placeholder((n,), name='B', dtype="int")
 
     # input (X)
-    X = tvm.placeholder((2, 3), name='X', dtype="int8")
+    X = tvm.placeholder(input_shape, name='X', dtype="int8")
 
     # quantization parameters will be got from Operator arguments
     X_zero_point = 4
     W_zero_point = tvm.nd.array(np.array([1]).astype("int32"), ctx)
+    create_pointer_vector_int = tvm.get_global_func("tvm.contrib.fbgemm.create_pointer_vector_int")
+    w_zp = create_pointer_vector_int(W_zero_point, 1)
     #W_zero_point = [1]
     Y_zero_point = 5
 
@@ -283,11 +284,15 @@ def test_fbgemm_conv_int8():
     # ReQuant Multiplier
     #C_multiplier = np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,))
     C_multiplier = tvm.nd.array(np.array([0.1234]).astype("float"), ctx)
-    #C_multiplier = [0.1234] 
+    create_pointer_vector_float = tvm.get_global_func("tvm.contrib.fbgemm.create_pointer_vector_float")
+    c_mul_pt = create_pointer_vector_float(C_multiplier, 1)
+    #C_multiplier = [0.1234]
 # formula for calculation
-    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, [1], Y_zero_point, [0.1234], co, 
-			 MB, IC, OC, IN_DIM1, G, K1, stride1, pad1)
-    #C = fbgemm.conv_int8(X)
+
+    create_pointer_array_int = tvm.get_global_func("tvm.contrib.fbgemm.create_pointer_array_int")
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, w_zp, Y_zero_point, c_mul_pt, co,
+			 MB, IC, OC, create_pointer_array_int(IN_DIM, 2), G, create_pointer_array_int(K, 2), create_pointer_array_int(stride, 2), create_pointer_array_int(pad, 4))
+    #C = fbgemm.conv_int8(X
 
     s = tvm.create_schedule(C.op)
     f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
@@ -344,7 +349,7 @@ if __name__ == "__main__":
 
 
     test_fbgemm_conv_int8()
-    """ 
+    """
     if True:
 
 
