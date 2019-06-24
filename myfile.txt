@@ -1,0 +1,13 @@
+This sentence is redirected to a file.00000 
+0. 
+0 
+0xccf8601 
+2 
+3 
+4 
+5 
+6 
+7 
+8 
+pad[0]1pad[1]1pad[2]1pad[3]1 
+9 

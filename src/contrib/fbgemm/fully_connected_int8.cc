@@ -21,7 +21,7 @@
 #include <unistd.h>
 #include <chrono>
 #include <vector>
-
+#include <array>
 
 namespace tvm {
 namespace runtime {
@@ -327,7 +327,7 @@ bool isValid(BlockingFactors *param)
 
 }
 
-TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_for_tuning")
+TVM_RhGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_for_tuning")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
       DLTensor* X = args[0];  // M*K quantized int8 input
       DLTensor* W = args[1];  // K*N quantized uint8 weight
@@ -393,6 +393,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_for_tuning")
 */
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
+      std::cout << "REACH C++";
       DLTensor* X = args[0];  // M*K quantized int8 input
       std::uint64_t wt = args[1];
       void* weight = reinterpret_cast<void*>(static_cast<uint64_t>(wt));
@@ -430,8 +431,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant")
 
       BlockingFactors params;
 
-      if(args.size() > 10) {
-        int cntr = 10;
+      if(args.size() > 11) {
+        int cntr = 11;
         params.MCB = args[cntr];
         params.NCB = args[cntr + 1];
         params.KCB = args[cntr + 2];
@@ -453,7 +454,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant")
       std::vector<TensorQuantizationParams> temp_qparams;
       temp_qparams.push_back(TensorQuantizationParams{1.0, w_zero_point});
 
-      if(args.size() > 10){
+      if(args.size() > 11){
 
         PackAWithRowOffset<std::uint8_t> packA(
             trans_param, m, k,
@@ -584,7 +585,104 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.fully_connected_int8")
     });
 */
 
-/*
+TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
+    .set_body([](TVMArgs args, TVMRetValue* ret) {
+  freopen ("myfile.txt","w",stdout);
+  printf ("This sentence is redirected to a file.");
+	        std::cout << "000";
+         DLTensor* W = args[0];
+        std::cout << "00" << " " << std::endl;
+        int spatial_dim = args[1];
+        std::cout << "0." << " " << std::endl;
+        int cntr = 2; //TODO: make changes on spatial_dim.
+        int MB = args[cntr];
+        int IC = args[cntr + 1];
+        int OC = args[cntr + 2];
+        //std::array<int, 2> IN_DIM = args[cntr + 3];
+
+        //std::uint64_t id_addr = args[cntr + 3];
+        //void* id_d = reinterpret_cast<void*>(static_cast<uint64_t>(id_addr));
+        //std::array<int, 2>* IN_DIM =
+        //reinterpret_cast<std::array<int, 2>*>(id_d);
+	std::cout << "0" << " " << std::endl;
+        DLTensor* id_addr = args[cntr + 3];
+	std::cout << id_addr;
+	int* id_pr = reinterpret_cast<int*>(id_addr->data);
+	std::cout << "1" << " " << std::endl;
+	std::array<int, 2> IN_DIM = {0, 0};
+        std::cout << "2" << " " << std::endl;
+	IN_DIM[0] = id_pr[0];
+        std::cout << "3" << " " << std::endl;
+        IN_DIM[1] = id_pr[1];	
+        std::cout << "4" << " " << std::endl;
+        int G = args[cntr + 4];
+        //std::array<int, 2> K = args[cntr + 5];
+        //std::uint64_t k_addr = args[cntr + 5];
+        //void* k_d = reinterpret_cast<void*>(static_cast<uint64_t>(k_addr));
+        //std::array<int, 2>* K =
+        //reinterpret_cast<std::array<int, 2>*>(k_d);
+        std::cout << "5" << " " << std::endl;
+        DLTensor* k_addr = args[cntr + 5];
+        int* k_pr = reinterpret_cast<int*>(k_addr->data);
+        std::array<int, 2> K = {0, 0};
+        K[0] = k_pr[0];
+        K[1] = k_pr[1];
+        std::cout << "6" << " " << std::endl;
+        //std::array<int, 2> stride = args[cntr + 6];
+        //std::uint64_t s_addr = args[cntr + 6];
+        //void* s_d = reinterpret_cast<void*>(static_cast<uint64_t>(s_addr));
+        //std::array<int, 2>* stride =
+        //reinterpret_cast<std::array<int, 2>*>(s_d);
+        DLTensor* s_addr = args[cntr + 6];
+        int* s_pr = reinterpret_cast<int*>(s_addr->data);
+        std::array<int, 2> stride = {0, 0};
+        stride[0] = s_pr[0];
+        stride[1] = s_pr[1];
+        std::cout << "7" << " " << std::endl;
+        
+        //std::array<int, 4> pad = args[cntr + 7];
+        //std::uint64_t p_addr = args[cntr + 7];
+        //void* p_d = reinterpret_cast<void*>(static_cast<uint64_t>(p_addr));
+        //std::array<int, 4>* pad =
+        //reinterpret_cast<std::array<int, 4>*>(p_d);
+        DLTensor* pad_addr = args[cntr + 7];
+        int* p_pr = reinterpret_cast<int*>(pad_addr->data);
+        std::array<int, 4> pad = {0, 0, 0, 0};
+        pad[0] = p_pr[0];
+        pad[1] = p_pr[1];
+        pad[2] = p_pr[2];
+        pad[3] = p_pr[3];
+        std::cout << "8" << " " << std::endl;
+        std::cout << "pad[0]" << pad[0] << "pad[1]" << pad[1] << "pad[2]" << pad[2] << "pad[3]" << pad[3] <<" " << std::endl;
+         //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
+        conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
+        std::cout << "9" << " " << std::endl;
+fclose (stdout);
+         BlockingFactors params;
+
+         if (args.size() > 11) {
+          int cntr = 10;
+          params.MCB = args[cntr];
+          params.NCB = args[cntr + 1];
+          params.KCB = args[cntr + 2];
+          params.MR = args[cntr + 3];
+          params.NR = args[cntr + 4];
+          params.NR_MIN = args[cntr + 5];
+          params.ROW_INTERLEAVE = args[cntr + 6];
+
+           PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data), &params);
+         //packB->printPackedMatrix("packingB"); invalid conversion from ‘int8_t* {aka signed char*}’ to ‘int’ [-fpermissive]
+          *ret = packedB;
+
+         } else {
+
+           PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data));
+          *ret = packedB;
+
+         }
+
+     });
+
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
 
@@ -623,16 +721,43 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     int MB = args[cntr];
     int IC = args[cntr + 1];
     int OC = args[cntr + 2];
-    std::array<int, 2> IN_DIM = args[cntr + 3];
+    //std::array<int, 2> IN_DIM = args[cntr + 3];
+    std::uint64_t id_addr = args[cntr + 3];
+    void* id_d = reinterpret_cast<void*>(static_cast<uint64_t>(id_addr));
+    std::array<int, 2>* IN_DIM =
+        reinterpret_cast<std::array<int, 2>*>(id_d);
     int G = args[cntr + 4];
-    std::array<int, 2> K = args[cntr + 5];
-    std::array<int, 2> stride = args[cntr + 6];
-    std::array<int, 4> pad = args[cntr + 7];
+    
+        //std::array<int, 2> K = args[cntr + 5];
+        std::uint64_t k_addr = args[cntr + 5];
+        void* k_d = reinterpret_cast<void*>(static_cast<uint64_t>(k_addr));
+        std::array<int, 2>* K =
+        reinterpret_cast<std::array<int, 2>*>(k_d);
+        
+        //std::array<int, 2> stride = args[cntr + 6];
+        std::uint64_t s_addr = args[cntr + 6];
+        void* s_d = reinterpret_cast<void*>(static_cast<uint64_t>(s_addr));
+        std::array<int, 2>* stride =
+        reinterpret_cast<std::array<int, 2>*>(s_d);
+        
+        //std::array<int, 4> pad = args[cntr + 7];
+        std::uint64_t p_addr = args[cntr + 7];
+        void* p_d = reinterpret_cast<void*>(static_cast<uint64_t>(p_addr));
+        std::array<int, 4>* pad =
+        reinterpret_cast<std::array<int, 4>*>(p_d);
+
+         //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
+        conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, *IN_DIM, G, *K, *stride, *pad);
+
+//std::array<int, 2> K = args[cntr + 5];
+    //std::array<int, 2> stride = args[cntr + 6];
+    //std::array<int, 4> pad = args[cntr + 7];
     //int nthreads = args[cntr + 8];
 
     //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
     //ISSUE 2
-    conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
+
+//    conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
 
     CHECK_EQ(conv_p.IC % conv_p.G, 0);
     CHECK_EQ(conv_p.OC % conv_p.G, 0);
@@ -688,7 +813,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
         outputProcObj,
         0,
         1);
+
     });
-*/
+
 }  // namespace contrib
 }  // namespace tvm

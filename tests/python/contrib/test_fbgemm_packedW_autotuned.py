@@ -7,6 +7,9 @@ import sys
 import logging
 import os
 
+#print(os.getpid())
+#raw_input("dummy breakpoint")
+
 QuantParams = namedtuple("QuantParams", "scale zero_point")
 
 @autotvm.template
@@ -190,8 +193,8 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val):
     #print(tvm.lower(s, [X, B, C], simple_mode=True))
     f_evaluator = f.time_evaluator(f.entry_name, ctx, 10)
     x1 = np.random.uniform(x_val - 1, x_val + 2, size=(m, k)).astype(X.dtype)
-    x = tvm.nd.array(x1.transpose(), ctx)
-    b = tvm.nd.array(np.random.uniform(b_val - 1, b_val + 2, size=(n,)).astype(B.dtype), ctx)
+    x = tvm.nd.array(x1, ctx)
+    b = tvm.nd.array(np.random.uniform(b_val, b_val + 2, size=(n,)).astype(B.dtype), ctx)
     y = tvm.nd.array(np.zeros((m, n), dtype=C.dtype), ctx)
     f(x,b,y)
 
@@ -202,10 +205,10 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val):
     print("M:{}, N:{}, K:{}".format(m,n,k))
     #print(gops_per_sec)
     print(y.asnumpy())
-    print(np.matmul(x.asnumpy(), w1) + b.asnumpy())
+    print(np.matmul(x1, w1) + b.asnumpy())
 
     tvm.testing.assert_allclose(
-           y.asnumpy(), np.matmul(x.asnumpy(), w1) + b.asnumpy(), rtol=1e-5)
+           y.asnumpy(), np.matmul(x1, w1) + b.asnumpy(), rtol=1e-5)
 
 def test_fbgemm_conv_int8():
     print("Reach here python")
@@ -219,12 +222,13 @@ def test_fbgemm_conv_int8():
     IC = 128
     OC = 128
     #IN_DIM = [56, 56]
-    IN_DIM = tvm.nd.array([56, 56], ctx)
+    IN_DIM = tvm.nd.array(np.array([56, 56]).astype("int32"), ctx)
+    print(IN_DIM.dtype)
     G = 1
-    K = tvm.nd.array([3, 3], ctx)
-    stride = tvm.nd.array([1, 1], ctx)
+    K = tvm.nd.array(np.array([3, 3]).astype("int32"), ctx)
+    stride = tvm.nd.array(np.array([1, 1]).astype("int32"), ctx)
     #pad = [1, 1, 1, 1]
-    pad = tvm.nd.array([1, 1, 1, 1], ctx)
+    pad = tvm.nd.array(np.array([1, 1, 1, 1]).astype("int32"), ctx)
     # conv_params = [1, 128, 128, [56, 56], 1, [3, 3], [1, 1], [1, 1, 1, 1]]
 
     conv_params = [MB, IC, OC, IN_DIM, G, K, stride, pad]
@@ -253,11 +257,11 @@ def test_fbgemm_conv_int8():
     # weight
     W = tvm.placeholder(W_shape, name='W', dtype="uint8")
     w = tvm.nd.array(np.random.uniform(1, 3, size=W_shape).astype(W.dtype), ctx)
-
+    print("before weight")
     # packing of weight
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
     ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
-
+    print("finish weight")
     # bias
     #B = tvm.placeholder((n,), name='B', dtype="int")
 
@@ -272,7 +276,7 @@ def test_fbgemm_conv_int8():
 
     # column offset
     get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
-    co = get_co_offsets(w, W_zero_point, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
+    co = get_co_offsets(w, W_zero_point, spatial_dim, MB, IC, OC, IN_DIM1, G, K1, stride1, pad1)
 
 
     # ReQuant Multiplier
@@ -336,8 +340,8 @@ if __name__ == "__main__":
         [1,    128,    2722])
 
 
-    #test_fbgemm_conv_int8()
-    
+    test_fbgemm_conv_int8()
+    """ 
     if True:
 
 
@@ -365,7 +369,6 @@ if __name__ == "__main__":
 	 for shape in shapes:
 		for value in values:
 			c = shape + value
-			print(c)
 			comb.append(c)
 
          for c in comb:
@@ -395,4 +398,4 @@ if __name__ == "__main__":
               tuner.tune(n_trial=150,
                          measure_option=measure_option,
                          callbacks=[autotvm.callback.log_to_file(log_file_name)])
-    
+    """

@@ -180,6 +180,10 @@ class FunctionBase(object):
         values, tcodes, num_args = _make_tvm_args(args, temp_args)
         ret_val = TVMValue()
         ret_tcode = ctypes.c_int()
+
+        #if _LIB.TVMFuncCall(self.handle, values, tcodes, ctypes.c_int(num_args),
+        #ctypes.byref(ret_val), ctypes.byref(ret_tcode)) != 0:
+	#		print("ignore")
         check_call(_LIB.TVMFuncCall(
             self.handle, values, tcodes, ctypes.c_int(num_args),
             ctypes.byref(ret_val), ctypes.byref(ret_tcode)))
