@@ -255,8 +255,8 @@ def test_fbgemm_conv_int8():
     Y_shape = (MB, OUT_DIM[0], OUT_DIM[1], OC) #NHWK
 
     # weight
-    W = tvm.placeholder(W_shape, name='W', dtype="uint8")
-    w = tvm.nd.array(np.random.uniform(1, 3, size=W_shape).astype(W.dtype), ctx)
+    W = tvm.placeholder(W_shape, name='W', dtype="int8")
+    w = tvm.nd.array(np.random.uniform(1, 2, size=W_shape).astype(W.dtype), ctx)
     print("before weight")
     # packing of weight
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
@@ -270,20 +270,23 @@ def test_fbgemm_conv_int8():
 
     # quantization parameters will be got from Operator arguments
     X_zero_point = 4
-    W_zero_point = tvm.nd.array([1], ctx)
+    W_zero_point = tvm.nd.array(np.array([1]).astype("int32"), ctx)
+    #W_zero_point = [1]
     Y_zero_point = 5
 
 
     # column offset
     get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
-    co = get_co_offsets(w, W_zero_point, spatial_dim, MB, IC, OC, IN_DIM1, G, K1, stride1, pad1)
+    co = get_co_offsets(w, W_zero_point, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
 
 
     # ReQuant Multiplier
     #C_multiplier = np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,))
-    C_multiplier = tvm.nd.array([0.1234], ctx)
-    # formula for calculation
-    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W_zero_point, Y_zero_point, C_multiplier, conv_params, co)
+    C_multiplier = tvm.nd.array(np.array([0.1234]).astype("float"), ctx)
+    #C_multiplier = [0.1234] 
+# formula for calculation
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W_zero_point, Y_zero_point, C_multiplier, co, 
+			 MB, IC, OC, IN_DIM, G, K, stride, pad)
     #C = fbgemm.conv_int8(X)
 
     s = tvm.create_schedule(C.op)
@@ -291,10 +294,10 @@ def test_fbgemm_conv_int8():
 
     # applying the formula
     #x = tvm.nd.array(np.random.uniform(1, 3, size=input_shape).astype(X.dtype), ctx)
-    x = tvm.nd.array(np.random.uniform(1, 3, size=(2, 3)).astype(X.dtype), ctx)
+    x = tvm.nd.array(np.random.uniform(1, 3, size=input_shape).astype(X.dtype), ctx)
     #b = tvm.nd.array(np.random.uniform(b_val - 1, b_val + 2, size=(n,)).astype(B.dtype), ctx)
     #y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
-    y = tvm.nd.array(np.zeros((2, 3), dtype=C.dtype), ctx)
+    y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
 
     f(x,y)
 
