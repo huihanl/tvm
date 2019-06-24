@@ -285,8 +285,8 @@ def test_fbgemm_conv_int8():
     C_multiplier = tvm.nd.array(np.array([0.1234]).astype("float"), ctx)
     #C_multiplier = [0.1234] 
 # formula for calculation
-    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W_zero_point, Y_zero_point, C_multiplier, co, 
-			 MB, IC, OC, IN_DIM, G, K, stride, pad)
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, [1], Y_zero_point, [0.1234], co, 
+			 MB, IC, OC, IN_DIM1, G, K1, stride1, pad1)
     #C = fbgemm.conv_int8(X)
 
     s = tvm.create_schedule(C.op)

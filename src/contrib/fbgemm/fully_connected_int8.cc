@@ -905,10 +905,10 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
         reinterpret_cast<aligned_vector<int32_t>*>(zp);
 */
 
-         DLTensor* zp_addr = args[4];
-         int* zp_pr = reinterpret_cast<int*>(zp_addr->data);
-         std::vector<int32_t> Bint8_zero_point = {0};
-         Bint8_zero_point[0] = zp_pr[0];
+    //     DLTensor* zp_addr = args[4];
+    //     int* zp_pr = reinterpret_cast<int*>(zp_addr->data);
+         std::vector<int32_t> Bint8_zero_point = {1};
+    //     Bint8_zero_point[0] = zp_pr[0];
  
 
     std::int32_t C_zero_point = args[5];
@@ -916,13 +916,13 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     //aligned_vector<float> C_multiplier = ;
     //reinterpret_cast<std::vector<float>*>(args[6])
 
-    DLTensor* mul_addr = args[6];
-   // void* mula = reinterpret_cast<void*>(static_cast<uint64_t>(mul_addr));
-   // aligned_vector<float>* C_multiplier =
-   //     reinterpret_cast<aligned_vector<float>*>(mula);
-          float* mul_pr = reinterpret_cast<float*>(mul_addr->data);
-           std::vector<float> C_multiplier = {0.0};
-           C_multiplier[0] = mul_pr[0];
+    std::uint64_t mul_addr = args[6];
+    void* mula = reinterpret_cast<void*>(static_cast<uint64_t>(mul_addr));
+    aligned_vector<float>* C_multiplier =
+        reinterpret_cast<aligned_vector<float>*>(mula);
+         // float* mul_pr = reinterpret_cast<float*>(mul_addr->data);
+          // std::vector<float> C_multiplier = {0.0};
+           //C_multiplier[0] = mul_pr[0];
 
     std::uint64_t co_addr = args[7];
     void* co = reinterpret_cast<void*>(static_cast<uint64_t>(co_addr));
@@ -934,7 +934,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     int IC = args[cntr + 1];
     int OC = args[cntr + 2];
     //std::array<int, 2> IN_DIM = args[cntr + 3];
-    /*std::uint64_t id_addr = args[cntr + 3];
+    std::uint64_t id_addr = args[cntr + 3];
     void* id_d = reinterpret_cast<void*>(static_cast<uint64_t>(id_addr));
     std::array<int, 2>* IN_DIM =
         reinterpret_cast<std::array<int, 2>*>(id_d);
@@ -957,7 +957,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
         void* p_d = reinterpret_cast<void*>(static_cast<uint64_t>(p_addr));
         std::array<int, 4>* pad =
         reinterpret_cast<std::array<int, 4>*>(p_d);
-*/
+/*
         std::cout << "0" << " " << std::endl;
         DLTensor* id_addr = args[cntr + 3];
         std::cout << id_addr;
@@ -1013,7 +1013,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
         std::cout << "8" << " " << std::endl;
         std::cout << "pad[0]" << pad[0] << "pad[1]" << pad[1] << "pad[2]" << pad[2] << "pad[3]" << pad[3] <<" " << std::endl;
          //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
-        conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
+*/
+        conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, *IN_DIM, G, *K, *stride, *pad);
 
 //std::array<int, 2> K = args[cntr + 5];
     //std::array<int, 2> stride = args[cntr + 6];
@@ -1059,7 +1060,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
         doNothingObj,
         //C_multiplier.data(),
-        C_multiplier.data(),
+        C_multiplier->data(),
         C_zero_point,
         Aint8_zero_point,
         //Bint8_zero_point.data(),
