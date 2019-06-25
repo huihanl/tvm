@@ -289,9 +289,8 @@ def test_fbgemm_conv_int8():
     #C_multiplier = [0.1234]
 # formula for calculation
 
-    create_pointer_array_int = tvm.get_global_func("tvm.contrib.fbgemm.create_pointer_array_int")
     C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, w_zp, Y_zero_point, c_mul_pt, co,
-			 MB, IC, OC, create_pointer_array_int(IN_DIM, 2), G, create_pointer_array_int(K, 2), create_pointer_array_int(stride, 2), create_pointer_array_int(pad, 4))
+			 MB, IC, OC, create_pointer_vector_int(IN_DIM, 2), G, create_pointer_vector_int(K, 2), create_pointer_vector_int(stride, 2), create_pointer_vector_int(pad, 4))
     #C = fbgemm.conv_int8(X
 
     s = tvm.create_schedule(C.op)
