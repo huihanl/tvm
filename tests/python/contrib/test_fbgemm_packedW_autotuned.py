@@ -175,7 +175,7 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val, A_tran
     ww = my_packedw(w, 1, W_trans)
 
     get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8")
-    co = get_co_offsets(w, 1, 1, False)
+    co = get_co_offsets(w, 1, 1, W_trans)
 
     if A_trans:
         X = tvm.placeholder((k, m), name='X', dtype="int8")
@@ -365,8 +365,8 @@ if __name__ == "__main__":
         [1,    128,    2722])
 
 
-    #test_fbgemm_conv_int8()
-    #"""
+    test_fbgemm_conv_int8()
+    """
     if True:
 
 
@@ -426,4 +426,4 @@ if __name__ == "__main__":
               tuner.tune(n_trial=150,
                          measure_option=measure_option,
                          callbacks=[autotvm.callback.log_to_file(log_file_name)])
-    #"""
+    """

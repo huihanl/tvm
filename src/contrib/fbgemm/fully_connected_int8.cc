@@ -865,6 +865,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
 
     conv_param_t<2> conv_p(MB, IC, OC, IN_DIM, G, K, stride, pad);
 
+    //conv_param_t<2> conv_p(1, 4, 4, {5, 5}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
+
     CHECK_EQ(conv_p.IC % conv_p.G, 0);
     CHECK_EQ(conv_p.OC % conv_p.G, 0);
 
@@ -873,6 +875,9 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
 
     int im_out_dim = accumulate(
         conv_p.OUT_DIM.begin(), conv_p.OUT_DIM.end(), 1, multiplies<int>());
+
+    int im_dim = accumulate(
+        conv_p.IN_DIM.begin(), conv_p.IN_DIM.end(), 1, multiplies<int>());
 
     int KDim = kernel_dim * conv_p.IC;
     int KDimPerGroup = KDim / conv_p.G;
@@ -906,8 +911,12 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
         outputProcObj,
         0,
         1);
+
+for (int i = 0; i < conv_p.MB * im_dim * conv_p.IC; i++) {
+std::cout << static_cast<int64_t>(reinterpret_cast<std::uint8_t*>(A->data)[i]) << " ";}
+
 for (int i = 0; i < conv_p.MB * im_out_dim * conv_p.OC; i++) {
-std::cout << Y_int32_->data()[i] << " ";}
+std::cout << static_cast<int64_t>(reinterpret_cast<std::uint8_t*>(Y->data)[i]) << " ";}
     });
 
 }  // namespace contrib
