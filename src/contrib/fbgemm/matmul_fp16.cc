@@ -26,9 +26,9 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.matmul_fp16")
     DLTensor* B = args[1];
     DLTensor* C = args[2];
 
-    CHECK_EQ(A->ndim, 2);
-    CHECK_EQ(B->ndim, 2);
-    CHECK_EQ(A->shape[1], B->shape[0]);
+    //CHECK_EQ(A->ndim, 2);
+    //CHECK_EQ(B->ndim, 2);
+    //CHECK_EQ(A->shape[1], B->shape[0]);
 
     int m = A->shape[0];
     int n = B->shape[1];
@@ -42,7 +42,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.matmul_fp16")
     Bint.assign(static_cast<int*>(B->data), static_cast<int*>(B->data) + k*n);
     aligned_vector<float> A_in(Aint.begin(), Aint.end());
     aligned_vector<float> B_in(Bint.begin(), Bint.end());
-		
+
     aligned_vector<float> C_in(m * n, NAN);
     // fbgemm fp16
     PackedGemmMatrixFP16 Bp(matrix_op_t::NoTranspose, k, n, alpha, B_in.data());

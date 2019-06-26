@@ -172,7 +172,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8")
       DLTensor* W = args[0];
       int threads = args[1];
 
-      CHECK_EQ(W->ndim, 2);
+      //CHECK_EQ(W->ndim, 2);
 
       int k = W->shape[0];
       int n = W->shape[1];
@@ -393,7 +393,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_for_tuning")
 */
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
-      std::cout << "REACH C++";
       DLTensor* X = args[0];  // M*K quantized int8 input
       std::uint64_t wt = args[1];
       void* weight = reinterpret_cast<void*>(static_cast<uint64_t>(wt));
@@ -404,11 +403,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant")
       DLTensor* Y = args[3];
       bool trans = args[9];
       int threads = args[10];
-      //CHECK_EQ(X->ndim, 2);
-      //CHECK_EQ(W->ndim, 2);
-      //CHECK_EQ(B->ndim, 1);
-      //CHECK_EQ(X->shape[1], W->shape[1]);
-      //CHECK_EQ(W->shape[0], B->shape[0]);
 
       float ReQuant_multiplier = (double)args[7];
       std::int32_t x_zero_point = args[4];
@@ -422,12 +416,11 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant")
 
       matrix_op_t trans_param = matrix_op_t::NoTranspose;
       if (trans) {
-	m = X->shape[1];
-	k = X->shape[0];
-	trans_param = matrix_op_t::Transpose;
-	ld = m;
+      	m = X->shape[1];
+      	k = X->shape[0];
+      	trans_param = matrix_op_t::Transpose;
+      	ld = m;
       }
-
 
       BlockingFactors params;
 
@@ -500,7 +493,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.fully_connected_int8")
       // ignore the axis and axis_w now for testing purpose
       DLTensor* Y = args[3];
       int threads = args[8];
-      CHECK_EQ(B->ndim, 1);
+      //CHECK_EQ(B->ndim, 1);
       //CHECK_EQ(X->shape[1], W->shape[1]);
       //CHECK_EQ(W->shape[0], B->shape[0]);
 
