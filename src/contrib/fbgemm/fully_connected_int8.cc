@@ -617,15 +617,6 @@ void col_offsets_with_zero_pt_s8acc32_ref(
      int32_t* col_offsets,
      int ncols_per_quant_group) {
 
-         std::cout << "K=" << K << " " << std::endl;
-         std::cout << "N=" << N << " " << std::endl;
-         std::cout << "ld=" << ld << " " << std::endl;
-         std::cout << "ncols_per_quant_group=" << ncols_per_quant_group << " " << std::endl;
-
-
-
-
-         std::cout << "START" << " " << std::endl;
    for (int j = 0; j < N; ++j) {
          std::cout << "j=" << j << " " << std::endl;
      int32_t sum = 0;
@@ -634,14 +625,7 @@ void col_offsets_with_zero_pt_s8acc32_ref(
        sum += Bint8[k * ld + j];
  //        std::cout << "sum=" << sum << " " << std::endl;
      }
-
-
-         std::cout << "AFTER K LOOP, sum=" << sum << " " << std::endl;
-         std::cout << "B_zero_point[0] * K=" << B_zero_point[0] * K << " " << std::endl;
-
-
      col_offsets[j] = sum - B_zero_point[0] * K;
-         std::cout << "col_offsets[j]=" << col_offsets[j] << " " << std::endl;
    }
  }
 
@@ -655,9 +639,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
         DLTensor* zp_addr = args[1];
         std::cout << zp_addr;
         int* zp_pr = reinterpret_cast<int*>(zp_addr->data);
-        std::cout << "1" << " " << std::endl;
         std::vector<int32_t> Bint8_zero_point = {0};
-        std::cout << "2" << " " << std::endl;
         Bint8_zero_point[0] = zp_pr[0];
 
       //std::uint64_t zp_addr = args[1];
@@ -671,38 +653,26 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
       int IC = args[cntr + 1];
       int OC = args[cntr + 2];
         DLTensor* id_addr = args[cntr + 3];
-        std::cout << id_addr;
         int* id_pr = reinterpret_cast<int*>(id_addr->data);
-        std::cout << "1" << " " << std::endl;
         std::array<int, 2> IN_DIM = {0, 0};
-        std::cout << "2" << " " << std::endl;
         IN_DIM[0] = id_pr[0];
-        std::cout << "3" << " " << std::endl;
         IN_DIM[1] = id_pr[1];
-        std::cout << "4" << " " << std::endl;
-        std::cout << "IN_DIM[0]" << IN_DIM[0] << "IN_DIM[1]" << IN_DIM[1] << " " << std::endl;
         int G = args[cntr + 4];
-        std::cout << "G=" << G << std::endl;
         //std::array<int, 2> K = args[cntr + 5];
         //std::uint64_t k_addr = args[cntr + 5];
         //void* k_d = reinterpret_cast<void*>(static_cast<uint64_t>(k_addr));
         //std::array<int, 2>* K =
         //reinterpret_cast<std::array<int, 2>*>(k_d);
-        std::cout << "5" << " " << std::endl;
         DLTensor* k_addr = args[cntr + 5];
         int* k_pr = reinterpret_cast<int*>(k_addr->data);
         std::array<int, 2> K = {0, 0};
         K[0] = k_pr[0];
         K[1] = k_pr[1];
-        std::cout << "K[0]" << K[0] << "K[1]" << K[1] << " " << std::endl;
-        std::cout << "6" << " " << std::endl;
         DLTensor* s_addr = args[cntr + 6];
         int* s_pr = reinterpret_cast<int*>(s_addr->data);
         std::array<int, 2> stride = {0, 0};
         stride[0] = s_pr[0];
         stride[1] = s_pr[1];
-        std::cout << "stride[0]" << stride[0] << "stride[1]" << stride[1] << " " << std::endl;
-        std::cout << "7" << " " << std::endl;
 
         //std::array<int, 4> pad = args[cntr + 7];
         //std::uint64_t p_addr = args[cntr + 7];
@@ -716,11 +686,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
         pad[1] = p_pr[1];
         pad[2] = p_pr[2];
         pad[3] = p_pr[3];
-        std::cout << "8" << " " << std::endl;
-        std::cout << "pad[0]" << pad[0] << "pad[1]" << pad[1] << "pad[2]" << pad[2] << "pad[3]" << pad[3] <<" " << std::endl;
          //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
         conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
-        std::cout << "9" << " " << std::endl;
 //      std::array<int, 2> IN_DIM = args[cntr + 3];
 //      int G = args[cntr + 4];
 //      std::array<int, 2> K = args[cntr + 5];
@@ -734,10 +701,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
       int KDim = kernel_dim * conv_p.IC;
       int KDimPerGroup = KDim / conv_p.G;
       int OC_per_G = conv_p.OC / conv_p.G;
-         std::cout << "kernel_dim=" << kernel_dim << " " << std::endl;
-         std::cout << "KDim=" << KDim << " " << std::endl;
-         std::cout << "KDimPerGroup=" << KDimPerGroup << " " << std::endl;
-         std::cout << "OC_per_G=" << OC_per_G << " " << std::endl;
 
 
 
@@ -754,31 +717,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
             col_offsets->data(),
             conv_p.OC);
       *ret = col_offsets;
-
-     });
-/*
- void col_offsets_with_zero_pt_s8acc32_ref(
-     int K,
-     int N,
-     int ld,
-     const int8_t* Bint8,
-     const int32_t* B_zero_point,
-     int32_t* col_offsets,
-     int ncols_per_quant_group) {
-         std::cout << "START" << " " << std::endl;
-   for (int j = 0; j < N; ++j) {
-         std::cout << "j=" << j << " " << std::endl;
-     int32_t sum = 0;
-     for (int k = 0; k < K; ++k) {
-         std::cout << "k=" << k << " " << std::endl;
-       sum += Bint8[k * ld + j];
-         std::cout << "sum=" << sum << " " << std::endl;
-     }
-     col_offsets[j] = sum - B_zero_point[0] * K;
-         std::cout << "col_offsets[j]=" << col_offsets[j] << " " << std::endl;
-   }
- }
-*/
+});
 
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.create_pointer_vector_int")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
@@ -806,43 +745,13 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.create_pointer_vector_float")
     *ret = vec;
 
 });
-/*
-TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.create_pointer_array_int_2")
-    .set_body([](TVMArgs args, TVMRetValue* ret) {
-      DLTensor* A = args[0];
-    int size = args[1];
-      std::array<int, 2> arr;
-    int* X = reinterpret_cast<int*>(A->data);
-      for (int i = 0; i < size; ++i) {
-        arr[i] = X[i];
-      }
-      *ret = arr;
-
-});
-
-TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.create_pointer_array_int_4")
-    .set_body([](TVMArgs args, TVMRetValue* ret) {
-      DLTensor* A = args[0]; 
-    int size = args[1];
-      std::array<int, 4> arr;
-    int* X = reinterpret_cast<int*>(A->data);
-      for (int i = 0; i < size; ++i) {
-        arr[i] = X[i];
-      } 
-      *ret = arr;
-      
-});
-*/
 
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
   //freopen ("myfile.txt","w",stdout);
  // printf ("This sentence is redirected to a file.");
-	        std::cout << "000";
          DLTensor* W = args[0];
-        std::cout << "00" << " " << std::endl;
         int spatial_dim = args[1];
-        std::cout << "0." << " " << std::endl;
         int cntr = 2; //TODO: make changes on spatial_dim.
         int MB = args[cntr];
         int IC = args[cntr + 1];
@@ -853,33 +762,22 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
         //void* id_d = reinterpret_cast<void*>(static_cast<uint64_t>(id_addr));
         //std::array<int, 2>* IN_DIM =
         //reinterpret_cast<std::array<int, 2>*>(id_d);
-	std::cout << "0" << " " << std::endl;
         DLTensor* id_addr = args[cntr + 3];
-	std::cout << id_addr;
 	int* id_pr = reinterpret_cast<int*>(id_addr->data);
-	std::cout << "1" << " " << std::endl;
 	std::array<int, 2> IN_DIM = {0, 0};
-        std::cout << "2" << " " << std::endl;
 	IN_DIM[0] = id_pr[0];
-        std::cout << "3" << " " << std::endl;
         IN_DIM[1] = id_pr[1];
-        std::cout << "4" << " " << std::endl;
-        std::cout << "IN_DIM[0]" << IN_DIM[0] << "IN_DIM[1]" << IN_DIM[1] << " " << std::endl;
         int G = args[cntr + 4];
-        std::cout << "G=" << G << std::endl;
         //std::array<int, 2> K = args[cntr + 5];
         //std::uint64_t k_addr = args[cntr + 5];
         //void* k_d = reinterpret_cast<void*>(static_cast<uint64_t>(k_addr));
         //std::array<int, 2>* K =
         //reinterpret_cast<std::array<int, 2>*>(k_d);
-        std::cout << "5" << " " << std::endl;
         DLTensor* k_addr = args[cntr + 5];
         int* k_pr = reinterpret_cast<int*>(k_addr->data);
         std::array<int, 2> K = {0, 0};
         K[0] = k_pr[0];
         K[1] = k_pr[1];
-        std::cout << "K[0]" << K[0] << "K[1]" << K[1] << " " << std::endl;
-        std::cout << "6" << " " << std::endl;
         //std::array<int, 2> stride = args[cntr + 6];
         //std::uint64_t s_addr = args[cntr + 6];
         //void* s_d = reinterpret_cast<void*>(static_cast<uint64_t>(s_addr));
@@ -890,8 +788,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
         std::array<int, 2> stride = {0, 0};
         stride[0] = s_pr[0];
         stride[1] = s_pr[1];
-        std::cout << "stride[0]" << stride[0] << "stride[1]" << stride[1] << " " << std::endl;
-        std::cout << "7" << " " << std::endl;
 
         //std::array<int, 4> pad = args[cntr + 7];
         //std::uint64_t p_addr = args[cntr + 7];
@@ -905,15 +801,11 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
         pad[1] = p_pr[1];
         pad[2] = p_pr[2];
         pad[3] = p_pr[3];
-        std::cout << "8" << " " << std::endl;
-        std::cout << "pad[0]" << pad[0] << "pad[1]" << pad[1] << "pad[2]" << pad[2] << "pad[3]" << pad[3] <<" " << std::endl;
          //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
         conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
-        std::cout << "9" << " " << std::endl;
          BlockingFactors params;
 
          if (args.size() > 11) {
-       std::cout << "REACH > 11" << " " << std::endl;
           int cntr = 10;
           params.MCB = args[cntr];
           params.NCB = args[cntr + 1];
@@ -925,16 +817,23 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
 
            PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data), &params);
          //packB->printPackedMatrix("packingB"); invalid conversion from ‘int8_t* {aka signed char*}’ to ‘int’ [-fpermissive]
+      PackBMatrix<std::int8_t, std::int32_t> B_Ptr = *(packedB.getPackedWForIm2col());
+std::cout << "11111111111111";      
+B_Ptr.printPackedMatrix("B"); 
           *ret = &packedB;
 
          } else {
 
-       std::cout << "10" << " " << std::endl;
    PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data));
-//std::cout << packedB->data() << " " << std::endl;
-       std::cout << "11" << " " << std::endl;
+      //  std::cout << "AAA" << " " << std::endl;
+     //packedB.getPackedWForIm2col()->printPackedMatrix("B");
+       // std::cout << "BBB" << " " << std::endl;
+      PackBMatrix<std::int8_t, std::int32_t> B_Ptr = *(packedB.getPackedWForIm2col());
+std::cout << "11111111111111";
+B_Ptr.printPackedMatrix("B");
           *ret = &packedB;
-       std::cout << "12" << " " << std::endl;
+        //std::cout << "DDD" << " " << std::endl;
+
          }
 //fclose (stdout);
      });
@@ -995,7 +894,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     std::array<int, 2> IN_DIM;
     IN_DIM[0] = IN_DIM_v->data()[0];
     IN_DIM[1] = IN_DIM_v->data()[1];
-
+std::cout << "IN_DIM[0]" << IN_DIM[0] << "IN_DIM[1]" << IN_DIM[1] << " " << std::endl;
     int G = args[cntr + 4];
 
     //std::array<int, 2> K = args[cntr + 5];
@@ -1006,6 +905,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     std::array<int, 2> K;
     K[0] = K_v->data()[0];
     K[1] = K_v->data()[1];
+         std::cout << "K[0]" << K[0] << "K[1]" << K[1] << " " << std::endl;
     //std::array<int, 2>* K =
     //reinterpret_cast<std::array<int, 2>*>(k_d);
 
@@ -1017,6 +917,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     std::array<int, 2> stride;
     stride[0] = stride_v->data()[0];
     stride[1] = stride_v->data()[1];
+std::cout << "stride[0]" << stride[0] << "stride[1]" << stride[1] << " " << std::endl;
     //std::array<int, 2>* stride =
     //reinterpret_cast<std::array<int, 2>*>(s_d);
 
@@ -1032,6 +933,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     pad[1] = p_v->data()[1];
     pad[2] = p_v->data()[2];
     pad[3] = p_v->data()[3];
+std::cout << "pad[0]" << pad[0] << "pad[1]" << pad[1] << "pad[2]" << pad[2] << "pad[3]" << pad[3]      <<" " << std::endl;
 /*
         std::cout << "0" << " " << std::endl;
         DLTensor* id_addr = args[cntr + 3];
@@ -1128,7 +1030,10 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     int KDimPerGroup = KDim / conv_p.G;
     int OC_per_G = conv_p.OC / conv_p.G;
 
-    std::vector<std::int32_t> Y_int32_(conv_p.MB * im_out_dim * conv_p.OC);
+    std::vector<std::int32_t>* Y_int32_ = new std::vector<int32_t>;
+    Y_int32_->reserve(conv_p.MB * im_out_dim * conv_p.OC);
+
+std::cout << "REACH HERE 1" << std::endl;
 
     // no-op output process objects
     DoNothing<> doNothingObj{};
@@ -1141,21 +1046,23 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
         //Bint8_zero_point.data(),
         Bint8_zero_point->data(),
         nullptr, // row offsets
-        (*column_offsets_).data(),
+        column_offsets_->data(),
         nullptr, // bias
         conv_p.OC,
         conv_p.G);
+
+std::cout << "REACH HERE 2" << std::endl;
 
     fbgemmConv(
         conv_p,
         reinterpret_cast<const std::uint8_t*>(A->data),
         *packedB,
         reinterpret_cast<std::uint8_t*>(Y->data),
-        Y_int32_.data(),
+        Y_int32_->data(),
         outputProcObj,
         0,
         1);
-
+std::cout << "REACH HERE 3" << std::endl;
     });
 
 }  // namespace contrib

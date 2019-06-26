@@ -1,0 +1,632 @@
+Reach here python
+00000 
+0. 
+0 
+0xc82c401 
+2 
+3 
+4 
+IN_DIM[0]56IN_DIM[1]56 
+G=1
+5 
+K[0]3K[1]3 
+6 
+stride[0]1stride[1]1 
+7 
+8 
+pad[0]1pad[1]1pad[2]1pad[3]1 
+9 
+10 
+11 
+12 
+finish weight
+finish w zero point pointer
+0x6947a01 
+2 
+0xc82c401 
+2 
+3 
+4 
+IN_DIM[0]56IN_DIM[1]56 
+G=1
+5 
+K[0]3K[1]3 
+6 
+stride[0]1stride[1]1 
+7 
+8 
+pad[0]1pad[1]1pad[2]1pad[3]1 
+9 
+kernel_dim=9 
+KDim=1152 
+KDimPerGroup=1152 
+OC_per_G=128 
+K=1152 
+N=128 
+ld=128 
+ncols_per_quant_group=128 
+START 
+j=0 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=1 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=2 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=3 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=4 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=5 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=6 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=7 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=8 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=9 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=10 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=11 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=12 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=13 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=14 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=15 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=16 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=17 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=18 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=19 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=20 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=21 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=22 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=23 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=24 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+=25 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=26 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=27 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=28 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=29 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=30 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=31 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=32 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=33 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=34 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=35 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=36 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=37 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=38 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=39 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=40 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=41 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=42 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=43 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=44 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=45 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=46 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=47 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=48 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=49 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=50 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=51 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=52 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=53 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=54 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=55 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=56 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=57 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=58 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=59 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=60 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=61 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=62 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=63 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=64 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=65 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=66 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=67 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=68 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=69 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=70 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=71 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=72 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=73 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=74 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=75 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=76 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=77 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=78 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=79 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=80 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=81 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=82 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=83 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=84 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=85 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=86 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=87 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=88 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=89 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=90 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=91 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=92 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=93 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=94 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=95 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=96 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=97 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=98 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=99 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=100 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=101 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=102 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=103 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=104 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=105 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=106 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=107 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=108 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=109 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=110 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=111 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=112 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=113 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=114 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=115 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=116 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=117 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=118 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=119 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=120 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=121 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=122 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=123 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=124 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=125 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=126 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+j=127 
+AFTER K LOOP, sum=1152 
+B_zero_point[0] * K=1152 
+col_offsets[j]=0 
+finish column offset
+finish c_multiplier pointer
+finish in_dim_v
+finish k_v
+finish stride_v
+finish pad_v
+IN_DIM[0]56IN_DIM[1]56 
+K[0]3K[1]3 
+stride[0]1stride[1]1 
+pad[0]1pad[1]1pad[2]1pad[3]1 
+REACH HERE 1
+REACH HERE 2
+im2col 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+0 
+1 
+FINISH PackAWithIm2Col 
+FINISH outProcess.setRowOffsets 
