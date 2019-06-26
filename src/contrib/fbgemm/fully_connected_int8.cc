@@ -726,10 +726,10 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.create_pointer_vector_float")
 
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
-      int kernel_dim_2d = 9;
-      aligned_vector<int8_t> Bint8(9 * 4 * 4);
-      randFill<int8_t>(Bint8, 1, 4);
-      //DLTensor* W = args[0];
+      //int kernel_dim_2d = 9;
+      //aligned_vector<int8_t> Bint8(9 * 4 * 4);
+      //randFill<int8_t>(Bint8, 1, 4);
+      DLTensor* W = args[0];
         /*
 	int spatial_dim = args[1];
         int cntr = 2;
@@ -870,7 +870,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     pad[2] = p_v->data()[2];
     pad[3] = p_v->data()[3];
 
-    conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
+    conv_param_t<2> conv_p(MB, IC, OC, IN_DIM, G, K, stride, pad);
 
     CHECK_EQ(conv_p.IC % conv_p.G, 0);
     CHECK_EQ(conv_p.OC % conv_p.G, 0);
@@ -913,6 +913,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
         outputProcObj,
         0,
         1);
+for (int i = 0; i < conv_p.MB * im_out_dim * conv_p.OC; i++) {
+std::cout << Y_int32_->data()[i] << " ";}
     });
 
 }  // namespace contrib

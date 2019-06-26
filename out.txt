@@ -5,7 +5,7 @@ Reach here python
 begin weight
 finish weight
 finish w zero point pointer
-0xcd9e60j=0 
+0x6a6ff0j=0 
 j=1 
 j=2 
 j=3 
@@ -19,29 +19,34 @@ im2col
 1 
 FINISH PackAWithIm2Col 
 FINISH outProcess.setRowOffsets 
-Traceback (most recent call last):
-  File "tests/python/contrib/test_fbgemm_packedW_autotuned.py", line 359, in <module>
-    test_fbgemm_conv_int8()
-  File "tests/python/contrib/test_fbgemm_packedW_autotuned.py", line 315, in test_fbgemm_conv_int8
-    f(x,y)
-  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/_ffi/function.py", line 128, in __call__
-    return f(*args)
-  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/_ffi/_ctypes/function.py", line 189, in __call__
-    ctypes.byref(ret_val), ctypes.byref(ret_tcode)))
-  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/_ffi/base.py", line 72, in check_call
-    raise TVMError(py_str(_LIB.TVMGetLastError()))
-tvm._ffi.base.TVMError: [22:54:29] /root/huihan/tvm-hhl/src/runtime/module_util.cc:53: Check failed: ret == 0 (-1 vs. 0) A.groups = 1 and B.groups = 39 are not the same
+FINISH fbgemmPacked 
+FINISH fbgemmPacked!!! 
+-341771960 32756 13922896 0 -822113380 32756 3 0 14446336 0 24 0 64 32756 13994768 0 0 0 64 0 13774088 0 14390088 0 14390088 0 16 0 0 32756 13726976 0 -822042788 32756 13929616 0 -822105760 32756 13924144 0 14390144 0 0 0 0 0 0 0 0 0 0 99986 144 0 193 0 13926880 0 13995200 0 32 0 14390248 0 14390248 0 16 0 0 32756 13721600 0 -822101088 32756 13726976 0 -822042788 32756 13929616 0 -822105760 32756 13923920 0 96 0 32 0 14359472 0 0 0 0 0 33 0 14486480 0 14446320 0 [[[[0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]]
 
-Stack trace returned 10 entries:
-[bt] (0) /root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(dmlc::StackTrace(unsigned long)+0x1d6) [0x7fddfae60cf6]
-[bt] (1) /root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(+0x10a7d94) [0x7fddfb4e9d94]
-[bt] (2) /root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(TVMFuncCall+0x48) [0x7fddfb4d66a8]
-[bt] (3) /lib64/libffi.so.6(ffi_call_unix64+0x4c) [0x7fde145f7dcc]
-[bt] (4) /lib64/libffi.so.6(ffi_call+0x1f5) [0x7fde145f76f5]
-[bt] (5) /root/huihan/venv/lib64/python2.7/lib-dynload/_ctypes.so(_ctypes_callproc+0x30b) [0x7fde1480abeb]
-[bt] (6) /root/huihan/venv/lib64/python2.7/lib-dynload/_ctypes.so(+0xa9e5) [0x7fde148049e5]
-[bt] (7) /lib64/libpython2.7.so.1.0(PyObject_Call+0x43) [0x7fde1bcfea63]
-[bt] (8) /lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x2336) [0x7fde1bd93236]
-[bt] (9) /lib64/libpython2.7.so.1.0(PyEval_EvalCodeEx+0x7ed) [0x7fde1bd9a03d]
+  [[0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]]
 
+  [[0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]]
 
+  [[0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]]
+
+  [[0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]
+   [0 0 0 0]]]]
