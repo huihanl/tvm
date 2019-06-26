@@ -726,7 +726,10 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.create_pointer_vector_float")
 
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
-        DLTensor* W = args[0];
+      int kernel_dim_2d = 9;
+      aligned_vector<int8_t> Bint8(9 * 4 * 4);
+      randFill<int8_t>(Bint8, 1, 4);
+        //DLTensor* W = args[0];
         /*
 	int spatial_dim = args[1];
         int cntr = 2;
@@ -781,11 +784,12 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
         *ret = &packedB;
 
         } else {
-
-        PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data));
+        PackWeightsForConv<2> packedB(conv_p, Bint8.data());
+        PackWeightsForConv<2>* packedB_ptr = packedB;
+        //PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data));
         //PackBMatrix<std::int8_t, std::int32_t> B_Ptr = *(packedB.getPackedWForIm2col());
         //B_Ptr.printPackedMatrix("B");
-        *ret = &packedB;
+        *ret = packedB_ptr;
         }
      });
 
