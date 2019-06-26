@@ -163,20 +163,24 @@ def fbgemm_packed_weights(m, n, k):
     tvm.testing.assert_allclose(
            y.asnumpy(), np.matmul(x.asnumpy(), w.asnumpy()) + b.asnumpy(), rtol=1e-5)
 
-def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val):
-    W_trans = False
-    A_trans = True
+def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val, A_trans, W_trans):
     ctx = tvm.cpu(0)
     W = tvm.placeholder((k, n), name='W', dtype="uint8")
     w1 = np.random.uniform(w_val - 1, w_val + 2, size=(k, n)).astype(W.dtype)
-    w = tvm.nd.array(w1.transpose(), ctx)
+    if W_trans:
+        w = tvm.nd.array(w1.transpose(), ctx)
+    else:
+        w = tvm.nd.array(w1, ctx)
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8")
-    ww = my_packedw(tvm.nd.array(w1, ctx), 1, False)
+    ww = my_packedw(w, 1, W_trans)
 
     get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8")
-    co = get_co_offsets(tvm.nd.array(w1, ctx),1,1, W_trans)
+    co = get_co_offsets(w, 1, 1, False)
 
-    X = tvm.placeholder((m, k), name='X', dtype="int8")
+    if A_trans:
+        X = tvm.placeholder((k, m), name='X', dtype="int8")
+    else:
+        X = tvm.placeholder((m, k), name='X', dtype="int8")
     B = tvm.placeholder((n,), name='B', dtype="int")
 
     # quantization parameters will be got from Operator arguments
@@ -193,7 +197,10 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val):
     #print(tvm.lower(s, [X, B, C], simple_mode=True))
     f_evaluator = f.time_evaluator(f.entry_name, ctx, 10)
     x1 = np.random.uniform(x_val - 1, x_val + 2, size=(m, k)).astype(X.dtype)
-    x = tvm.nd.array(x1, ctx)
+    if A_trans:
+        x = tvm.nd.array(x1.transpose(), ctx)
+    else:
+        x = tvm.nd.array(x1, ctx)
     b = tvm.nd.array(np.random.uniform(b_val, b_val + 2, size=(n,)).astype(B.dtype), ctx)
     y = tvm.nd.array(np.zeros((m, n), dtype=C.dtype), ctx)
     f(x,b,y)
@@ -204,8 +211,8 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val):
     #gops_per_sec = gops_per_mm/result.mean/1e9
     print("M:{}, N:{}, K:{}".format(m,n,k))
     #print(gops_per_sec)
-    print(y.asnumpy())
-    print(np.matmul(x1, w1) + b.asnumpy())
+    #print(y.asnumpy())
+    #print(np.matmul(x1, w1) + b.asnumpy())
 
     tvm.testing.assert_allclose(
            y.asnumpy(), np.matmul(x1, w1) + b.asnumpy(), rtol=1e-5)
@@ -358,8 +365,8 @@ if __name__ == "__main__":
         [1,    128,    2722])
 
 
-    test_fbgemm_conv_int8()
-    """
+    #test_fbgemm_conv_int8()
+    #"""
     if True:
 
 
@@ -390,7 +397,10 @@ if __name__ == "__main__":
 			comb.append(c)
 
          for c in comb:
-	 	test_fbgemm_packed_weights_with_requant(c[0], c[1], c[2], c[3], c[4], c[5])
+	 	test_fbgemm_packed_weights_with_requant(c[0], c[1], c[2], c[3], c[4], c[5], True, True)
+                test_fbgemm_packed_weights_with_requant(c[0], c[1], c[2], c[3], c[4], c[5], True, False)
+                test_fbgemm_packed_weights_with_requant(c[0], c[1], c[2], c[3], c[4], c[5], False, True)
+                test_fbgemm_packed_weights_with_requant(c[0], c[1], c[2], c[3], c[4], c[5], False, False)
          #fbgemm_packed_weights(16, 4, 8)
          #for shape in shapes_others:
          #     fbgemm_packed_weights(shape[0], shape[1], shape[2])
@@ -416,4 +426,4 @@ if __name__ == "__main__":
               tuner.tune(n_trial=150,
                          measure_option=measure_option,
                          callbacks=[autotvm.callback.log_to_file(log_file_name)])
-    """
+    #"""
