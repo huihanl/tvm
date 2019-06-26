@@ -491,7 +491,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant")
 });
 
 
-
+/*
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.fully_connected_int8")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
       DLTensor* X = args[0];  // M*K quantized int8 input
@@ -499,8 +499,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.fully_connected_int8")
       DLTensor* B = args[2];  // N quantized int8 bias
       // ignore the axis and axis_w now for testing purpose
       DLTensor* Y = args[3];
-      int threads = args[8ecthhi
-      j/CHECK_EQ(B->ndim, 1);
+      int threads = args[8];
+      CHECK_EQ(B->ndim, 1);
       //CHECK_EQ(X->shape[1], W->shape[1]);
       //CHECK_EQ(W->shape[0], B->shape[0]);
 
@@ -583,7 +583,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.fully_connected_int8")
                      threads);  // num_threads
       }
     });
-
+*/
 
 
  void col_offsets_with_zero_pt_s8acc32_ref(
@@ -726,9 +726,9 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.create_pointer_vector_float")
 
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
-      /*
         DLTensor* W = args[0];
-        int spatial_dim = args[1];
+        /*
+	int spatial_dim = args[1];
         int cntr = 2;
         int MB = args[cntr];
         int IC = args[cntr + 1];
@@ -776,15 +776,15 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
           params.ROW_INTERLEAVE = args[cntr + 6];
 
         PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data), &params);
-        PackBMatrix<std::int8_t, std::int32_t> B_Ptr = *(packedB.getPackedWForIm2col());
-        B_Ptr.printPackedMatrix("B");
+        //PackBMatrix<std::int8_t, std::int32_t> B_Ptr = *(packedB.getPackedWForIm2col());
+        //B_Ptr.printPackedMatrix("B");
         *ret = &packedB;
 
         } else {
 
         PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data));
-        PackBMatrix<std::int8_t, std::int32_t> B_Ptr = *(packedB.getPackedWForIm2col());
-        B_Ptr.printPackedMatrix("B");
+        //PackBMatrix<std::int8_t, std::int32_t> B_Ptr = *(packedB.getPackedWForIm2col());
+        //B_Ptr.printPackedMatrix("B");
         *ret = &packedB;
         }
      });

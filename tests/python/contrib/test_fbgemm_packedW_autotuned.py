@@ -258,7 +258,7 @@ def test_fbgemm_conv_int8():
     # weight
     W = tvm.placeholder(W_shape, name='W', dtype="int8")
     w = tvm.nd.array(np.random.uniform(1, 2, size=W_shape).astype(W.dtype), ctx)
-
+    print("begin weight")
     # packing of weight
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
     ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
