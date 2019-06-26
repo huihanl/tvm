@@ -491,7 +491,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant")
 });
 
 
-/*
+
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.fully_connected_int8")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
       DLTensor* X = args[0];  // M*K quantized int8 input
@@ -583,30 +583,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.fully_connected_int8")
                      threads);  // num_threads
       }
     });
-*/
-/*
-void col_offsets_with_zero_pt_s8acc32_ref(
-    int K,
-    int N,
-    int ld,
-    const int8_t* Bint8,
-    const int32_t* B_zero_point,
-    int32_t* col_offsets,
-    int ncols_per_quant_group) {
-        std::cout << "START" << " " << std::endl;
-  for (int j = 0; j < N; ++j) {
-        std::cout << "j=" << j << " " << std::endl;
-    int32_t sum = 0;
-    for (int k = 0; k < K; ++k) {
-        std::cout << "k=" << k << " " << std::endl;
-      sum += Bint8[k * ld + j];
-        std::cout << "sum=" << sum << " " << std::endl;
-    }
-    col_offsets[j] = sum - B_zero_point[j / ncols_per_quant_group] * K;
-        std::cout << "col_offsets[j]=" << col_offsets[j] << " " << std::endl;
-  }
-}
-*/
+
+
 
  void col_offsets_with_zero_pt_s8acc32_ref(
      int K,
@@ -748,52 +726,33 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.create_pointer_vector_float")
 
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
-  //freopen ("myfile.txt","w",stdout);
- // printf ("This sentence is redirected to a file.");
-         DLTensor* W = args[0];
+      /*
+        DLTensor* W = args[0];
         int spatial_dim = args[1];
-        int cntr = 2; //TODO: make changes on spatial_dim.
+        int cntr = 2;
         int MB = args[cntr];
         int IC = args[cntr + 1];
         int OC = args[cntr + 2];
-        //std::array<int, 2> IN_DIM = args[cntr + 3];
 
-        //std::uint64_t id_addr = args[cntr + 3];
-        //void* id_d = reinterpret_cast<void*>(static_cast<uint64_t>(id_addr));
-        //std::array<int, 2>* IN_DIM =
-        //reinterpret_cast<std::array<int, 2>*>(id_d);
         DLTensor* id_addr = args[cntr + 3];
-	int* id_pr = reinterpret_cast<int*>(id_addr->data);
-	std::array<int, 2> IN_DIM = {0, 0};
-	IN_DIM[0] = id_pr[0];
+      	int* id_pr = reinterpret_cast<int*>(id_addr->data);
+      	std::array<int, 2> IN_DIM = {0, 0};
+      	IN_DIM[0] = id_pr[0];
         IN_DIM[1] = id_pr[1];
         int G = args[cntr + 4];
-        //std::array<int, 2> K = args[cntr + 5];
-        //std::uint64_t k_addr = args[cntr + 5];
-        //void* k_d = reinterpret_cast<void*>(static_cast<uint64_t>(k_addr));
-        //std::array<int, 2>* K =
-        //reinterpret_cast<std::array<int, 2>*>(k_d);
+
         DLTensor* k_addr = args[cntr + 5];
         int* k_pr = reinterpret_cast<int*>(k_addr->data);
         std::array<int, 2> K = {0, 0};
         K[0] = k_pr[0];
         K[1] = k_pr[1];
-        //std::array<int, 2> stride = args[cntr + 6];
-        //std::uint64_t s_addr = args[cntr + 6];
-        //void* s_d = reinterpret_cast<void*>(static_cast<uint64_t>(s_addr));
-        //std::array<int, 2>* stride =
-        //reinterpret_cast<std::array<int, 2>*>(s_d);
+
         DLTensor* s_addr = args[cntr + 6];
         int* s_pr = reinterpret_cast<int*>(s_addr->data);
         std::array<int, 2> stride = {0, 0};
         stride[0] = s_pr[0];
         stride[1] = s_pr[1];
 
-        //std::array<int, 4> pad = args[cntr + 7];
-        //std::uint64_t p_addr = args[cntr + 7];
-        //void* p_d = reinterpret_cast<void*>(static_cast<uint64_t>(p_addr));
-        //std::array<int, 4>* pad =
-        //reinterpret_cast<std::array<int, 4>*>(p_d);
         DLTensor* pad_addr = args[cntr + 7];
         int* p_pr = reinterpret_cast<int*>(pad_addr->data);
         std::array<int, 4> pad = {0, 0, 0, 0};
@@ -801,11 +760,12 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
         pad[1] = p_pr[1];
         pad[2] = p_pr[2];
         pad[3] = p_pr[3];
-         //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
-        conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
-         BlockingFactors params;
+*/
+        //conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
+        conv_param_t<> conv_p = conv_param_t<>(1, 4, 4, {5, 5}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
+        BlockingFactors params;
 
-         if (args.size() > 11) {
+        if (args.size() > 11) {
           int cntr = 10;
           params.MCB = args[cntr];
           params.NCB = args[cntr + 1];
@@ -815,27 +775,18 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
           params.NR_MIN = args[cntr + 5];
           params.ROW_INTERLEAVE = args[cntr + 6];
 
-           PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data), &params);
-         //packB->printPackedMatrix("packingB"); invalid conversion from ‘int8_t* {aka signed char*}’ to ‘int’ [-fpermissive]
-      PackBMatrix<std::int8_t, std::int32_t> B_Ptr = *(packedB.getPackedWForIm2col());
-std::cout << "11111111111111";      
-B_Ptr.printPackedMatrix("B"); 
-          *ret = &packedB;
+        PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data), &params);
+        PackBMatrix<std::int8_t, std::int32_t> B_Ptr = *(packedB.getPackedWForIm2col());
+        B_Ptr.printPackedMatrix("B");
+        *ret = &packedB;
 
-         } else {
+        } else {
 
-   PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data));
-      //  std::cout << "AAA" << " " << std::endl;
-     //packedB.getPackedWForIm2col()->printPackedMatrix("B");
-       // std::cout << "BBB" << " " << std::endl;
-      PackBMatrix<std::int8_t, std::int32_t> B_Ptr = *(packedB.getPackedWForIm2col());
-std::cout << "11111111111111";
-B_Ptr.printPackedMatrix("B");
-          *ret = &packedB;
-        //std::cout << "DDD" << " " << std::endl;
-
-         }
-//fclose (stdout);
+        PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data));
+        PackBMatrix<std::int8_t, std::int32_t> B_Ptr = *(packedB.getPackedWForIm2col());
+        B_Ptr.printPackedMatrix("B");
+        *ret = &packedB;
+        }
      });
 
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
@@ -857,25 +808,12 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     aligned_vector<int32_t>* Bint8_zero_point =
         reinterpret_cast<aligned_vector<int32_t>*>(zp);
 
-
-    //     DLTensor* zp_addr = args[4];
-    //     int* zp_pr = reinterpret_cast<int*>(zp_addr->data);
-         //std::vector<int32_t> Bint8_zero_point = {1};
-    //     Bint8_zero_point[0] = zp_pr[0];
-
-
     std::int32_t C_zero_point = args[5];
-
-    //aligned_vector<float> C_multiplier = ;
-    //reinterpret_cast<std::vector<float>*>(args[6])
 
     std::uint64_t mul_addr = args[6];
     void* mula = reinterpret_cast<void*>(static_cast<uint64_t>(mul_addr));
     aligned_vector<float>* C_multiplier =
         reinterpret_cast<aligned_vector<float>*>(mula);
-         // float* mul_pr = reinterpret_cast<float*>(mul_addr->data);
-          // std::vector<float> C_multiplier = {0.0};
-           //C_multiplier[0] = mul_pr[0];
 
     std::uint64_t co_addr = args[7];
     void* co = reinterpret_cast<void*>(static_cast<uint64_t>(co_addr));
@@ -894,7 +832,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     std::array<int, 2> IN_DIM;
     IN_DIM[0] = IN_DIM_v->data()[0];
     IN_DIM[1] = IN_DIM_v->data()[1];
-std::cout << "IN_DIM[0]" << IN_DIM[0] << "IN_DIM[1]" << IN_DIM[1] << " " << std::endl;
+
     int G = args[cntr + 4];
 
     //std::array<int, 2> K = args[cntr + 5];
@@ -905,11 +843,7 @@ std::cout << "IN_DIM[0]" << IN_DIM[0] << "IN_DIM[1]" << IN_DIM[1] << " " << std:
     std::array<int, 2> K;
     K[0] = K_v->data()[0];
     K[1] = K_v->data()[1];
-         std::cout << "K[0]" << K[0] << "K[1]" << K[1] << " " << std::endl;
-    //std::array<int, 2>* K =
-    //reinterpret_cast<std::array<int, 2>*>(k_d);
 
-    //std::array<int, 2> stride = args[cntr + 6];
     std::uint64_t s_addr = args[cntr + 6];
     void* s_d = reinterpret_cast<void*>(static_cast<uint64_t>(s_addr));
     std::vector<int>* stride_v =
@@ -917,7 +851,6 @@ std::cout << "IN_DIM[0]" << IN_DIM[0] << "IN_DIM[1]" << IN_DIM[1] << " " << std:
     std::array<int, 2> stride;
     stride[0] = stride_v->data()[0];
     stride[1] = stride_v->data()[1];
-std::cout << "stride[0]" << stride[0] << "stride[1]" << stride[1] << " " << std::endl;
     //std::array<int, 2>* stride =
     //reinterpret_cast<std::array<int, 2>*>(s_d);
 
@@ -933,86 +866,11 @@ std::cout << "stride[0]" << stride[0] << "stride[1]" << stride[1] << " " << std:
     pad[1] = p_v->data()[1];
     pad[2] = p_v->data()[2];
     pad[3] = p_v->data()[3];
-std::cout << "pad[0]" << pad[0] << "pad[1]" << pad[1] << "pad[2]" << pad[2] << "pad[3]" << pad[3]      <<" " << std::endl;
-/*
-        std::cout << "0" << " " << std::endl;
-        DLTensor* id_addr = args[cntr + 3];
-        std::cout << id_addr;
-        int* id_pr = reinterpret_cast<int*>(id_addr->data);
-        std::cout << "1" << " " << std::endl;
-        std::array<int, 2> IN_DIM = {0, 0};
-        std::cout << "2" << " " << std::endl;
-        IN_DIM[0] = id_pr[0];
-        std::cout << "3" << " " << std::endl;
-        IN_DIM[1] = id_pr[1];
-        std::cout << "4" << " " << std::endl;
-        std::cout << "IN_DIM[0]" << IN_DIM[0] << "IN_DIM[1]" << IN_DIM[1] << " " << std::endl;
-        int G = args[cntr + 4];
-        std::cout << "G=" << G << std::endl;
-        //std::array<int, 2> K = args[cntr + 5];
-        //std::uint64_t k_addr = args[cntr + 5];
-        //void* k_d = reinterpret_cast<void*>(static_cast<uint64_t>(k_addr));
-        //std::array<int, 2>* K =
-        //reinterpret_cast<std::array<int, 2>*>(k_d);
-        std::cout << "5" << " " << std::endl;
-        DLTensor* k_addr = args[cntr + 5];
-        int* k_pr = reinterpret_cast<int*>(k_addr->data);
-        std::array<int, 2> K = {0, 0};
-        K[0] = k_pr[0];
-        K[1] = k_pr[1];
-        std::cout << "K[0]" << K[0] << "K[1]" << K[1] << " " << std::endl;
-        std::cout << "6" << " " << std::endl;
-        //std::array<int, 2> stride = args[cntr + 6];
-        //std::uint64_t s_addr = args[cntr + 6];
-        //void* s_d = reinterpret_cast<void*>(static_cast<uint64_t>(s_addr));
-        //std::array<int, 2>* stride =
-        //reinterpret_cast<std::array<int, 2>*>(s_d);
-        DLTensor* s_addr = args[cntr + 6];
-        int* s_pr = reinterpret_cast<int*>(s_addr->data);
-        std::array<int, 2> stride = {0, 0};
-        stride[0] = s_pr[0];
-        stride[1] = s_pr[1];
-        std::cout << "stride[0]" << stride[0] << "stride[1]" << stride[1] << " " << std::endl;
-        std::cout << "7" << " " << std::endl;
 
-        //std::array<int, 4> pad = args[cntr + 7];
-        //std::uint64_t p_addr = args[cntr + 7];
-        //void* p_d = reinterpret_cast<void*>(static_cast<uint64_t>(p_addr));
-        //std::array<int, 4>* pad =
-        //reinterpret_cast<std::array<int, 4>*>(p_d);
-        DLTensor* pad_addr = args[cntr + 7];
-        int* p_pr = reinterpret_cast<int*>(pad_addr->data);
-        std::array<int, 4> pad = {0, 0, 0, 0};
-        pad[0] = p_pr[0];
-        pad[1] = p_pr[1];
-        pad[2] = p_pr[2];
-        pad[3] = p_pr[3];
-        std::cout << "8" << " " << std::endl;
-        std::cout << "pad[0]" << pad[0] << "pad[1]" << pad[1] << "pad[2]" << pad[2] << "pad[3]" << pad[3] <<" " << std::endl;
-         //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
-*/
-        conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
-
-//std::array<int, 2> K = args[cntr + 5];
-    //std::array<int, 2> stride = args[cntr + 6];
-    //std::array<int, 4> pad = args[cntr + 7];
-    //int nthreads = args[cntr + 8];
-
-    //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
-    //ISSUE 2
-
-//    conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
+    conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
 
     CHECK_EQ(conv_p.IC % conv_p.G, 0);
     CHECK_EQ(conv_p.OC % conv_p.G, 0);
-
-    //if (conv_p.IC % conv_p.G != 0 || conv_p.OC % conv_p.G != 0) {
-      // invalid shapes
-      //continue;
-    //}
-
-    //int im_in_dim = accumulate(
-    //    conv_p.IN_DIM.begin(), conv_p.IN_DIM.end(), 1, multiplies<int>());
 
     int kernel_dim =
         accumulate(conv_p.K.begin(), conv_p.K.end(), 1, multiplies<int>());
@@ -1020,20 +878,12 @@ std::cout << "pad[0]" << pad[0] << "pad[1]" << pad[1] << "pad[2]" << pad[2] << "
     int im_out_dim = accumulate(
         conv_p.OUT_DIM.begin(), conv_p.OUT_DIM.end(), 1, multiplies<int>());
 
-    //aligned_vector<int32_t> Cint32_fb(conv_p.MB * im_out_dim * conv_p.OC);
-    //aligned_vector<uint8_t> Cint8_fb(conv_p.MB * im_out_dim * conv_p.OC, 0);
-
-    // matrix dimensions after im2col
-    //int MDim = conv_p.MB * im_out_dim;
-    //int NDim = conv_p.OC / conv_p.G;
     int KDim = kernel_dim * conv_p.IC;
     int KDimPerGroup = KDim / conv_p.G;
     int OC_per_G = conv_p.OC / conv_p.G;
 
     std::vector<std::int32_t>* Y_int32_ = new std::vector<int32_t>;
     Y_int32_->reserve(conv_p.MB * im_out_dim * conv_p.OC);
-
-std::cout << "REACH HERE 1" << std::endl;
 
     // no-op output process objects
     DoNothing<> doNothingObj{};
@@ -1051,8 +901,6 @@ std::cout << "REACH HERE 1" << std::endl;
         conv_p.OC,
         conv_p.G);
 
-std::cout << "REACH HERE 2" << std::endl;
-
     fbgemmConv(
         conv_p,
         reinterpret_cast<const std::uint8_t*>(A->data),
@@ -1062,7 +910,6 @@ std::cout << "REACH HERE 2" << std::endl;
         outputProcObj,
         0,
         1);
-std::cout << "REACH HERE 3" << std::endl;
     });
 
 }  // namespace contrib
