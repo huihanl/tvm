@@ -587,7 +587,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.fully_connected_int8")
      const int32_t* B_zero_point,
      int32_t* col_offsets,
      int ncols_per_quant_group) {
-
+         std::cout << "N=" << N << " " << std::endl;
    for (int j = 0; j < N; ++j) {
          std::cout << "j=" << j << " " << std::endl;
      int32_t sum = 0;
@@ -597,6 +597,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.fully_connected_int8")
  //        std::cout << "sum=" << sum << " " << std::endl;
      }
      col_offsets[j] = sum - B_zero_point[0] * K;
+     std::cout << "col_offsets[j]" << col_offsets[j] << " " << std::endl;
    }
  }
 
@@ -659,6 +660,22 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
         pad[3] = p_pr[3];
          //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
         conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
+
+std::cout << conv_p.MB << " " << std::endl;
+std::cout << conv_p.IC << " " << std::endl;
+std::cout << conv_p.OC << " " << std::endl;
+std::cout << conv_p.IN_DIM[0] << " " << std::endl;
+std::cout << conv_p.IN_DIM[1] << " " << std::endl;
+std::cout << conv_p.G << " " << std::endl;
+std::cout << conv_p.K[0] << " " << std::endl;
+std::cout << conv_p.K[1] << " " << std::endl;
+std::cout << conv_p.stride[0] << " " << std::endl;
+std::cout << conv_p.stride[1] << " " << std::endl;
+std::cout << conv_p.pad[0] << " " << std::endl;
+std::cout << conv_p.pad[1] << " " << std::endl;
+std::cout << conv_p.pad[2] << " " << std::endl;
+std::cout << conv_p.pad[3] << " " << std::endl;
+
 //      std::array<int, 2> IN_DIM = args[cntr + 3];
 //      int G = args[cntr + 4];
 //      std::array<int, 2> K = args[cntr + 5];
@@ -673,11 +690,16 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
       int KDimPerGroup = KDim / conv_p.G;
       int OC_per_G = conv_p.OC / conv_p.G;
 
-
+std::cout << kernel_dim << " " << std::endl;
+std::cout << KDim << " " << std::endl;
+std::cout << KDimPerGroup << " " << std::endl;
+std::cout << OC_per_G << " " << std::endl;
 
        // COMPUTING column offset
-      std::vector<int32_t>* col_offsets = new std::vector<int32_t>;
-      col_offsets->reserve(128);
+      //std::vector<int32_t>* col_offsets = new std::vector<int32_t>;
+std::vector<int32_t>* col_offsets = new std::vector<int32_t>(conv_p.OC);
+    std::cout << "column_offsets_" << std::endl;
+        std::cout << "column_offsets size" << col_offsets->size() << std::endl;
 
         col_offsets_with_zero_pt_s8acc32_ref(
             KDimPerGroup,
@@ -687,6 +709,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
             Bint8_zero_point.data(),
             col_offsets->data(),
             conv_p.OC);
+        std::cout << "column_offsets size" << col_offsets->size() << std::endl;
       *ret = col_offsets;
 });
 
@@ -785,6 +808,56 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
         }
      });
 
+template <>
+void conv_ref(
+    const conv_param_t<2>& conv_p,
+    const uint8_t* A,
+    int32_t A_zero_point,
+    const int8_t* B,
+    int32_t* C) {
+  // filters are assumed to be in G RS C/G x K format
+  int IC = conv_p.IC;
+  int OC = conv_p.OC;
+  int G = conv_p.G;
+  assert(IC % G == 0);
+  assert(OC % G == 0);
+  array<int, 2> IN_DIM = conv_p.IN_DIM;
+  array<int, 2> OUT_DIM = conv_p.OUT_DIM;
+  array<int, 2> K = conv_p.K;
+
+  for (int n = 0; n < conv_p.MB; ++n) {
+    for (int h = 0; h < OUT_DIM[0]; ++h) {
+      for (int w = 0; w < OUT_DIM[1]; ++w) {
+        for (int g = 0; g < G; ++g) {
+          for (int m = 0; m < OC / G; ++m) {
+            int sum = 0;
+            for (int r = 0; r < K[0]; ++r) {
+              int h_in = -conv_p.pad[0] + h * conv_p.stride[0] + r;
+              for (int s = 0; s < K[1]; ++s) {
+                int w_in = -conv_p.pad[1] + w * conv_p.stride[1] + s;
+                for (int c = 0; c < IC / G; ++c) {
+                  int a = h_in < 0 || h_in >= IN_DIM[0] || w_in < 0 ||
+                          w_in >= IN_DIM[1]
+                      ? A_zero_point
+                      : A[((n * IN_DIM[0] + h_in) * IN_DIM[1] + w_in) * IC +
+                          g * (IC / G) + c];
+                  int b =
+                      B[(((g * K[0] + r) * K[1] + s) * (IC / G) + c) *
+                            (OC / G) +
+                        m];
+                  sum += a * b;
+                } // for each c
+              } // for each s
+            } // for each r
+            C[((n * OUT_DIM[0] + h) * OUT_DIM[1] + w) * OC + g * (OC / G) + m] =
+                sum;
+          } // for each m
+        } // for each group
+      } // for each w
+    } // for each h
+  } // for each n
+}
+
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
 
@@ -815,7 +888,12 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     void* co = reinterpret_cast<void*>(static_cast<uint64_t>(co_addr));
     std::vector<std::int32_t>* column_offsets_ =
         reinterpret_cast<std::vector<std::int32_t>*>(co);
-
+    std::cout << "column_offsets_" << std::endl;
+        std::cout << "column_offsets size" << column_offsets_->size() << std::endl;
+    for (int i = 0; i < column_offsets_->size(); i++) {
+        std::cout << column_offsets_->at(i) << " ";
+    }
+    std::cout << " " << std::endl;
     int cntr = 8;
     int MB = args[cntr];
     int IC = args[cntr + 1];
@@ -883,9 +961,15 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     int KDimPerGroup = KDim / conv_p.G;
     int OC_per_G = conv_p.OC / conv_p.G;
 
-    std::vector<std::int32_t>* Y_int32_ = new std::vector<int32_t>;
-    Y_int32_->reserve(conv_p.MB * im_out_dim * conv_p.OC);
-
+    //std::vector<std::int32_t>* Y_int32_ = new std::vector<int32_t>;
+//    Y_int32_->reserve(conv_p.MB * im_out_dim * conv_p.OC);
+std::vector<std::int32_t>* Y_int32_ = new std::vector<int32_t>(conv_p.MB * im_out_dim * conv_p.OC);
+std::cout << "BEFORE FBGEMMCONV";
+for (int i = 0; i < conv_p.MB * im_out_dim * conv_p.OC; i++) {
+//    Y_int32_->push_back(0);
+    std::cout << Y_int32_->at(i) << " ";
+}
+std::cout << "BEFORE FBGEMMCONV";
     // no-op output process objects
     DoNothing<> doNothingObj{};
     ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
@@ -912,12 +996,20 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
         0,
         1);
 
-for (int i = 0; i < conv_p.MB * im_dim * conv_p.IC; i++) {
-std::cout << static_cast<int64_t>(reinterpret_cast<std::uint8_t*>(A->data)[i]) << " ";}
+aligned_vector<uint8_t> Cint8_ref(conv_p.MB * im_out_dim * conv_p.OC);
+conv_ref(
+        conv_p,
+        reinterpret_cast<const std::uint8_t*>(A->data),
+        Aint8_zero_point,
+        Bint8.data(),
+        Cint32_ref.data());
+
+//for (int i = 0; i < conv_p.MB * im_dim * conv_p.IC; i++) {
+//std::cout << static_cast<int64_t>(reinterpret_cast<std::uint8_t*>(A->data)[i]) << " ";}
 
 for (int i = 0; i < conv_p.MB * im_out_dim * conv_p.OC; i++) {
 std::cout << static_cast<int64_t>(reinterpret_cast<std::uint8_t*>(Y->data)[i]) << " ";}
-    });
+   });
 
 }  // namespace contrib
 }  // namespace tvm
