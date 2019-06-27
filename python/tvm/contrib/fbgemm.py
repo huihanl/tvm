@@ -150,7 +150,7 @@ def conv_int8(Y_shape, X, X_zero_point, W, W_zero_point,
                     MB, IC, OC, IN_DIM, G, K, stride, pad,
                     nthreads,
                     MCB, NCB, KCB, MR, NR, NR_MIN, ROW_INTERLEAVE),
-                    name="C", dtype="int8")
+                    name="C", dtype="uint8")
     else:
          return _api.extern(
                  Y_shape, [X],
@@ -161,7 +161,7 @@ def conv_int8(Y_shape, X, X_zero_point, W, W_zero_point,
                     C_multiplier,
                     column_offset,
 		    MB, IC, OC, IN_DIM, G, K, stride, pad,
-		            nthreads), name="C", dtype="int8")
+		            nthreads), name="C", dtype="uint8")
 
 
 

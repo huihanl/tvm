@@ -807,7 +807,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
         *ret = packedB;
         }
      });
-
+/*
 template <>
 void conv_ref(
     const conv_param_t<2>& conv_p,
@@ -857,7 +857,7 @@ void conv_ref(
     } // for each h
   } // for each n
 }
-
+*/
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
 
@@ -997,19 +997,26 @@ std::cout << "BEFORE FBGEMMCONV";
         1);
 
 aligned_vector<uint8_t> Cint8_ref(conv_p.MB * im_out_dim * conv_p.OC);
-conv_ref(
+/*conv_ref(
         conv_p,
         reinterpret_cast<const std::uint8_t*>(A->data),
         Aint8_zero_point,
         Bint8.data(),
         Cint32_ref.data());
-
+*/
 //for (int i = 0; i < conv_p.MB * im_dim * conv_p.IC; i++) {
 //std::cout << static_cast<int64_t>(reinterpret_cast<std::uint8_t*>(A->data)[i]) << " ";}
 
 for (int i = 0; i < conv_p.MB * im_out_dim * conv_p.OC; i++) {
 std::cout << static_cast<int64_t>(reinterpret_cast<std::uint8_t*>(Y->data)[i]) << " ";}
-   });
 
+std::cout << "AFTER FBGEMMCONV";
+for (int i = 0; i < conv_p.MB * im_out_dim * conv_p.OC; i++) {
+//    Y_int32_->push_back(0);
+    std::cout << Y_int32_->at(i) << " ";
+}   
+std::cout << "AFTER FBGEMMCONV";
+
+   });
 }  // namespace contrib
 }  // namespace tvm
