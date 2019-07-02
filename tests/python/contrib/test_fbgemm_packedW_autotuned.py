@@ -268,6 +268,7 @@ def test_fbgemm_conv_int8():
     print("begin weight")
     # packing of weight
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
+
     ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
     print("finish weight")
     # bias
@@ -289,13 +290,9 @@ def test_fbgemm_conv_int8():
     get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
     co = get_co_offsets(w, W_zero_point, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
     print("finish column offset")
-
     # ReQuant Multiplier
     #C_multiplier = np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,))
-    C_multiplier = tvm.nd.array(np.array([0.1234]).astype("float"), ctx)
-    create_pointer_vector_float = tvm.get_global_func("tvm.contrib.fbgemm.create_pointer_vector_float")
-    c_mul_pt = create_pointer_vector_float(C_multiplier, 1)
-    print("finish c_multiplier pointer")    
+    C_multiplier = 0.0878014
 #C_multiplier = [0.1234]
 # formula for calculation
     in_dim_v = create_pointer_vector_int(IN_DIM, 2)
@@ -306,15 +303,15 @@ def test_fbgemm_conv_int8():
     print("finish stride_v")
     pad_v = create_pointer_vector_int(pad, 4)
     print("finish pad_v")
-    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, w_zp, Y_zero_point, c_mul_pt, co,
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, w_zp, Y_zero_point, C_multiplier, co,
 			 MB, IC, OC, in_dim_v, G, k_v, stride_v, pad_v)
 
     s = tvm.create_schedule(C.op)
     f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
 
     # applying the formula
-    #x = tvm.nd.array(np.random.uniform(1, 3, size=input_shape).astype(X.dtype), ctx)
-    x = tvm.nd.array(np.random.uniform(10, 20, size=input_shape).astype(X.dtype), ctx)
+    x = tvm.nd.array(np.random.uniform(1, 3, size=input_shape).astype(X.dtype), ctx)
+    #x = tvm.nd.array(np.array([0,0,4,2,3,1,0,4,4,5,2,3,4,0,0,3,4,0,2,0,2,4,3,5,5,3,0,3,2,4,5,4,1,0,4,1,3,4,5,2,1,5,4,4,3,0,3,5,1,2,4,2,1,1,2,0,2,5,5,0,5,3,3,1,5,2,1,0,5,0,3,2,1,5,3,2,5,0,4,4,4,0,0,4,5,3,4,4,5,5,1,1,2,3,3,5,2,5,1,2]).astype(X.dtype), ctx)
     #b = tvm.nd.array(np.random.uniform(b_val - 1, b_val + 2, size=(n,)).astype(B.dtype), ctx)
     #y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
     y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)

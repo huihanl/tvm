@@ -1,4 +1,4 @@
 cd ..
-source update-tvm-lly.sh &> e.txt
+source update-tvm.sh &> e.txt
 cd ..
 vi e.txt
