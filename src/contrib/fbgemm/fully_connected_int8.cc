@@ -783,11 +783,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
         //conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
         conv_param_t<2> conv_p(1, 4, 4, {5, 5}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
         BlockingFactors params;
-<<<<<<< HEAD
 aligned_vector<int8_t> Btest = {0,0,-2,-3,-3,1,3,-4,0,0,4,2,0,4,1,3,-3,-3,2,-3,-4,-2,-4,-1,-4,2,4,-2,-3,-2,3,1,-3,2,-1,-1,0,-3,1,3,1,4,1,-3,4,-1,-3,1,-2,0,0,4,-3,-3,-2,1,-3,1,1,3,-2,0,-1,-3,-4,4,-1,-3,4,-1,-3,3,-4,-3,-4,-1,-2,-3,3,0,-1,0,3,4,1,-3,2,4,-2,3,0,0,1,3,2,0,4,1,-1,3,2,2,4,4,3,-2,0,0,-4,-1,1,3,-1,2,3,2,3,2,2,-4,3,0,0,-4,2,0,2,2,-3,4,3,4,0,-3,0,4,-3,0,-2,0,3,-1,0,3};
 
-=======
->>>>>>> parent of 0f14f6bf... finish conv
 
         if (args.size() > 11) {
           int cntr = 10;
@@ -872,15 +869,12 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
 
     std::int32_t C_zero_point = args[5];
 
-<<<<<<< HEAD
     float C_mul_num = (double) args[6];
     aligned_vector<float> C_multiplier = {C_mul_num};
-=======
     std::uint64_t mul_addr = args[6];
     void* mula = reinterpret_cast<void*>(static_cast<uint64_t>(mul_addr));
     aligned_vector<float>* C_multiplier =
         reinterpret_cast<aligned_vector<float>*>(mula);
->>>>>>> parent of 0f14f6bf... finish conv
 
     std::uint64_t co_addr = args[7];
     void* co = reinterpret_cast<void*>(static_cast<uint64_t>(co_addr));
@@ -971,7 +965,6 @@ std::vector<std::int32_t>* Y_int32_ = new std::vector<int32_t>(conv_p.MB * im_ou
         conv_p.OC,
         conv_p.G);
 
-<<<<<<< HEAD
 std::vector<std::uint8_t> Atest = {0,0,4,2,3,1,0,4,4,5,2,3,4,0,0,3,4,0,2,0,2,4,
                                    3,5,5,3,0,3,2,4,5,4,1,0,4,1,3,4,5,2,1,5,4,4,
                                    3,0,3,5,1,2,4,2,1,1,2,0,2,5,5,0,5,3,3,1,5,2,
@@ -983,12 +976,6 @@ std::vector<std::uint8_t> Atest = {0,0,4,2,3,1,0,4,4,5,2,3,4,0,0,3,4,0,2,0,2,4,
         //reinterpret_cast<const std::uint8_t*>(A->data),
         Atest.data(),
 	      *packedB,
-=======
-    fbgemmConv(
-        conv_p,
-        reinterpret_cast<const std::uint8_t*>(A->data),
-        *packedB,
->>>>>>> parent of 0f14f6bf... finish conv
         reinterpret_cast<std::uint8_t*>(Y->data),
         Y_int32_->data(),
         outputProcObj,

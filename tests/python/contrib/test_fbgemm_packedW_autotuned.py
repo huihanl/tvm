@@ -287,23 +287,10 @@ def test_fbgemm_conv_int8():
     # column offset
     get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
     co = get_co_offsets(w, W_zero_point, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
-<<<<<<< HEAD
 
     # ReQuant Multiplier
     C_multiplier = 0.0878014
 
-=======
-    print("finish column offset")
-
-    # ReQuant Multiplier
-    #C_multiplier = np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,))
-    C_multiplier = tvm.nd.array(np.array([0.1234]).astype("float"), ctx)
-    create_pointer_vector_float = tvm.get_global_func("tvm.contrib.fbgemm.create_pointer_vector_float")
-    c_mul_pt = create_pointer_vector_float(C_multiplier, 1)
-    print("finish c_multiplier pointer")    
-#C_multiplier = [0.1234]
-# formula for calculation
->>>>>>> parent of 0f14f6bf... finish conv
     in_dim_v = create_pointer_vector_int(IN_DIM, 2)
 
     k_v = create_pointer_vector_int(K, 2)
@@ -311,13 +298,8 @@ def test_fbgemm_conv_int8():
     stride_v = create_pointer_vector_int(stride, 2)
 
     pad_v = create_pointer_vector_int(pad, 4)
-<<<<<<< HEAD
 
     C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W_zero_point, Y_zero_point, C_multiplier, co,
-=======
-    print("finish pad_v")
-    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, w_zp, Y_zero_point, c_mul_pt, co,
->>>>>>> parent of 0f14f6bf... finish conv
 			 MB, IC, OC, in_dim_v, G, k_v, stride_v, pad_v)
 
     s = tvm.create_schedule(C.op)
