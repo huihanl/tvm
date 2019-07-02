@@ -218,10 +218,16 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val, A_tran
            y.asnumpy(), np.matmul(x1, w1) + b.asnumpy(), rtol=1e-5)
 
 def test_fbgemm_conv_int8():
-    print("Reach here python")
+
     ctx = tvm.cpu(0)
       #MB, IC, OC, {IT, IH, IW}, G, {KT, KH, KW}, {stride_t, stride_h, stride_w},
       #{pad_prev, pad_h_top, pad_w_left, pad_next, pad_h_bottom, pad_w_right}
+
+
+    get_conv_params = tvm.get_global_func("tvm.contrib.fbgemm.get_conv_params")
+    conv_params = get_conv_params(MB, IC, OC, IN_DIM, G, K, stride, pad)
+
+    print("finish conv_params")
 
     spatial_dim = 2
 
@@ -237,7 +243,7 @@ def test_fbgemm_conv_int8():
     pad = tvm.nd.array(np.array([1, 1, 1, 1]).astype("int32"), ctx)
     # conv_params = [1, 128, 128, [56, 56], 1, [3, 3], [1, 1], [1, 1, 1, 1]]
 
-    conv_params = [MB, IC, OC, IN_DIM, G, K, stride, pad]
+    #conv_params = [MB, IC, OC, IN_DIM, G, K, stride, pad]
 
 
     # compute out_dim, i.e. shape for Y (the output for convolution)
@@ -257,53 +263,44 @@ def test_fbgemm_conv_int8():
 
     # shapes
     input_shape = (MB, IN_DIM1[0], IN_DIM1[1], IC) #NHWC
-    print("input_shape: ", input_shape)
+
     W_shape = (K1[0], K1[1], IC, OC / G) #RSCK
-    print("W_shape: ", W_shape)
+
     Y_shape = (MB, OUT_DIM[0], OUT_DIM[1], OC) #NHWK
-    print("Y_shape: ", Y_shape)
+
     # weight
     W = tvm.placeholder(W_shape, name='W', dtype="int8")
     w = tvm.nd.array(np.random.uniform(1, 10, size=W_shape).astype(W.dtype), ctx)
-    print("begin weight")
+
     # packing of weight
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
 
     ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
-    print("finish weight")
-    # bias
-    #B = tvm.placeholder((n,), name='B', dtype="int")
 
     # input (X)
     X = tvm.placeholder(input_shape, name='X', dtype="uint8")
 
     # quantization parameters will be got from Operator arguments
     X_zero_point = 4
-    W_zero_point = tvm.nd.array(np.array([-2]).astype("int32"), ctx)
-    create_pointer_vector_int = tvm.get_global_func("tvm.contrib.fbgemm.create_pointer_vector_int")
-    w_zp = create_pointer_vector_int(W_zero_point, 1)
-    #W_zero_point = [1]
+    W_zero_point = -1
     Y_zero_point = 5
-    print("finish w zero point pointer")
 
     # column offset
     get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
     co = get_co_offsets(w, W_zero_point, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
-    print("finish column offset")
+
     # ReQuant Multiplier
-    #C_multiplier = np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,))
     C_multiplier = 0.0878014
-#C_multiplier = [0.1234]
-# formula for calculation
+
     in_dim_v = create_pointer_vector_int(IN_DIM, 2)
-    print("finish in_dim_v")
+
     k_v = create_pointer_vector_int(K, 2)
-    print("finish k_v")
+
     stride_v = create_pointer_vector_int(stride, 2)
-    print("finish stride_v")
+
     pad_v = create_pointer_vector_int(pad, 4)
-    print("finish pad_v")
-    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, w_zp, Y_zero_point, C_multiplier, co,
+
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W_zero_point, Y_zero_point, C_multiplier, co,
 			 MB, IC, OC, in_dim_v, G, k_v, stride_v, pad_v)
 
     s = tvm.create_schedule(C.op)

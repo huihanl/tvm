@@ -58,7 +58,7 @@ def gemm_int8acc32_prepacked(m, n, X, X_qparams, packedW, W_qparams,
 
 
 def gemm_int8acc32_prepacked_with_requant(m, n, X, X_qparams, packedW, W_qparams,
-                                B, Y_qparams, col_offsets, transA, 
+                                B, Y_qparams, col_offsets, transA,
 				nthreads=1,
                          	autotune = False, MCB = 56, NCB = 32, KCB = 256,
                                 MR = 14, NR = 32, NR_MIN = 16, ROW_INTERLEAVE = 4):
@@ -71,7 +71,7 @@ def gemm_int8acc32_prepacked_with_requant(m, n, X, X_qparams, packedW, W_qparams
              	    "tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant",
                     ins[0], packedW, ins[1], outs[0], X_qparams.zero_point,
                     W_qparams.zero_point, Y_qparams.zero_point,
-                    ReQuant_multiplier, col_offsets, transA, 
+                    ReQuant_multiplier, col_offsets, transA,
 		    nthreads,
                     MCB, NCB, KCB, MR, NR, NR_MIN, ROW_INTERLEAVE),
                     name="C", dtype="int8")
@@ -82,7 +82,7 @@ def gemm_int8acc32_prepacked_with_requant(m, n, X, X_qparams, packedW, W_qparams
              	    "tvm.contrib.fbgemm.gemmint8acc32packedwt_with_requant",
                     ins[0], packedW, ins[1], outs[0], X_qparams.zero_point,
                     W_qparams.zero_point, Y_qparams.zero_point,
-                    ReQuant_multiplier, col_offsets, transA, 
+                    ReQuant_multiplier, col_offsets, transA,
 		    nthreads), name="C", dtype="int8")
 
 def gemm_int8acc32_prepacked_for_tuning(m, n, W, X, X_qparams, packedW, W_qparams,
@@ -133,7 +133,7 @@ def fully_connected_int8(X, X_qparams, W, W_qparams, B, Y_qparams, nthreads=1,
 
 
 def conv_int8(Y_shape, X, X_zero_point, W, W_zero_point,
-                                Y_zero_point, C_multiplier, column_offset, 
+                                Y_zero_point, C_multiplier, column_offset,
 				MB, IC, OC, IN_DIM, G, K, stride, pad, nthreads=1,
                          	autotune = False, MCB = 56, NCB = 32, KCB = 256,
                                 MR = 14, NR = 32, NR_MIN = 16, ROW_INTERLEAVE = 4):
@@ -143,8 +143,8 @@ def conv_int8(Y_shape, X, X_zero_point, W, W_zero_point,
                  Y_shape, [X],
                  lambda ins, outs: _intrin.call_packed(
              	    "tvm.contrib.fbgemm.conv_int8",
-                    ins[0], W, outs[0], X_zero_point,
-                    W_zero_point, Y_zero_point,
+                    ins[0], W, outs[0], X_zero_point, W_zero_point,
+                    Y_zero_point,
                     C_multiplier,
                     column_offset,
                     MB, IC, OC, IN_DIM, G, K, stride, pad,
@@ -156,11 +156,11 @@ def conv_int8(Y_shape, X, X_zero_point, W, W_zero_point,
                  Y_shape, [X],
                  lambda ins, outs: _intrin.call_packed(
              	    "tvm.contrib.fbgemm.conv_int8",
-                    ins[0], W, outs[0], X_zero_point,
-                    W_zero_point, Y_zero_point,
+                    ins[0], W, outs[0], X_zero_point, W_zero_point,
+                    Y_zero_point,
                     C_multiplier,
                     column_offset,
-		    MB, IC, OC, IN_DIM, G, K, stride, pad,
+		            MB, IC, OC, IN_DIM, G, K, stride, pad,
 		            nthreads), name="C", dtype="uint8")
 
 
