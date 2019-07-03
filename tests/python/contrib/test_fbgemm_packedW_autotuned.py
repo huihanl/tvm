@@ -264,7 +264,9 @@ def test_fbgemm_conv_int8():
     print("Y_shape: ", Y_shape)
     # weight
     W = tvm.placeholder(W_shape, name='W', dtype="int8")
-    w = tvm.nd.array(np.random.uniform(1, 10, size=W_shape).astype(W.dtype), ctx)
+
+    wa = [0,0,-2,-3,-3,1,3,-4,0,0,4,2,0,4,1,3,-3,-3,2,-3,-4,-2,-4,-1,-4,2,4,-2,-3,-2,3,1,-3,2,-1,-1,0,-3,1,3,1,4,1,-3,4,-1,-3,1,-2,0,0,4,-3,-3,-2,1,-3,1,1,3,-2,0,-1,-3,-4,4,-1,-3,4,-1,-3,3,-4,-3,-4,-1,-2,-3,3,0,-1,0,3,4,1,-3,2,4,-2,3,0,0,1,3,2,0,4,1,-1,3,2,2,4,4,3,-2,0,0,-4,-1,1,3,-1,2,3,2,3,2,2,-4,3,0,0,-4,2,0,2,2,-3,4,3,4,0,-3,0,4,-3,0,-2,0,3,-1,0,3]
+    w = tvm.nd.array(np.reshape(np.array(wa), W_shape).astype(W.dtype), ctx)
     print("begin weight")
     # packing of weight
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
@@ -309,7 +311,9 @@ def test_fbgemm_conv_int8():
     s = tvm.create_schedule(C.op)
     f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
     # applying the formula
-    x = tvm.nd.array(np.random.uniform(1, 3, size=input_shape).astype(X.dtype), ctx)
+    #x = tvm.nd.array(np.random.uniform(1, 3, size=input_shape).astype(X.dtype), ctx)
+    xa = [0,0,4,2,3,1,0,4,4,5,2,3,4,0,0,3,4,0,2,0,2,4,3,5,5,3,0,3,2,4,5,4,1,0,4,1,3,4,5,2,1,5,4,4,3,0,3,5,1,2,4,2,1,1,2,0,2,5,5,0,5,3,3,1,5,2,1,0,5,0,3,2,1,5,3,2,5,0,4,4,4,0,0,4,5,3,4,4,5,5,1,1,2,3,3,5,2,5,1,2]
+    x = tvm.nd.array(np.reshape(np.array(xa), input_shape).astype(X.dtype), ctx)
     y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
     f(x,y)
     print(y.asnumpy())

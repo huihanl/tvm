@@ -639,14 +639,13 @@ std::vector<int32_t>* col_offsets = new std::vector<int32_t>(conv_p.OC);
     std::cout << "column_offsets_" << std::endl;
         std::cout << "column_offsets size" << col_offsets->size() << std::endl;
 
-aligned_vector<int8_t> Btest = {0,0,-2,-3,-3,1,3,-4,0,0,4,2,0,4,1,3,-3,-3,2,-3,-4,-2,-4,-1,-4,2,4,-2,-3,-2,3,1,-3,2,-1,-1,0,-3,1,3,1,4,1,-3,4,-1,-3,1,-2,0,0,4,-3,-3,-2,1,-3,1,1,3,-2,0,-1,-3,-4,4,-1,-3,4,-1,-3,3,-4,-3,-4,-1,-2,-3,3,0,-1,0,3,4,1,-3,2,4,-2,3,0,0,1,3,2,0,4,1,-1,3,2,2,4,4,3,-2,0,0,-4,-1,1,3,-1,2,3,2,3,2,2,-4,3,0,0,-4,2,0,2,2,-3,4,3,4,0,-3,0,4,-3,0,-2,0,3,-1,0,3};
 
         col_offsets_with_zero_pt_s8acc32(
             KDimPerGroup,
             OC_per_G,
             OC_per_G,
-            //reinterpret_cast<std::int8_t*>(B->data),
-	    Btest.data(),
+            reinterpret_cast<std::int8_t*>(B->data),
+	    //Btest.data(),
             Bint8_zero_point.data(),
             col_offsets->data(),
             conv_p.OC);
@@ -720,7 +719,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
         //conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
         conv_param_t<2> conv_p(1, 4, 4, {5, 5}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
         BlockingFactors params;
-aligned_vector<int8_t> Btest = {0,0,-2,-3,-3,1,3,-4,0,0,4,2,0,4,1,3,-3,-3,2,-3,-4,-2,-4,-1,-4,2,4,-2,-3,-2,3,1,-3,2,-1,-1,0,-3,1,3,1,4,1,-3,4,-1,-3,1,-2,0,0,4,-3,-3,-2,1,-3,1,1,3,-2,0,-1,-3,-4,4,-1,-3,4,-1,-3,3,-4,-3,-4,-1,-2,-3,3,0,-1,0,3,4,1,-3,2,4,-2,3,0,0,1,3,2,0,4,1,-1,3,2,2,4,4,3,-2,0,0,-4,-1,1,3,-1,2,3,2,3,2,2,-4,3,0,0,-4,2,0,2,2,-3,4,3,4,0,-3,0,4,-3,0,-2,0,3,-1,0,3};
         
 
         if (args.size() > 11) {
@@ -734,15 +732,15 @@ aligned_vector<int8_t> Btest = {0,0,-2,-3,-3,1,3,-4,0,0,4,2,0,4,1,3,-3,-3,2,-3,-
           params.ROW_INTERLEAVE = args[cntr + 6];
 
 
-        //PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data), &params);
-	PackWeightsForConv<2> packedB(conv_p, Btest.data(), &params);
+        PackWeightsForConv<2> packedB(conv_p, reinterpret_cast<std::int8_t*>(W->data), &params);
+//	PackWeightsForConv<2> packedB(conv_p, Btest.data(), &params);
         //PackBMatrix<std::int8_t, std::int32_t> B_Ptr = *(packedB.getPackedWForIm2col());
         //B_Ptr.printPackedMatrix("B");
         *ret = &packedB;
 
         } else {
         //PackWeightsForConv<2> packedB(conv_p, Bint8.data());
-        PackWeightsForConv<2>* packedB = new PackWeightsForConv<2>(conv_p, Btest.data());
+        PackWeightsForConv<2>* packedB = new PackWeightsForConv<2>(conv_p, reinterpret_cast<std::int8_t*>(W->data));
         //PackWeightsForConv<2> packedB(conv_p, Btest.data());
 	//packedB.getPackedWForIm2col()->printPackedMatrix("B");
         //PackBMatrix<std::int8_t, std::int32_t> B_Ptr = *(packedB.getPackedWForIm2col());
@@ -765,7 +763,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     std::int32_t Aint8_zero_point = args[3];
     //aligned_vector<float> Bint8_zero_point = args[4];
     
-    std::int32_t Bint8_zp = args[3];
+    std::int32_t Bint8_zp = args[4];
     aligned_vector<int32_t> Bint8_zero_point = {Bint8_zp};
 
     std::int32_t C_zero_point = args[5];
@@ -885,12 +883,11 @@ std::cout << outputProcObj.getBZeroPoint()[0] << std::endl;
 ////std::cout << outputProcObj.getBias() << std::endl;
 std::cout << outputProcObj.getNCols() << std::endl;
 
-std::vector<std::uint8_t> Atest = {0,0,4,2,3,1,0,4,4,5,2,3,4,0,0,3,4,0,2,0,2,4,3,5,5,3,0,3,2,4,5,4,1,0,4,1,3,4,5,2,1,5,4,4,3,0,3,5,1,2,4,2,1,1,2,0,2,5,5,0,5,3,3,1,5,2,1,0,5,0,3,2,1,5,3,2,5,0,4,4,4,0,0,4,5,3,4,4,5,5,1,1,2,3,3,5,2,5,1,2};
 
     fbgemmConv(
         conv_p,
-        //reinterpret_cast<const std::uint8_t*>(A->data),
-        Atest.data(),
+        reinterpret_cast<const std::uint8_t*>(A->data),
+//        Atest.data(),
 	*packedB,
         reinterpret_cast<std::uint8_t*>(Y->data),
         Y_int32_->data(),
@@ -1039,6 +1036,9 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_reference_solution")
           conv_p.OC);
     }
 
+for (int i = 0; i < col_offsets.size(); i ++) {
+std::cout << col_offsets.at(i) << std::endl;
+}
     for (int g = 0; g < conv_p.G; ++g) {
       row_offsets_u8acc32_ref(
           MDim,

@@ -173,7 +173,7 @@ def compute_ref_sol(Y_shape, X, X_zero_point, W, W_zero_point,
          return _api.extern(
                  Y_shape, [X, W],
                  lambda ins, outs: _intrin.call_packed(
-                    "tvm.contrib.fbgemm.reference_solution",
+                    "tvm.contrib.fbgemm.compute_reference_solution",
                     ins[0], ins[1], outs[0], X_zero_point, W_zero_point,
                     Y_zero_point,
                     C_multiplier,
@@ -185,7 +185,7 @@ def compute_ref_sol(Y_shape, X, X_zero_point, W, W_zero_point,
          return _api.extern(
                  Y_shape, [X, W],
                  lambda ins, outs: _intrin.call_packed(
-                    "tvm.contrib.fbgemm.reference_solution",
+                    "tvm.contrib.fbgemm.compute_reference_solution",
                     ins[0], ins[1], outs[0], X_zero_point, W_zero_point,
                     Y_zero_point,
                     C_multiplier,
