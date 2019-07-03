@@ -279,9 +279,8 @@ def test_fbgemm_conv_int8():
 
     # quantization parameters will be got from Operator arguments
     X_zero_point = 4
-    W_zero_point = tvm.nd.array(np.array([-2]).astype("int32"), ctx)
+    W_zero_point = -2 
     create_pointer_vector_int = tvm.get_global_func("tvm.contrib.fbgemm.create_pointer_vector_int")
-    w_zp = create_pointer_vector_int(W_zero_point, 1)
     #W_zero_point = [1]
     Y_zero_point = 5
     print("finish w zero point pointer")
@@ -303,22 +302,31 @@ def test_fbgemm_conv_int8():
     print("finish stride_v")
     pad_v = create_pointer_vector_int(pad, 4)
     print("finish pad_v")
-    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, w_zp, Y_zero_point, C_multiplier, co,
-			 MB, IC, OC, in_dim_v, G, k_v, stride_v, pad_v)
 
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W_zero_point, Y_zero_point, C_multiplier, co,
+			 MB, IC, OC, in_dim_v, G, k_v, stride_v, pad_v)
+    print("After C")
     s = tvm.create_schedule(C.op)
     f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
-
     # applying the formula
     x = tvm.nd.array(np.random.uniform(1, 3, size=input_shape).astype(X.dtype), ctx)
-    #x = tvm.nd.array(np.array([0,0,4,2,3,1,0,4,4,5,2,3,4,0,0,3,4,0,2,0,2,4,3,5,5,3,0,3,2,4,5,4,1,0,4,1,3,4,5,2,1,5,4,4,3,0,3,5,1,2,4,2,1,1,2,0,2,5,5,0,5,3,3,1,5,2,1,0,5,0,3,2,1,5,3,2,5,0,4,4,4,0,0,4,5,3,4,4,5,5,1,1,2,3,3,5,2,5,1,2]).astype(X.dtype), ctx)
-    #b = tvm.nd.array(np.random.uniform(b_val - 1, b_val + 2, size=(n,)).astype(B.dtype), ctx)
-    #y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
     y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
-
     f(x,y)
+    print(y.asnumpy())
+    print("finish conv int8  ") 
+    C1 = fbgemm.compute_ref_sol(Y_shape, X, X_zero_point, W, W_zero_point, Y_zero_point, C_multiplier,
+                         MB, IC, OC, in_dim_v, G, k_v, stride_v, pad_v)
+    s1 = tvm.create_schedule(C1.op)
+    f1 = tvm.build(s, [X, W, C1], target="llvm", name="compute_ref_sol")
+    # applying the formula
+    y1 = tvm.nd.array(np.zeros(Y_shape, dtype=C1.dtype), ctx)
+    f1(x,w,y1)
+
+    tvm.testing.assert_allclose(y.asnumpy(), y1.asnumpy(), rtol=1e-5)
 
     print(y.asnumpy())
+    print(y1.asnumpy())
+
 
 if __name__ == "__main__":
     shapes = (
