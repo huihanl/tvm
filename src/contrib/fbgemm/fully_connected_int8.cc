@@ -923,6 +923,8 @@ std::cout << "AFTER FBGEMMCONV";
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_reference_solution")
     .set_body([](TVMArgs args, TVMRetValue* ret) {
 
+    std::cout << "REACH 1" << std::endl;
+
     DLTensor* A = args[0];
     DLTensor* W = args[1];
     
@@ -1036,9 +1038,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_reference_solution")
           conv_p.OC);
     }
 
-for (int i = 0; i < col_offsets.size(); i ++) {
-std::cout << col_offsets.at(i) << std::endl;
-}
+    std::cout << "REACH 2" << std::endl;    
+
     for (int g = 0; g < conv_p.G; ++g) {
       row_offsets_u8acc32_ref(
           MDim,

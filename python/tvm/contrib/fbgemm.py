@@ -168,7 +168,7 @@ def compute_ref_sol(Y_shape, X, X_zero_point, W, W_zero_point,
                                 MB, IC, OC, IN_DIM, G, K, stride, pad, nthreads=1,
                                 autotune = False, MCB = 56, NCB = 32, KCB = 256,
                                 MR = 14, NR = 32, NR_MIN = 16, ROW_INTERLEAVE = 4):
-    
+    print("reach compute_ref_sol")    
     if autotune:
          return _api.extern(
                  Y_shape, [X, W],
@@ -180,7 +180,7 @@ def compute_ref_sol(Y_shape, X, X_zero_point, W, W_zero_point,
                     MB, IC, OC, IN_DIM, G, K, stride, pad,
                     nthreads,
                     MCB, NCB, KCB, MR, NR, NR_MIN, ROW_INTERLEAVE),
-                    name="C", dtype="uint8")
+                    name="C1", dtype="uint8")
     else:
          return _api.extern(
                  Y_shape, [X, W],
@@ -190,6 +190,6 @@ def compute_ref_sol(Y_shape, X, X_zero_point, W, W_zero_point,
                     Y_zero_point,
                     C_multiplier,
                             MB, IC, OC, IN_DIM, G, K, stride, pad,
-                            nthreads), name="C", dtype="uint8")
+                            nthreads), name="C1", dtype="uint8")
 
 _init_api("tvm.contrib.fbgemm")
