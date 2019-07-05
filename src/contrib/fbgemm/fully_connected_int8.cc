@@ -686,8 +686,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
       //aligned_vector<int8_t> Bint8(9 * 4 * 4);
       //randFill<int8_t>(Bint8, 1, 4);
       DLTensor* W = args[0];
-        /*
-	int spatial_dim = args[1];
+
+	      int spatial_dim = args[1];
         int cntr = 2;
         int MB = args[cntr];
         int IC = args[cntr + 1];
@@ -715,11 +715,11 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
         pad[1] = p_pr[1];
         pad[2] = p_pr[2];
         pad[3] = p_pr[3];
-*/
-        //conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
-        conv_param_t<2> conv_p(1, 4, 4, {5, 5}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
+
+        conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
+
         BlockingFactors params;
-        
+
 
         if (args.size() > 11) {
           int cntr = 10;
@@ -762,7 +762,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     DLTensor* Y = args[2];
     std::int32_t Aint8_zero_point = args[3];
     //aligned_vector<float> Bint8_zero_point = args[4];
-    
+
     std::int32_t Bint8_zp = args[4];
     aligned_vector<int32_t> Bint8_zero_point = {Bint8_zp};
 
@@ -913,158 +913,10 @@ std::cout << "AFTER FBGEMMCONV";
 for (int i = 0; i < conv_p.MB * im_out_dim * conv_p.OC; i++) {
 //    Y_int32_->push_back(0);
     std::cout << Y_int32_->at(i) << " ";
-}   
+}
 std::cout << "AFTER FBGEMMCONV";
 
    });
 
-
-
-TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_reference_solution")
-    .set_body([](TVMArgs args, TVMRetValue* ret) {
-
-    std::cout << "REACH 1" << std::endl;
-
-    DLTensor* A = args[0];
-    DLTensor* W = args[1];
-    
-    DLTensor* Y = args[2];
-    std::int32_t Aint8_zero_point = args[3];
-    //aligned_vector<float> Bint8_zero_point = args[4];
-
-    std::int32_t Bint8_zp = args[4];
-
-    aligned_vector<int32_t> Bint8_zero_point = {Bint8_zp};
-
-    std::int32_t C_zero_point = args[5];
-
-    float num = (double) args[6];
-    aligned_vector<float> C_multiplier = {num};
-    std::cout << "C_multiplier " << C_multiplier.at(0) << std::endl;
-    
-    int cntr = 7;
-    int MB = args[cntr];
-    int IC = args[cntr + 1];
-    int OC = args[cntr + 2];
-    //std::array<int, 2> IN_DIM = args[cntr + 3];
-    std::uint64_t id_addr = args[cntr + 3];
-    void* id_d = reinterpret_cast<void*>(static_cast<uint64_t>(id_addr));
-    std::vector<int>* IN_DIM_v =
-        reinterpret_cast<std::vector<int>*>(id_d);
-    std::array<int, 2> IN_DIM;
-    IN_DIM[0] = IN_DIM_v->data()[0];
-    IN_DIM[1] = IN_DIM_v->data()[1];
-
-    int G = args[cntr + 4];
-
-    //std::array<int, 2> K = args[cntr + 5];
-    std::uint64_t k_addr = args[cntr + 5];
-    void* k_d = reinterpret_cast<void*>(static_cast<uint64_t>(k_addr));
-    std::vector<int>* K_v =
-        reinterpret_cast<std::vector<int>*>(k_d);
-    std::array<int, 2> K;
-    K[0] = K_v->data()[0];
-    K[1] = K_v->data()[1];
- 
-    std::uint64_t s_addr = args[cntr + 6];
-    void* s_d = reinterpret_cast<void*>(static_cast<uint64_t>(s_addr));
-    std::vector<int>* stride_v =
-        reinterpret_cast<std::vector<int>*>(s_d);
-    std::array<int, 2> stride;
-    stride[0] = stride_v->data()[0];
-    stride[1] = stride_v->data()[1];
-    //std::array<int, 2>* stride =
-    //reinterpret_cast<std::array<int, 2>*>(s_d);
-    
-    //std::array<int, 4> pad = args[cntr + 7];
-    std::uint64_t p_addr = args[cntr + 7];
-    void* p_d = reinterpret_cast<void*>(static_cast<uint64_t>(p_addr));
-    //std::array<int, 4>* pad =
-    //reinterpret_cast<std::array<int, 4>*>(p_d);
-    std::vector<int>* p_v =
-        reinterpret_cast<std::vector<int>*>(p_d);
-    std::array<int, 4> pad;
-    pad[0] = p_v->data()[0];
-    pad[1] = p_v->data()[1];
-    pad[2] = p_v->data()[2];
-    pad[3] = p_v->data()[3];
-    
-    conv_param_t<2> conv_p(MB, IC, OC, IN_DIM, G, K, stride, pad);
-
-    int im_in_dim = accumulate(
-        conv_p.IN_DIM.begin(), conv_p.IN_DIM.end(), 1, multiplies<int>());
-
-    int kernel_dim =
-        accumulate(conv_p.K.begin(), conv_p.K.end(), 1, multiplies<int>());
-
-    int im_out_dim = accumulate(
-        conv_p.OUT_DIM.begin(), conv_p.OUT_DIM.end(), 1, multiplies<int>());
-
-    aligned_vector<int32_t> Cint32_ref(conv_p.MB * im_out_dim * conv_p.OC);
-
-
-
-    // reference implementation
-    conv_ref(
-        conv_p,
-        reinterpret_cast<const std::uint8_t*>(A->data),
-        Aint8_zero_point,
-        reinterpret_cast<std::int8_t*>(W->data),
-        Cint32_ref.data());
-
-    // matrix dimensions after im2col
-    int MDim = conv_p.MB * im_out_dim;
-    int NDim = conv_p.OC / conv_p.G;
-    int KDim = kernel_dim * conv_p.IC;
-    int KDimPerGroup = KDim / conv_p.G;
-
-    int OC_per_G = conv_p.OC / conv_p.G;
-
-    // computing row offset
-    vector<int32_t> row_offsets(MDim);
-    vector<uint8_t> Aint8_im2col(MDim * KDim);
-    im2col_ref(conv_p, reinterpret_cast<const std::uint8_t*>(A->data), Aint8_zero_point, Aint8_im2col.data());
-
-    // computing column offset
-    vector<int32_t> col_offsets(conv_p.OC);
-    for (int g = 0; g < conv_p.G; ++g) {
-      col_offsets_with_zero_pt_s8acc32_ref(
-          KDimPerGroup,
-          OC_per_G,
-          OC_per_G,
-          reinterpret_cast<std::int8_t*>(W->data) + g * KDimPerGroup * OC_per_G,
-          Bint8_zero_point.data(),
-          col_offsets.data() + g * OC_per_G,
-          conv_p.OC);
-    }
-
-    std::cout << "REACH 2" << std::endl;    
-
-    for (int g = 0; g < conv_p.G; ++g) {
-      row_offsets_u8acc32_ref(
-          MDim,
-          KDimPerGroup,
-          KDim,
-          Aint8_im2col.data() + g * KDimPerGroup,
-          row_offsets.data());
-
-      requantize_u8acc32_ref(
-          MDim,
-          NDim,
-          conv_p.G * NDim,
-          Cint32_ref.data() + g * NDim,
-          reinterpret_cast<std::uint8_t*>(Y->data) + g * NDim,
-          C_multiplier.data() + g * NDim / conv_p.OC,
-          C_zero_point,
-          Aint8_zero_point,
-          Bint8_zero_point.data() + g * NDim / conv_p.OC,
-          row_offsets.data(),
-          col_offsets.data() + g * NDim,
-          nullptr,
-          conv_p.OC);
-    }
-    });
-
 }  // namespace contrib
 }  // namespace tvm
-
