@@ -305,15 +305,11 @@ def row_offsets_u8acc32_ref(M, K, ld, Aint8, length, KDimPerGroup, G):
 
 def col_offsets_with_zero_pt_s8acc32_ref(K, N, ld, OC, Bint8, B_zero_point, ncols_per_quant_group, G, col_lead, w_lead):
     col_offsets = [0 for i in range(OC)]
-    print(col_offsets)
     for g in range(G):
         for j in range(N):
             total = 0
             for k in range(K):
                 total += Bint8[g * w_lead + k * ld + j]
-            print(g, g * col_lead, g * col_lead + j, j, ncols_per_quant_group, j / ncols_per_quant_group)
-            print(col_offsets[g * col_lead + j])
-            print(B_zero_point[j / ncols_per_quant_group])
             col_offsets[g * col_lead + j] = total - B_zero_point[j / ncols_per_quant_group] * K
 
     return col_offsets
@@ -336,15 +332,18 @@ def reference_solution(A, A_zero_point, W, MB, IC, OC, IN_DIM, OUT_DIM, G, K, st
 
     length_im2col = MDim * KDim
     A_im2col = im2col_ref(MB, IC, OC, IN_DIM, OUT_DIM, G, K, stride, pad, A, A_zero_point, length_im2col)
-
+    print("A_im2col: ")
+    print(A_im2col)
     col_lead = OC_per_G
     w_lead = KDimPerGroup * OC_per_G
-    print("G = ", G)
     col_offsets = col_offsets_with_zero_pt_s8acc32_ref(KDimPerGroup, OC_per_G, OC_per_G, OC,
                                                        W, B_zero_point, OC, G, col_lead, w_lead)
-
+    print("col_offsets: ")
+    print(col_offsets)
 
     row_offsets = row_offsets_u8acc32_ref(MDim, KDimPerGroup, KDim, A_im2col, MDim, KDimPerGroup, G)
+    print("row_offsets: ")
+    print(row_offsets)
 
     NDim_OC = NDim / OC
     output = requantize_u8acc32_ref(MDim, NDim, G * NDim, Cint32_ref, C_multiplier, C_zero_point,
@@ -354,7 +353,7 @@ def reference_solution(A, A_zero_point, W, MB, IC, OC, IN_DIM, OUT_DIM, G, K, st
     return output
 
 
-def test_fbgemm_conv_int8(MBi, ICi, OCi, IN_DIMi, Gi, Ki, stridei, padi):
+def test_fbgemm_conv_int8(xref, wref, yref, MBi, ICi, OCi, IN_DIMi, Gi, Ki, stridei, padi):
     ctx = tvm.cpu(0)
 
     spatial_dim = 2
@@ -364,7 +363,7 @@ def test_fbgemm_conv_int8(MBi, ICi, OCi, IN_DIMi, Gi, Ki, stridei, padi):
     OC = OCi
     #IN_DIM = [56, 56]
     IN_DIM = tvm.nd.array(np.array(IN_DIMi).astype("int32"), ctx)
-    G = 1
+    G = Gi
     K = tvm.nd.array(np.array(Ki).astype("int32"), ctx)
     stride = tvm.nd.array(np.array(stridei).astype("int32"), ctx)
     #pad = [1, 1, 1, 1]
@@ -391,22 +390,17 @@ def test_fbgemm_conv_int8(MBi, ICi, OCi, IN_DIMi, Gi, Ki, stridei, padi):
 
     # shapes
     input_shape = (MB, IN_DIM1[0], IN_DIM1[1], IC) #NHWC
-    print("input_shape: ", input_shape)
     W_shape = (K1[0], K1[1], IC, OC / G) #RSCK
-    print("W_shape: ", W_shape)
     Y_shape = (MB, OUT_DIM[0], OUT_DIM[1], OC) #NHWK
-    print("Y_shape: ", Y_shape)
     # weight
     W = tvm.placeholder(W_shape, name='W', dtype="int8")
     wa_length = K1[0] * K1[1] * IC * OC / G
-    wa = [random.randint(-4, 4) for i in range(wa_length)]
+    wa = wref
     w = tvm.nd.array(np.reshape(np.array(wa), W_shape).astype(W.dtype), ctx)
-    print("begin weight")
     # packing of weight
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
 
     ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
-    print("finish weight")
     # bias
     #B = tvm.placeholder((n,), name='B', dtype="int")
 
@@ -419,52 +413,40 @@ def test_fbgemm_conv_int8(MBi, ICi, OCi, IN_DIMi, Gi, Ki, stridei, padi):
     create_pointer_vector_int = tvm.get_global_func("tvm.contrib.fbgemm.create_pointer_vector_int")
     #W_zero_point = [1]
     Y_zero_point = 5
-    print("finish w zero point pointer")
 
     # column offset
     get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
     co = get_co_offsets(w, W_zero_point, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
-    print("finish column offset")
     # ReQuant Multiplier
     #C_multiplier = np.random.uniform(0.1234 / 2, 0.1234 * 3 / 2, size=(1,))
     C_multiplier = 0.0878014
-#C_multiplier = [0.1234]
 # formula for calculation
     in_dim_v = create_pointer_vector_int(IN_DIM, 2)
-    print("finish in_dim_v")
     k_v = create_pointer_vector_int(K, 2)
-    print("finish k_v")
     stride_v = create_pointer_vector_int(stride, 2)
-    print("finish stride_v")
     pad_v = create_pointer_vector_int(pad, 4)
-    print("finish pad_v")
 
     C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W_zero_point, Y_zero_point, C_multiplier, co,
 			 MB, IC, OC, in_dim_v, G, k_v, stride_v, pad_v)
-    print("After C")
     s = tvm.create_schedule(C.op)
     f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
     # applying the formula
     x_length = MB * IN_DIM1[0] * IN_DIM1[1] * IC
-    xa = [random.randint(0, 5) for i in range(x_length)]
+    xa = xref
     x = tvm.nd.array(np.reshape(np.array(xa), input_shape).astype(X.dtype), ctx)
     y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
     f(x,y)
-    print(y.asnumpy())
-    print("finish conv int8  ") 
-#    C1 = fbgemm.compute_ref_sol(Y_shape, X, X_zero_point, W, W_zero_point, Y_zero_point, C_multiplier,
- #                        MB, IC, OC, in_dim_v, G, k_v, stride_v, pad_v)
-  #  s1 = tvm.create_schedule(C1.op)
-   # f1 = tvm.build(s, [X, W, C1], target="llvm", name="compute_ref_sol")
-    # applying the formula
-    #y1 = tvm.nd.array(np.zeros(Y_shape, dtype=C1.dtype), ctx)
-    #f1(x,w,y1)
+
     y_ref = reference_solution(xa, X_zero_point, wa, MB, IC, OC, IN_DIM1, OUT_DIM, G, K1, stride1, pad1, [C_multiplier], [W_zero_point], Y_zero_point)
     y_ref = np.reshape(np.array(y_ref), Y_shape)
-    tvm.testing.assert_allclose(y.asnumpy(), y_ref, rtol=1e-5)
 
-    print(y.asnumpy())
-    print(y_ref)
+    #tvm.testing.assert_allclose(y_ref, np.reshape(np.array(yref), Y_shape), rtol=1e-5)
+    #print("reference_solution correct")
+
+    #tvm.testing.assert_allclose(y.asnumpy(), np.reshape(np.array(yref), Y_shape), rtol=1e-5)
+    #print("implementation correct")
+
+    tvm.testing.assert_allclose(y.asnumpy(), y_ref, rtol=1e-5)
 
 
 if __name__ == "__main__":
@@ -509,15 +491,28 @@ if __name__ == "__main__":
         [1,    128,    2722])
 
     configs = [ 
-		[1, 4, 4, [5, 5], 1, [3, 3], [1, 1], [1, 1, 1, 1]], 
-		[1, 32, 32, [3, 3], 8, [3, 3], [1, 1], [1, 1, 1, 1]],    
-		[1, 32, 32, [4, 4], 8, [3, 3], [1, 1], [1, 1, 1, 1]],    [1, 32, 32, [3, 5], 8, [3, 3], [1, 1], [1, 1, 1, 1]],    [1, 32, 32, [5, 3], 8, [3, 3], [1, 1], [1, 1, 1, 1]],    [1, 8, 8, [5, 5], 2, [3, 3], [1, 1], [1, 1, 1, 1]],    [1, 128, 128, [56, 48], 32, [3, 3], [1, 1], [1, 1, 1, 1]],    [1, 128, 128, [48, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 64, 64, [3, 3], 8, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 64, 64, [4, 4], 8, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 64, 64, [3, 5], 8, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 64, 64, [5, 3], 8, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 16, 16, [5, 5], 2, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 256, 256, [56, 48], 32, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 256, 256, [48, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]],     [2, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]] ]
+		#[1, 4, 4, [5, 5], 1, [3, 3], [1, 1], [1, 1, 1, 1]], 
+		#[1, 6, 6, [3, 3], 1, [3, 3], [1, 1], [1, 1, 1, 1]],    
+		[1, 32, 32, [3, 3], 8, [3, 3], [1, 1], [1, 1, 1, 1]],
+[1, 32, 32, [4, 4], 8, [3, 3], [1, 1], [1, 1, 1, 1]],    [1, 32, 32, [3, 5], 8, [3, 3], [1, 1], [1, 1, 1, 1]],    [1, 32, 32, [5, 3], 8, [3, 3], [1, 1], [1, 1, 1, 1]],    [1, 8, 8, [5, 5], 2, [3, 3], [1, 1], [1, 1, 1, 1]],    [1, 128, 128, [56, 48], 32, [3, 3], [1, 1], [1, 1, 1, 1]],    [1, 128, 128, [48, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 64, 64, [3, 3], 8, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 64, 64, [4, 4], 8, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 64, 64, [3, 5], 8, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 64, 64, [5, 3], 8, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 16, 16, [5, 5], 2, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 256, 256, [56, 48], 32, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 256, 256, [48, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]],     [1, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]],     [2, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]] ]
 
 
-    for config in configs[0:3]:
-        print(config[0], config[1], config[2], config[3], config[4], config[5], config[6], config[7])
-        for i in range(1):
-            test_fbgemm_conv_int8(config[0], config[1], config[2], config[3], config[4], config[5], config[6], config[7])
+    f= open("diff.txt","r")
+    valid = f.readlines()
+    for i in range(len(valid) / 3):
+	config = configs[i]
+	print(i)
+        xref = valid[i * 3]
+        wref = valid[i * 3 + 1]
+	yref = valid[i * 3 + 2]
+        xref = xref.split()
+	xref = [int(x) for x in xref]
+        wref = wref.split()
+        wref = [int(w) for w in wref]
+        yref = yref.split()
+        yref = [int(y) for y in yref]
+	#print(xref, wref, yref)
+        test_fbgemm_conv_int8(xref, wref, yref, config[0], config[1], config[2], config[3], config[4], config[5], config[6], config[7])
     """
     if True:
 	 shapes = (

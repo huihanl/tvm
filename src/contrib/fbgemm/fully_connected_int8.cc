@@ -554,17 +554,12 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.fully_connected_int8")
      const int32_t* B_zero_point,
      int32_t* col_offsets,
      int ncols_per_quant_group) {
-         std::cout << "N=" << N << " " << std::endl;
    for (int j = 0; j < N; ++j) {
-         std::cout << "j=" << j << " " << std::endl;
      int32_t sum = 0;
      for (int k = 0; k < K; ++k) {
- //        std::cout << "k=" << k << " " << std::endl;
        sum += Bint8[k * ld + j];
- //        std::cout << "sum=" << sum << " " << std::endl;
      }
-     col_offsets[j] = sum - B_zero_point[0] * K;
-     std::cout << "col_offsets[j]" << col_offsets[j] << " " << std::endl;
+     col_offsets[j] = sum - B_zero_point[j / ncols_per_quant_group] * K;
    }
  }
 
@@ -605,11 +600,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
         stride[0] = s_pr[0];
         stride[1] = s_pr[1];
 
-        //std::array<int, 4> pad = args[cntr + 7];
-        //std::uint64_t p_addr = args[cntr + 7];
-        //void* p_d = reinterpret_cast<void*>(static_cast<uint64_t>(p_addr));
-        //std::array<int, 4>* pad =
-        //reinterpret_cast<std::array<int, 4>*>(p_d);
         DLTensor* pad_addr = args[cntr + 7];
         int* p_pr = reinterpret_cast<int*>(pad_addr->data);
         std::array<int, 4> pad = {0, 0, 0, 0};
@@ -617,7 +607,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
         pad[1] = p_pr[1];
         pad[2] = p_pr[2];
         pad[3] = p_pr[3];
-         //conv_param_t<> shape = conv_param_t<>(1, 128, 128, {56, 56}, 1, {3, 3}, {1, 1}, {1, 1, 1, 1});
         conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
 
 
@@ -628,29 +617,26 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
       int KDimPerGroup = KDim / conv_p.G;
       int OC_per_G = conv_p.OC / conv_p.G;
 
-std::cout << kernel_dim << " " << std::endl;
-std::cout << KDim << " " << std::endl;
-std::cout << KDimPerGroup << " " << std::endl;
-std::cout << OC_per_G << " " << std::endl;
 
        // COMPUTING column offset
-      //std::vector<int32_t>* col_offsets = new std::vector<int32_t>;
-std::vector<int32_t>* col_offsets = new std::vector<int32_t>(conv_p.OC);
-    std::cout << "column_offsets_" << std::endl;
-        std::cout << "column_offsets size" << col_offsets->size() << std::endl;
+      std::vector<int32_t>* col_offsets = new std::vector<int32_t>(conv_p.OC);
 
-
+    for (int g = 0; g < conv_p.G; ++g) {
         col_offsets_with_zero_pt_s8acc32(
             KDimPerGroup,
             OC_per_G,
             OC_per_G,
-            reinterpret_cast<std::int8_t*>(B->data),
-	    //Btest.data(),
+            reinterpret_cast<std::int8_t*>(B->data) + g * KDimPerGroup * OC_per_G,
             Bint8_zero_point.data(),
-            col_offsets->data(),
+            col_offsets->data() + g * OC_per_G,
             conv_p.OC);
+    }
+    std::cout << "column offsets: " << std::endl;
+    for (int i = 0; i < col_offsets->size(); i++) {
+        std::cout << col_offsets->at(i) << " ";
+    }
+    std::cout << std::endl;
       *ret = col_offsets;
-      std::cout << "REACH *ret = col_offsets; " << std::endl;
 });
 
 TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.create_pointer_vector_int")
@@ -852,12 +838,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     //std::vector<std::int32_t>* Y_int32_ = new std::vector<int32_t>;
 //    Y_int32_->reserve(conv_p.MB * im_out_dim * conv_p.OC);
 std::vector<std::int32_t>* Y_int32_ = new std::vector<int32_t>(conv_p.MB * im_out_dim * conv_p.OC);
-std::cout << "BEFORE FBGEMMCONV";
-for (int i = 0; i < conv_p.MB * im_out_dim * conv_p.OC; i++) {
-//    Y_int32_->push_back(0);
-    std::cout << Y_int32_->at(i) << " ";
-}
-std::cout << "BEFORE FBGEMMCONV";
     // no-op output process objects
     DoNothing<> doNothingObj{};
     ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
@@ -874,20 +854,10 @@ std::cout << "BEFORE FBGEMMCONV";
         conv_p.OC,
         conv_p.G);
 
-std::cout << outputProcObj.getCMultiplier()[0] << std::endl;
-std::cout << outputProcObj.getAZeroPoint() << std::endl;
-std::cout << outputProcObj.getCZeroPoint() << std::endl;
-std::cout << outputProcObj.getBZeroPoint()[0] << std::endl;
-//std::cout << outputProcObj.getRowOffsets() << std::endl;
-////std::cout << outputProcObj.getColOffsets() << std::endl;
-////std::cout << outputProcObj.getBias() << std::endl;
-std::cout << outputProcObj.getNCols() << std::endl;
-
 
     fbgemmConv(
         conv_p,
         reinterpret_cast<const std::uint8_t*>(A->data),
-//        Atest.data(),
 	*packedB,
         reinterpret_cast<std::uint8_t*>(Y->data),
         Y_int32_->data(),
@@ -895,26 +865,6 @@ std::cout << outputProcObj.getNCols() << std::endl;
         0,
         1);
 
-aligned_vector<uint8_t> Cint8_ref(conv_p.MB * im_out_dim * conv_p.OC);
-/*conv_ref(
-        conv_p,
-        reinterpret_cast<const std::uint8_t*>(A->data),
-        Aint8_zero_point,
-        Bint8.data(),
-        Cint32_ref.data());
-*/
-//for (int i = 0; i < conv_p.MB * im_dim * conv_p.IC; i++) {
-//std::cout << static_cast<int64_t>(reinterpret_cast<std::uint8_t*>(A->data)[i]) << " ";}
-
-for (int i = 0; i < conv_p.MB * im_out_dim * conv_p.OC; i++) {
-std::cout << static_cast<int64_t>(reinterpret_cast<std::uint8_t*>(Y->data)[i]) << " ";}
-
-std::cout << "AFTER FBGEMMCONV";
-for (int i = 0; i < conv_p.MB * im_out_dim * conv_p.OC; i++) {
-//    Y_int32_->push_back(0);
-    std::cout << Y_int32_->at(i) << " ";
-}
-std::cout << "AFTER FBGEMMCONV";
 
    });
 
