@@ -22,7 +22,7 @@ def conv_ref(MB, IC, OC, IN_DIM, OUT_DIM, G, K, stride, pad,
                                 w_in = -pad[1] + w * stride[1] + s
                                 for c in range(IC / G):
                                     a = 0
-                                    if h_in < 0 or h_in >= IN_DIM[0]
+                                    if h_in < 0 or h_in >= IN_DIM[0] \
                                        or w_in < 0 or w_in >= IN_DIM[1]:
                                         a = A_zero_point
                                     else:
@@ -49,7 +49,7 @@ def im2col_ref(MB, IC, OC, IN_DIM, OUT_DIM, G, K, stride,
                     h_in = -pad[0] + h * stride[0] + r
                     for s in range(K[1]):
                         w_in = -pad[1] + w * stride[1] + s
-                        if h_in < 0 or h_in >= IN_DIM[0]
+                        if h_in < 0 or h_in >= IN_DIM[0] \
                            or w_in < 0 or w_in >= IN_DIM[1]:
                             for g in range(G):
                                 for c_ in range(IC / G):
@@ -84,12 +84,12 @@ def requantize_u8acc32_ref(M1, K1, ld1, Aint81, length1, KDimPerGroup1, G,
                 sum += Aint81[KDimPerGroup1 * g + i * ld1 + k]
             row_offsets[i] = sum
 
-	    for i in range(M):
+	for i in range(M):
             for j in range(N):
                 raw = inp[NDim * g + i * ld + j]
                 if A_zero_point:
-                    raw -= A_zero_point * col_offsets[j + NDim * g];
-                raw -= B_zero_point[j / ncols_per_quant_group + NDim_OC * g]
+                    raw -= A_zero_point * col_offsets[j + NDim * g]
+                raw -= B_zero_point[j / ncols_per_quant_group + NDim_OC * g] \
                        * row_offsets[i]
                 result = raw * C_multiplier[NDim_OC * g + j / ncols_per_quant_group]
                 rounded = round(result) + C_zero_point
@@ -105,7 +105,7 @@ def col_offsets_with_zero_pt_s8acc32_ref(K, N, ld, OC, Bint8, B_zero_point,
             total = 0
             for k in range(K):
                 total += Bint8[g * w_lead + k * ld + j]
-            col_offsets[g * col_lead + j] = total -
+            col_offsets[g * col_lead + j] = total - \
             B_zero_point[j / ncols_per_quant_group] * K
 
     return col_offsets
@@ -133,7 +133,7 @@ def reference_solution(A, A_zero_point, W, MB, IC, OC, IN_DIM, OUT_DIM, G, K,
                           stride, pad, A, A_zero_point, length_im2col)
     col_lead = OC_per_G
     w_lead = KDimPerGroup * OC_per_G
-    col_offsets =
+    col_offsets = \
     col_offsets_with_zero_pt_s8acc32_ref(KDimPerGroup, OC_per_G, OC_per_G, OC,
                                         W, B_zero_point, OC, G, col_lead, w_lead)
 
