@@ -253,12 +253,12 @@ def test_fbgemm_conv_int8(MBi, ICi, OCi, IN_DIM_lst, G, K_lst, stride_lst, pad_l
     # quantization parameters will be got from Operator arguments
     X_zero_point = 4
     W_zero_point = -2
-    create_pointer_vector_int =
+    create_pointer_vector_int = \
     tvm.get_global_func("tvm.contrib.fbgemm.create_pointer_vector_int")
     Y_zero_point = 5
 
     # column offset
-    get_co_offsets =
+    get_co_offsets = \
     tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
     co = get_co_offsets(w, W_zero_point, spatial_dim,
                         MB, IC, OC, IN_DIM, G, K, stride, pad)
