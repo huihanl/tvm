@@ -217,7 +217,7 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val, A_tran
            y.asnumpy(), np.matmul(x1, w1) + b.asnumpy(), rtol=1e-5)
 
 
-def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst):
+def test_fbgemm_conv_int8(MBi, ICi, OCi, IN_DIM_lst, G, K_lst, stride_lst, pad_lst):
     ctx = tvm.cpu(0)
     spatial_dim = 2
     IN_DIM = tvm.nd.array(np.array(IN_DIM_lst).astype("int32"), ctx)
@@ -241,9 +241,7 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
     # weight
     W = tvm.placeholder(W_shape, name='W', dtype="int8")
     wa_length = K_lst[0] * K_lst[1] * IC * OC / G
-    wa = [random.randint(-4, 4) for i in range(wa_length)]
-    w = tvm.nd.array(np.reshape(np.array(wa), W_shape).astype(W.dtype), ctx)
-
+    w = tvm.nd.array(np.random.uniform(-4, 4, size=W_shape).astype(W.dtype), ctx)
     # packing of weight
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
 
@@ -279,8 +277,7 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
     f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
 
     x_length = MB * IN_DIM_lst[0] * IN_DIM_lst[1] * IC
-    xa = [random.randint(0, 5) for i in range(x_length)]
-    x = tvm.nd.array(np.reshape(np.array(xa), input_shape).astype(X.dtype), ctx)
+    x = tvm.nd.array(np.random.uniform(0, 5, size=input_shape).astype(X.dtype), ctx)
     y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
     f(x,y)
 
@@ -351,8 +348,8 @@ if __name__ == "__main__":
         [1, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]],
         [2, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]]]
 
-    for i in range(len(configs)):
-	config = configs[i]
+    for i in range(configs):
+	    config = configs[i]
         test_fbgemm_conv_int8(config[0], config[1], config[2], config[3],
                               config[4], config[5], config[6], config[7])
     """
