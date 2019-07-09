@@ -247,7 +247,9 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
     # packing of weight
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
 
-    ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
+    ww = my_packedw(w, MB, IC, OC,
+                    IN_DIM0, IN_DIM1, G, K0, K1, stride0, stride1,
+                    pad0, pad1, pad2, pad3)
 
     # input (X)
     X = tvm.placeholder(input_shape, name='X', dtype="uint8")
@@ -262,19 +264,17 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
     # column offset
     get_co_offsets = \
     tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
-    co = get_co_offsets(w, W_zero_point, spatial_dim,
-                        MB, IC, OC, IN_DIM, G, K, stride, pad)
+    co = get_co_offsets(w, W_zero_point, MB, IC, OC,
+                        IN_DIM0, IN_DIM1, G, K0, K1, stride0, stride1,
+                        pad0, pad1, pad2, pad3)
 
     C_multiplier = 0.0878014
 
-    in_dim_v = create_pointer_vector_int(IN_DIM, 2)
-    k_v = create_pointer_vector_int(K, 2)
-    stride_v = create_pointer_vector_int(stride, 2)
-    pad_v = create_pointer_vector_int(pad, 4)
-
     C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww,
                          W_zero_point, Y_zero_point, C_multiplier, co,
-                         MB, IC, OC, in_dim_v, G, k_v, stride_v, pad_v)
+                         MB, IC, OC,
+                         IN_DIM0, IN_DIM1, G, K0, K1, stride0, stride1,
+                         pad0, pad1, pad2, pad3)
     s = tvm.create_schedule(C.op)
     f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
 
