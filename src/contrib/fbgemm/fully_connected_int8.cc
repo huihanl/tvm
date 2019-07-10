@@ -737,8 +737,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     void* co = reinterpret_cast<void*>(static_cast<uint64_t>(co_addr));
     std::vector<std::int32_t>* column_offsets_ =
         reinterpret_cast<std::vector<std::int32_t>*>(co);
-
-    int cntr = 8;
+DLTensor* B = args[8];
+    int cntr = 9;
     int MB = args[cntr];
     int IC = args[cntr + 1];
     int OC = args[cntr + 2];
@@ -797,6 +797,22 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     int KDimPerGroup = KDim / conv_p.G;
     int OC_per_G = conv_p.OC / conv_p.G;
 
+    static int count = 1;
+    static std::vector<int32_t> col_offsets(conv_p.OC);
+    if (count == 1) {
+    count += 1;
+    for (int g = 0; g < conv_p.G; ++g) {
+        col_offsets_with_zero_pt_s8acc32(
+            KDimPerGroup,
+            OC_per_G,
+            OC_per_G,
+            reinterpret_cast<std::int8_t*>(B->data) + g * KDimPerGroup * OC_per_G,
+            Bint8_zero_point.data(),
+            col_offsets.data() + g * OC_per_G,
+            conv_p.OC);
+    }
+    }
+
     std::vector<std::int32_t>* Y_int32_ =
     new std::vector<int32_t>(conv_p.MB * im_out_dim * conv_p.OC);
 
@@ -809,7 +825,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
         Aint8_zero_point,
         Bint8_zero_point.data(),
         nullptr, // row offsets
-        column_offsets_->data(),
+        col_offsets.data(),
         nullptr, // bias
         conv_p.OC,
         conv_p.G);
