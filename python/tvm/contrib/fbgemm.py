@@ -152,7 +152,8 @@ def conv_int8(Y_shape, X, X_zero_point, W, Wmat, W_zero_point,
                 Y_zero_point,
                 C_multiplier,
                 column_offset, ins[1],
-                MB, IC, OC, IN_DIM, G, K, stride, pad,
+                MB, IC, OC, IN_DIM[0], IN_DIM[1], G, K[0], K[1],
+		stride[0], stride[1], pad[0], pad[1], pad[2], pad[3],
                 nthreads,
                 MCB, NCB, KCB, MR, NR, NR_MIN, ROW_INTERLEAVE),
                 name="C", dtype="uint8")
@@ -165,7 +166,8 @@ def conv_int8(Y_shape, X, X_zero_point, W, Wmat, W_zero_point,
                 Y_zero_point,
                 C_multiplier,
                 column_offset, ins[1],
-	            MB, IC, OC, IN_DIM, G, K, stride, pad,
-	            nthreads), name="C", dtype="uint8")
+                MB, IC, OC, IN_DIM[0], IN_DIM[1], G, K[0], K[1], 
+                stride[0], stride[1], pad[0], pad[1], pad[2], pad[3],
+	        nthreads), name="C", dtype="uint8")
 
 _init_api("tvm.contrib.fbgemm")

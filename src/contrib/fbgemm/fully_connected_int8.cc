@@ -737,52 +737,47 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     void* co = reinterpret_cast<void*>(static_cast<uint64_t>(co_addr));
     std::vector<std::int32_t>* column_offsets_ =
         reinterpret_cast<std::vector<std::int32_t>*>(co);
-DLTensor* B = args[8];
+    DLTensor* B = args[8];
     int cntr = 9;
     int MB = args[cntr];
     int IC = args[cntr + 1];
     int OC = args[cntr + 2];
 
-    std::uint64_t id_addr = args[cntr + 3];
-    void* id_d = reinterpret_cast<void*>(static_cast<uint64_t>(id_addr));
-    std::vector<int>* IN_DIM_v =
-        reinterpret_cast<std::vector<int>*>(id_d);
-    std::array<int, 2> IN_DIM;
-    IN_DIM[0] = IN_DIM_v->data()[0];
-    IN_DIM[1] = IN_DIM_v->data()[1];
+    std::array<int, 2> IN_DIM = {0, 0};
+    IN_DIM[0] = args[cntr + 3];
+    IN_DIM[1] = args[cntr + 4];
 
-    int G = args[cntr + 4];
+    int G = args[cntr + 5];
 
-    std::uint64_t k_addr = args[cntr + 5];
-    void* k_d = reinterpret_cast<void*>(static_cast<uint64_t>(k_addr));
-    std::vector<int>* K_v =
-        reinterpret_cast<std::vector<int>*>(k_d);
-    std::array<int, 2> K;
-    K[0] = K_v->data()[0];
-    K[1] = K_v->data()[1];
+    std::array<int, 2> K = {0, 0};
+    K[0] = args[cntr + 6];
+    K[1] = args[cntr + 7];
 
-    std::uint64_t s_addr = args[cntr + 6];
-    void* s_d = reinterpret_cast<void*>(static_cast<uint64_t>(s_addr));
-    std::vector<int>* stride_v =
-        reinterpret_cast<std::vector<int>*>(s_d);
-    std::array<int, 2> stride;
-    stride[0] = stride_v->data()[0];
-    stride[1] = stride_v->data()[1];
+    std::array<int, 2> stride = {0, 0};
+    stride[0] = args[cntr + 8];
+    stride[1] = args[cntr + 9];
 
-    std::uint64_t p_addr = args[cntr + 7];
-    void* p_d = reinterpret_cast<void*>(static_cast<uint64_t>(p_addr));
-    std::vector<int>* p_v =
-        reinterpret_cast<std::vector<int>*>(p_d);
-    std::array<int, 4> pad;
-    pad[0] = p_v->data()[0];
-    pad[1] = p_v->data()[1];
-    pad[2] = p_v->data()[2];
-    pad[3] = p_v->data()[3];
+    std::array<int, 4> pad = {0, 0, 0, 0};
+    pad[0] = args[cntr + 10];
+    pad[1] = args[cntr + 11];
+    pad[2] = args[cntr + 12];
+    pad[3] = args[cntr + 13];
 
     conv_param_t<2> conv_p(MB, IC, OC, IN_DIM, G, K, stride, pad);
 
     CHECK_EQ(conv_p.IC % conv_p.G, 0);
     CHECK_EQ(conv_p.OC % conv_p.G, 0);
+
+    BlockingFactors params;
+    if(args.size() > cntr + 15) {
+        params.MCB = args[cntr + 14];
+        params.NCB = args[cntr + 15];
+        params.KCB = args[cntr + 16];
+        params.MR = args[cntr + 17];
+        params.NR = args[cntr + 18];
+        params.NR_MIN = args[cntr + 19];
+        params.ROW_INTERLEAVE = args[cntr + 20];
+    }
 
     int kernel_dim =
         accumulate(conv_p.K.begin(), conv_p.K.end(), 1, multiplies<int>());
@@ -816,6 +811,37 @@ DLTensor* B = args[8];
     std::vector<std::int32_t>* Y_int32_ =
     new std::vector<int32_t>(conv_p.MB * im_out_dim * conv_p.OC);
 
+if (args.size() > cntr + 15) {
+
+    static PackWeightsForConv<2> packedBmat(conv_p, reinterpret_cast<std::int8_t*>(B->data), &params);
+    
+    // no-op output process objects
+    DoNothing<> doNothingObj{};
+    ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
+        doNothingObj,
+        C_multiplier.data(),
+        C_zero_point,
+        Aint8_zero_point,
+        Bint8_zero_point.data(),
+        nullptr, // row offsets
+        col_offsets.data(),
+        nullptr, // bias
+        conv_p.OC,
+        conv_p.G);
+    
+    fbgemmConv(
+        conv_p,
+        reinterpret_cast<const std::uint8_t*>(A->data),
+        packedBmat,
+        reinterpret_cast<std::uint8_t*>(Y->data),
+        Y_int32_->data(),
+        outputProcObj,
+        0,
+        1, &params);
+
+} else {
+    static PackWeightsForConv<2> packedBmat(conv_p, reinterpret_cast<std::int8_t*>(B->data));
+
     // no-op output process objects
     DoNothing<> doNothingObj{};
     ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
@@ -833,13 +859,13 @@ DLTensor* B = args[8];
     fbgemmConv(
         conv_p,
         reinterpret_cast<const std::uint8_t*>(A->data),
-        *packedB,
+        packedBmat,
         reinterpret_cast<std::uint8_t*>(Y->data),
         Y_int32_->data(),
         outputProcObj,
         0,
         1);
-
+}
 });
 
 }  // namespace contrib

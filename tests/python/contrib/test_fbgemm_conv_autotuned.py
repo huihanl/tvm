@@ -237,8 +237,6 @@ def test_fbgemm_conv_int8_autotuned(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst
     configs.define_knob("MRs", MRs)
     configs.define_knob("NRs", NRs)
     configs.define_knob("NR_MINs", NR_MINs)
-    configs.add_flop(2 * m * n * k)
-
 
     ctx = tvm.cpu(0)
     spatial_dim = 2
@@ -255,6 +253,12 @@ def test_fbgemm_conv_int8_autotuned(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst
 
     IN_DIMP[1] = IN_DIM_lst[1] + pad_lst[1] + pad_lst[3];
     OUT_DIM[1] = (IN_DIMP[1] - K_lst[1]) / stride_lst[1] + 1;
+
+    MDim = MB * OUT_DIM[0] * OUT_DIM[1];
+    NDim = OC / G
+    KDim = K_lst[0] * K_lst[1] * IC
+    no_ops = 2 * MDim * NDim * KDim
+    configs.add_flop(no_ops)
 
     # shapes
     input_shape = (MB, IN_DIM_lst[0], IN_DIM_lst[1], IC) #NHWC
@@ -284,8 +288,6 @@ def test_fbgemm_conv_int8_autotuned(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst
     # quantization parameters will be got from Operator arguments
     X_zero_point = 4
     W_zero_point = -2
-    create_pointer_vector_int = \
-    tvm.get_global_func("tvm.contrib.fbgemm.create_pointer_vector_int")
     Y_zero_point = 5
 
     # column offset
@@ -296,14 +298,9 @@ def test_fbgemm_conv_int8_autotuned(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst
 
     C_multiplier = 0.0878014
 
-    in_dim_v = create_pointer_vector_int(IN_DIM, 2)
-    k_v = create_pointer_vector_int(K, 2)
-    stride_v = create_pointer_vector_int(stride, 2)
-    pad_v = create_pointer_vector_int(pad, 4)
-
-    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww,
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W,
                          W_zero_point, Y_zero_point, C_multiplier, co,
-                         MB, IC, OC, in_dim_v, G, k_v, stride_v, pad_v,
+                         MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst,
                          1, True,
                          configs["MCBs"].val,
                          configs["NCBs"].val,
@@ -314,7 +311,7 @@ def test_fbgemm_conv_int8_autotuned(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst
                          ROW_INTERLEAVE)
 
     s = tvm.create_schedule(C.op)
-    return s, [X, W, B, C]
+    return s, [X, W, C]
 
 
 def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst):
@@ -372,7 +369,7 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
     stride_v = create_pointer_vector_int(stride, 2)
     pad_v = create_pointer_vector_int(pad, 4)
 
-    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww,
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W,
                          W_zero_point, Y_zero_point, C_multiplier, co,
                          MB, IC, OC, in_dim_v, G, k_v, stride_v, pad_v)
     s = tvm.create_schedule(C.op)
@@ -412,7 +409,7 @@ if __name__ == "__main__":
         [1, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]],
         [2, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]]]
 
-    if True:
+    if False:
 
         for i in range(len(configs)):
         	config = configs[i]
@@ -434,7 +431,7 @@ if __name__ == "__main__":
                   builder='local',
                   runner=autotvm.LocalRunner(number=10, timeout=100000))
               tuner = autotvm.tuner.RandomTuner(task)
-              name = str([config[0], config[1], config[2], config[3], config[4], config[5]])
+              name = str(config)
               log_file_name = "fbgemm_results_" + name + ".log"
               tuner.tune(n_trial=150,
                          measure_option=measure_option,
