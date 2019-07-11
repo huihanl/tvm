@@ -107,7 +107,7 @@ def col_offsets_with_zero_pt_s8acc32_ref(K, N, ld, OC, Bint8, B_zero_point,
                 total += Bint8[g * w_lead + k * ld + j]
             col_offsets[g * col_lead + j] = total -
             B_zero_point[j / ncols_per_quant_group] * K
-
+    print(col_offsets)
     return col_offsets
 
 

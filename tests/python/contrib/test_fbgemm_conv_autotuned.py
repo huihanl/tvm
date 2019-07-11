@@ -217,7 +217,104 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val, A_tran
            y.asnumpy(), np.matmul(x1, w1) + b.asnumpy(), rtol=1e-5)
 
 
-def test_fbgemm_conv_int8(MBi, ICi, OCi, IN_DIM_lst, G, K_lst, stride_lst, pad_lst):
+@autotvm.template
+def test_fbgemm_conv_int8_autotuned(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst):
+
+
+    ROW_INTERLEAVE = 4
+
+    MCBs = [48, 98, 144, 192, 240]
+    NCBs = [16, 32, 64, 128, 48, 98, 192, 384]
+    KCBs = [256, 320, 384, 448, 512, 576, 640, 704, 768, 832, 960, 1024]
+    MRs = [24, 12, 6, 3, 8, 4, 2, 1]
+    NRs = [16, 32]
+    NR_MINs = [16]
+
+    configs = autotvm.get_config()
+    configs.define_knob("MCBs", MCBs)
+    configs.define_knob("NCBs", NCBs)
+    configs.define_knob("KCBs", KCBs)
+    configs.define_knob("MRs", MRs)
+    configs.define_knob("NRs", NRs)
+    configs.define_knob("NR_MINs", NR_MINs)
+
+    ctx = tvm.cpu(0)
+    spatial_dim = 2
+    IN_DIM = tvm.nd.array(np.array(IN_DIM_lst).astype("int32"), ctx)
+    K = tvm.nd.array(np.array(K_lst).astype("int32"), ctx)
+    stride = tvm.nd.array(np.array(stride_lst).astype("int32"), ctx)
+    pad = tvm.nd.array(np.array(pad_lst).astype("int32"), ctx)
+
+    IN_DIMP = [0, 0]
+    OUT_DIM = [0, 0]
+
+    IN_DIMP[0] = IN_DIM_lst[0] + pad_lst[0] + pad_lst[2];
+    OUT_DIM[0] = (IN_DIMP[0] - K_lst[0]) / stride_lst[0] + 1;
+
+    IN_DIMP[1] = IN_DIM_lst[1] + pad_lst[1] + pad_lst[3];
+    OUT_DIM[1] = (IN_DIMP[1] - K_lst[1]) / stride_lst[1] + 1;
+
+    MDim = MB * OUT_DIM[0] * OUT_DIM[1];
+    NDim = OC / G
+    KDim = K_lst[0] * K_lst[1] * IC
+    no_ops = 2 * MDim * NDim * KDim
+    configs.add_flop(no_ops)
+
+    # shapes
+    input_shape = (MB, IN_DIM_lst[0], IN_DIM_lst[1], IC) #NHWC
+    W_shape = (K_lst[0], K_lst[1], IC, OC / G) #RSCK
+    Y_shape = (MB, OUT_DIM[0], OUT_DIM[1], OC) #NHWK
+    # weight
+    W = tvm.placeholder(W_shape, name='W', dtype="int8")
+    wa_length = K_lst[0] * K_lst[1] * IC * OC / G
+    wa = [random.randint(-4, 4) for i in range(wa_length)]
+    w = tvm.nd.array(np.reshape(np.array(wa), W_shape).astype(W.dtype), ctx)
+
+    # packing of weight
+    my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
+
+    ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad,
+                    configs["MCBs"].val,
+                    configs["NCBs"].val,
+                    configs["KCBs"].val,
+                    configs["MRs"].val,
+                    configs["NRs"].val,
+                    configs["NR_MINs"].val,
+    		        ROW_INTERLEAVE)
+
+    # input (X)
+    X = tvm.placeholder(input_shape, name='X', dtype="uint8")
+
+    # quantization parameters will be got from Operator arguments
+    X_zero_point = 4
+    W_zero_point = -2
+    Y_zero_point = 5
+
+    # column offset
+    get_co_offsets = \
+    tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
+    co = get_co_offsets(w, W_zero_point, spatial_dim,
+                        MB, IC, OC, IN_DIM, G, K, stride, pad)
+
+    C_multiplier = 0.0878014
+
+    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W,
+                         W_zero_point, Y_zero_point, C_multiplier, co,
+                         MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst,
+                         1, True,
+                         configs["MCBs"].val,
+                         configs["NCBs"].val,
+                         configs["KCBs"].val,
+                         configs["MRs"].val,
+                         configs["NRs"].val,
+                         configs["NR_MINs"].val,
+                         ROW_INTERLEAVE)
+
+    s = tvm.create_schedule(C.op)
+    return s, [X, W, C]
+
+
+def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst):
     ctx = tvm.cpu(0)
     spatial_dim = 2
     IN_DIM = tvm.nd.array(np.array(IN_DIM_lst).astype("int32"), ctx)
@@ -241,13 +338,13 @@ def test_fbgemm_conv_int8(MBi, ICi, OCi, IN_DIM_lst, G, K_lst, stride_lst, pad_l
     # weight
     W = tvm.placeholder(W_shape, name='W', dtype="int8")
     wa_length = K_lst[0] * K_lst[1] * IC * OC / G
-    w = tvm.nd.array(np.random.uniform(-4, 4, size=W_shape).astype(W.dtype), ctx)
+    wa = [random.randint(-4, 4) for i in range(wa_length)]
+    w = tvm.nd.array(np.reshape(np.array(wa), W_shape).astype(W.dtype), ctx)
+
     # packing of weight
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
 
-    ww = my_packedw(w, MB, IC, OC,
-                    IN_DIM0, IN_DIM1, G, K0, K1, stride0, stride1,
-                    pad0, pad1, pad2, pad3)
+    ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
 
     # input (X)
     X = tvm.placeholder(input_shape, name='X', dtype="uint8")
@@ -262,29 +359,31 @@ def test_fbgemm_conv_int8(MBi, ICi, OCi, IN_DIM_lst, G, K_lst, stride_lst, pad_l
     # column offset
     get_co_offsets = \
     tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
-    co = get_co_offsets(w, W_zero_point, MB, IC, OC,
-                        IN_DIM0, IN_DIM1, G, K0, K1, stride0, stride1,
-                        pad0, pad1, pad2, pad3)
+    co = get_co_offsets(w, W_zero_point, spatial_dim,
+                        MB, IC, OC, IN_DIM, G, K, stride, pad)
 
     C_multiplier = 0.0878014
 
+    MCB = 48
+    NCB = 16
+    KCB = 640
+    MR = 24
+    NR = 16
+    NR_MIN = 16
+    ROW_INTERLEAVE = 4
 
     C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W,
                          W_zero_point, Y_zero_point, C_multiplier, co,
-                         MB, IC, OC,
-                         IN_DIM0, IN_DIM1, G, K0, K1, stride0, stride1,
-                         pad0, pad1, pad2, pad3)
+                         MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
+
     s = tvm.create_schedule(C.op)
     f = tvm.build(s, [X, W, C], target="llvm", name="conv_int8")
 
     x_length = MB * IN_DIM_lst[0] * IN_DIM_lst[1] * IC
-    x = tvm.nd.array(np.random.uniform(0, 5, size=input_shape).astype(X.dtype), ctx)
+    xa = [random.randint(0, 5) for i in range(x_length)]
+    x = tvm.nd.array(np.reshape(np.array(xa), input_shape).astype(X.dtype), ctx)
     y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
-    y1 = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
-    y2 = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
     f(x, w, y)
-    f(x, w, y1)
-    f(x, w, y2)
 
     y_ref = reference_solution(xa, X_zero_point, wa, MB, IC, OC, IN_DIM_lst,
                                OUT_DIM, G, K_lst, stride_lst, pad_lst, [C_multiplier],
@@ -292,51 +391,9 @@ def test_fbgemm_conv_int8(MBi, ICi, OCi, IN_DIM_lst, G, K_lst, stride_lst, pad_l
     y_ref = np.reshape(np.array(y_ref), Y_shape)
 
     tvm.testing.assert_allclose(y.asnumpy(), y_ref, rtol=1e-5)
-    print("y")
-    tvm.testing.assert_allclose(y1.asnumpy(), y_ref, rtol=1e-5)
-    print("y1")
-    tvm.testing.assert_allclose(y2.asnumpy(), y_ref, rtol=1e-5)
-    print("y2")
-if __name__ == "__main__":
-    shapes = (
-        [64, 800, 320],
-        [64, 768, 512],
-        #[16, 256, 512],
-        [128, 128, 128],
-        [256, 512, 256],
-        [1024, 1024, 1024])
 
-    shapes_others = (
-        [156800,    4,    36],
-        [156800,    8,    36],
-        [156800,    16,    36],
-        [1,    128,    512],
-        [1,    1024,    256],
-        [1,    2048,   512],
-        [1,    4096,    1024],
-        [6,    256,    1024],
-        [6,    256,    2048],
-        [6,    512,    512],
-        [6,    1024,    256],
-        [6,    2048,    256],
-        [6,    2048,    512],
-        [6,    4096,    256],
-        [6,    4096,    1024],
-        [6,    4096,    2048],
-        [10,    2048,    256],
-        [10,    4096,    1024],
-        [20,    2048,    256],
-        [20,    4096,    1024],
-        [102,    1024,    512],
-        [102,    2323,    256],
-        [102,    512,    256],
-        [1,    800,    3200],
-        [1,    800,    8000],
-        [16,    256,    1500],
-        [16,    256,    1567],
-        [1,    128,    2876],
-        [16,    128,    1567],
-        [1,    128,    2722])
+
+if __name__ == "__main__":
 
     configs = [
 		[1, 32, 32, [3, 3], 8, [3, 3], [1, 1], [1, 1, 1, 1]],
@@ -356,52 +413,19 @@ if __name__ == "__main__":
         [1, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]],
         [2, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]]]
 
-<<<<<<< HEAD
-    for i in range(configs):
-	    config = configs[i]
-=======
-    for i in range(1):
-	config = configs[i]
->>>>>>> a4c67a5fb0e180dd19a4fd1aca7bbefeec14e09b
-        test_fbgemm_conv_int8(config[0], config[1], config[2], config[3],
-                              config[4], config[5], config[6], config[7])
-    """
     if True:
-	 shapes = (
-		[4, 8, 2],
-		[2, 16, 1],
-		[4, 4, 2],
-		[1, 8, 4],
-		[16, 1, 1],
-		[16, 2, 2],
-		[8, 2, 4],
-		[2, 2, 8])
-	 values = (
-		[1.0, 2.0, 0.0],
-		[2.0, 2.0, 0.0],
-		[3.0, 1.0, 0.0],
-		[2.0, 3.0, 0.0],
-		[1.0, 3.0, 0.0],
-		[2.0, 3.0, 3.0],
-		[2.0, 1.0, 2.0])
-	 comb = []
-	 for shape in shapes:
-		for value in values:
-			c = shape + value
-			comb.append(c)
-         for c in comb:
-	 	test_fbgemm_packed_weights_with_requant(c[0], c[1], c[2], c[3], c[4], c[5], True, True)
-                test_fbgemm_packed_weights_with_requant(c[0], c[1], c[2], c[3], c[4], c[5], True, False)
-                test_fbgemm_packed_weights_with_requant(c[0], c[1], c[2], c[3], c[4], c[5], False, True)
-                test_fbgemm_packed_weights_with_requant(c[0], c[1], c[2], c[3], c[4], c[5], False, False)
-         #fbgemm_packed_weights(16, 4, 8)
-         #for shape in shapes_others:
-         #     fbgemm_packed_weights(shape[0], shape[1], shape[2])
+
+        for i in range(len(configs)):
+        	config = configs[i]
+                test_fbgemm_conv_int8(config[0], config[1], config[2], config[3],
+                                      config[4], config[5], config[6], config[7])
+
     else:
-         for shape in shapes_others:
+         for config in configs:
               task = autotvm.task.create(
-                  tune_fbgemm_packed_weights, args=(
-                      shape[0] , shape[1] , shape[2] ), target='llvm')
+                      test_fbgemm_conv_int8_autotuned,
+                      args=(config[0], config[1], config[2], config[3],
+                      config[4], config[5], config[6], config[7]), target='llvm')
               #print(task.config_space)
               print(len(task.config_space))
               # logging config (for printing tuning log to the screen)
@@ -411,8 +435,8 @@ if __name__ == "__main__":
                   builder='local',
                   runner=autotvm.LocalRunner(number=10, timeout=100000))
               tuner = autotvm.tuner.RandomTuner(task)
-              log_file_name = "fbgemm_results_"+str(shape[0])+"_"+str(shape[1])+"_"+str(shape[2])+".log"
+              name = str(config)
+              log_file_name = "fbgemm_results_" + name + ".log"
               tuner.tune(n_trial=150,
                          measure_option=measure_option,
                          callbacks=[autotvm.callback.log_to_file(log_file_name)])
-    """

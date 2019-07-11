@@ -729,8 +729,8 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     void* co = reinterpret_cast<void*>(static_cast<uint64_t>(co_addr));
     std::vector<std::int32_t>* column_offsets_ =
         reinterpret_cast<std::vector<std::int32_t>*>(co);
-
-    int cntr = 8;
+    DLTensor* B = args[8];
+    int cntr = 9;
     int MB = args[cntr];
     int IC = args[cntr + 1];
     int OC = args[cntr + 2];
@@ -760,6 +760,17 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     CHECK_EQ(conv_p.IC % conv_p.G, 0);
     CHECK_EQ(conv_p.OC % conv_p.G, 0);
 
+    BlockingFactors params;
+    if(args.size() > cntr + 15) {
+        params.MCB = args[cntr + 14];
+        params.NCB = args[cntr + 15];
+        params.KCB = args[cntr + 16];
+        params.MR = args[cntr + 17];
+        params.NR = args[cntr + 18];
+        params.NR_MIN = args[cntr + 19];
+        params.ROW_INTERLEAVE = args[cntr + 20];
+    }
+
     int kernel_dim =
         accumulate(conv_p.K.begin(), conv_p.K.end(), 1, multiplies<int>());
 
@@ -773,8 +784,54 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     int KDimPerGroup = KDim / conv_p.G;
     int OC_per_G = conv_p.OC / conv_p.G;
 
+    static int count = 1;
+    static std::vector<int32_t> col_offsets(conv_p.OC);
+    if (count == 1) {
+    count += 1;
+    for (int g = 0; g < conv_p.G; ++g) {
+        col_offsets_with_zero_pt_s8acc32(
+            KDimPerGroup,
+            OC_per_G,
+            OC_per_G,
+            reinterpret_cast<std::int8_t*>(B->data) + g * KDimPerGroup * OC_per_G,
+            Bint8_zero_point.data(),
+            col_offsets.data() + g * OC_per_G,
+            conv_p.OC);
+    }
+    }
+
     std::vector<std::int32_t>* Y_int32_ =
     new std::vector<int32_t>(conv_p.MB * im_out_dim * conv_p.OC);
+
+if (args.size() > cntr + 15) {
+
+    static PackWeightsForConv<2> packedBmat(conv_p, reinterpret_cast<std::int8_t*>(B->data), &params);
+    
+    // no-op output process objects
+    DoNothing<> doNothingObj{};
+    ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
+        doNothingObj,
+        C_multiplier.data(),
+        C_zero_point,
+        Aint8_zero_point,
+        Bint8_zero_point.data(),
+        nullptr, // row offsets
+        col_offsets.data(),
+        nullptr, // bias
+        conv_p.OC,
+        conv_p.G);
+    
+    fbgemmConv(
+        conv_p,
+        reinterpret_cast<const std::uint8_t*>(A->data),
+        packedBmat,
+        reinterpret_cast<std::uint8_t*>(Y->data),
+        Y_int32_->data(),
+        outputProcObj,
+        0,
+        1, &params);
+
+} else {
 
     // no-op output process objects
     DoNothing<> doNothingObj{};
@@ -799,7 +856,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
         outputProcObj,
         0,
         1);
-
+}
 });
 
 }  // namespace contrib
