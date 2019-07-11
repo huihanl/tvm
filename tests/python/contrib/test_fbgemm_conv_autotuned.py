@@ -364,22 +364,17 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
 
     C_multiplier = 0.0878014
 
-    in_dim_v = create_pointer_vector_int(IN_DIM, 2)
-    k_v = create_pointer_vector_int(K, 2)
-    stride_v = create_pointer_vector_int(stride, 2)
-    pad_v = create_pointer_vector_int(pad, 4)
+    MCB = 48
+    NCB = 16
+    KCB = 640
+    MR = 24
+    NR = 16
+    NR_MIN = 16
+    ROW_INTERLEAVE = 4
 
     C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W,
                          W_zero_point, Y_zero_point, C_multiplier, co,
-                         MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst,
-                         1, True,
-                         configs["MCBs"].val,
-                         configs["NCBs"].val,
-                         configs["KCBs"].val,
-                         configs["MRs"].val,
-                         configs["NRs"].val,
-                         configs["NR_MINs"].val,
-                         ROW_INTERLEAVE)
+                         MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
 
     s = tvm.create_schedule(C.op)
     f = tvm.build(s, [X, W, C], target="llvm", name="conv_int8")

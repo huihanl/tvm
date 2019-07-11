@@ -572,34 +572,30 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
       std::vector<int32_t> Bint8_zero_point = {Bzp};
 
      // conv_p
-    int cntr = 3;
+    int cntr = 2;
     int MB = args[cntr];
     int IC = args[cntr + 1];
     int OC = args[cntr + 2];
-    DLTensor* id_addr = args[cntr + 3];
-    int* id_pr = reinterpret_cast<int*>(id_addr->data);
-    std::array<int, 2> IN_DIM = {0, 0};
-    IN_DIM[0] = id_pr[0];
-    IN_DIM[1] = id_pr[1];
-    int G = args[cntr + 4];
-    DLTensor* k_addr = args[cntr + 5];
-    int* k_pr = reinterpret_cast<int*>(k_addr->data);
-    std::array<int, 2> K = {0, 0};
-    K[0] = k_pr[0];
-    K[1] = k_pr[1];
-    DLTensor* s_addr = args[cntr + 6];
-    int* s_pr = reinterpret_cast<int*>(s_addr->data);
-    std::array<int, 2> stride = {0, 0};
-    stride[0] = s_pr[0];
-    stride[1] = s_pr[1];
 
-    DLTensor* pad_addr = args[cntr + 7];
-    int* p_pr = reinterpret_cast<int*>(pad_addr->data);
+    std::array<int, 2> IN_DIM = {0, 0};
+    IN_DIM[0] = args[cntr + 3];
+    IN_DIM[1] = args[cntr + 4];
+
+    int G = args[cntr + 5];
+
+    std::array<int, 2> K = {0, 0};
+    K[0] = args[cntr + 6];
+    K[1] = args[cntr + 7];
+
+    std::array<int, 2> stride = {0, 0};
+    stride[0] = args[cntr + 8];
+    stride[1] = args[cntr + 9];
+
     std::array<int, 4> pad = {0, 0, 0, 0};
-    pad[0] = p_pr[0];
-    pad[1] = p_pr[1];
-    pad[2] = p_pr[2];
-    pad[3] = p_pr[3];
+    pad[0] = args[cntr + 10];
+    pad[1] = args[cntr + 11];
+    pad[2] = args[cntr + 12];
+    pad[3] = args[cntr + 13];
     conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
 
     //CALCULATION
@@ -658,41 +654,37 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
 
     DLTensor* W = args[0];
 
-    int spatial_dim = args[1];
-    int cntr = 2;
+    int cntr = 1;
     int MB = args[cntr];
     int IC = args[cntr + 1];
     int OC = args[cntr + 2];
-    DLTensor* id_addr = args[cntr + 3];
-  	int* id_pr = reinterpret_cast<int*>(id_addr->data);
-  	std::array<int, 2> IN_DIM = {0, 0};
-  	IN_DIM[0] = id_pr[0];
-    IN_DIM[1] = id_pr[1];
-    int G = args[cntr + 4];
-    DLTensor* k_addr = args[cntr + 5];
-    int* k_pr = reinterpret_cast<int*>(k_addr->data);
+
+    std::array<int, 2> IN_DIM = {0, 0};
+    IN_DIM[0] = args[cntr + 3];
+    IN_DIM[1] = args[cntr + 4];
+
+    int G = args[cntr + 5];
+
     std::array<int, 2> K = {0, 0};
-    K[0] = k_pr[0];
-    K[1] = k_pr[1];
-    DLTensor* s_addr = args[cntr + 6];
-    int* s_pr = reinterpret_cast<int*>(s_addr->data);
+    K[0] = args[cntr + 6];
+    K[1] = args[cntr + 7];
+
     std::array<int, 2> stride = {0, 0};
-    stride[0] = s_pr[0];
-    stride[1] = s_pr[1];
-    DLTensor* pad_addr = args[cntr + 7];
-    int* p_pr = reinterpret_cast<int*>(pad_addr->data);
+    stride[0] = args[cntr + 8];
+    stride[1] = args[cntr + 9];
+
     std::array<int, 4> pad = {0, 0, 0, 0};
-    pad[0] = p_pr[0];
-    pad[1] = p_pr[1];
-    pad[2] = p_pr[2];
-    pad[3] = p_pr[3];
+    pad[0] = args[cntr + 10];
+    pad[1] = args[cntr + 11];
+    pad[2] = args[cntr + 12];
+    pad[3] = args[cntr + 13];
 
     conv_param_t<> conv_p = conv_param_t<>(MB, IC, OC, IN_DIM, G, K, stride, pad);
 
     BlockingFactors params;
 
-    if (args.size() > 11) {
-      int cntr = 10;
+    if (args.size() > 16) {
+      int cntr = 15;
       params.MCB = args[cntr];
       params.NCB = args[cntr + 1];
       params.KCB = args[cntr + 2];
