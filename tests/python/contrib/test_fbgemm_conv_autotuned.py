@@ -371,15 +371,24 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
 
     C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W,
                          W_zero_point, Y_zero_point, C_multiplier, co,
-                         MB, IC, OC, in_dim_v, G, k_v, stride_v, pad_v)
+                         MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst,
+                         1, True,
+                         configs["MCBs"].val,
+                         configs["NCBs"].val,
+                         configs["KCBs"].val,
+                         configs["MRs"].val,
+                         configs["NRs"].val,
+                         configs["NR_MINs"].val,
+                         ROW_INTERLEAVE)
+
     s = tvm.create_schedule(C.op)
-    f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
+    f = tvm.build(s, [X, W, C], target="llvm", name="conv_int8")
 
     x_length = MB * IN_DIM_lst[0] * IN_DIM_lst[1] * IC
     xa = [random.randint(0, 5) for i in range(x_length)]
     x = tvm.nd.array(np.reshape(np.array(xa), input_shape).astype(X.dtype), ctx)
     y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
-    f(x,y)
+    f(x, w, y)
 
     y_ref = reference_solution(xa, X_zero_point, wa, MB, IC, OC, IN_DIM_lst,
                                OUT_DIM, G, K_lst, stride_lst, pad_lst, [C_multiplier],
@@ -409,7 +418,7 @@ if __name__ == "__main__":
         [1, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]],
         [2, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]]]
 
-    if False:
+    if True:
 
         for i in range(len(configs)):
         	config = configs[i]

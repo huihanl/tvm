@@ -840,7 +840,6 @@ if (args.size() > cntr + 15) {
         1, &params);
 
 } else {
-    static PackWeightsForConv<2> packedBmat(conv_p, reinterpret_cast<std::int8_t*>(B->data));
 
     // no-op output process objects
     DoNothing<> doNothingObj{};
@@ -851,7 +850,7 @@ if (args.size() > cntr + 15) {
         Aint8_zero_point,
         Bint8_zero_point.data(),
         nullptr, // row offsets
-        col_offsets.data(),
+        column_offsets_->data(),
         nullptr, // bias
         conv_p.OC,
         conv_p.G);
@@ -859,7 +858,7 @@ if (args.size() > cntr + 15) {
     fbgemmConv(
         conv_p,
         reinterpret_cast<const std::uint8_t*>(A->data),
-        packedBmat,
+        *packedB,
         reinterpret_cast<std::uint8_t*>(Y->data),
         Y_int32_->data(),
         outputProcObj,
