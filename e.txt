@@ -1,0 +1,919 @@
+finish column offsets
+1836
+Get devices for measurement successfully!
+finish column offsets
+144 48 320 2 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+No: 1	GFLOPS: 0.00/0.00	result: MeasureResult(costs=(RuntimeError('[17:46:28] /root/huihan/tvm-hhl/src/runtime/rpc/rpc_session.cc:952: Check failed: code == RPCCode::kReturn code=4\n\n',),), error_no=4, all_cost=0.9313609600067139, timestamp=1562978788.972832)	[('VAL_CNFG', (144, 48, 320, 2, 16, 16, 4))],,None,667
+finish column offsets
+240 16 704 12 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+*** Error in `/root/huihan/venv/bin/python': double free or corruption (!prev): 0x0000000000679670 ***
+======= Backtrace: =========
+/lib64/libc.so.6(+0x81489)[0x7f67ce216489]
+/root/huihan/FBGEMM/install/lib/libfbgemm.so(_ZN6fbgemm10fbgemmConvINS_16ReQuantizeOutputILb0ELNS_23QuantizationGranularityE0EhiNS_9DoNothingIhhEEEELi2EiEEiRKNS_12conv_param_tIXT0_EEEPKhRNS_18PackWeightsForConvIXT0_EaT1_EEPNT_7outTypeEPiRSG_iiPKNS_15BlockingFactorsE+0x4fb)[0x7f67abe8888b]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(+0x11840fe)[0x7f67ae3960fe]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(+0x1184851)[0x7f67ae396851]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(TVMFuncCall+0x48)[0x7f67ae3374d8]
+/tmp/tmpVRUmAI/tmp_func_808d81e7587acdee.tar.so(+0xee8)[0x7f67aa7fdee8]
+/tmp/tmpVRUmAI/tmp_func_808d81e7587acdee.tar.so(default_function+0x280)[0x7f67aa7fda30]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(+0x1138621)[0x7f67ae34a621]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(+0x1168cb5)[0x7f67ae37acb5]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(+0x1169087)[0x7f67ae37b087]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(_ZN3tvm7runtime10RPCSession12EventHandler16HandlePackedCallEv+0x59b)[0x7f67ae3776cb]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(_ZN3tvm7runtime10RPCSession12EventHandler13SwitchToStateENS2_5StateE+0x335)[0x7f67ae37d8e5]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(_ZN3tvm7runtime10RPCSession12EventHandler22HandleRecvPackedSeqArgEv+0x1f8)[0x7f67ae37ebe8]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(_ZN3tvm7runtime10RPCSession12EventHandler15HandleNextEventEPNS0_11TVMRetValueEbPKNS0_10PackedFuncE+0x268)[0x7f67ae37f478]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(_ZN3tvm7runtime10RPCSession22HandleUntilReturnEventEPNS0_11TVMRetValueEbPKNS0_10PackedFuncE+0x16c)[0x7f67ae378d4c]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(_ZN3tvm7runtime10RPCSession10ServerLoopEv+0xe9)[0x7f67ae378fd9]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(_ZN3tvm7runtime13RPCServerLoopEi+0x9a)[0x7f67ae38392a]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(+0x1172caa)[0x7f67ae384caa]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(TVMFuncCall+0x48)[0x7f67ae3374d8]
+/lib64/libffi.so.6(ffi_call_unix64+0x4c)[0x7f67c784adcc]
+/lib64/libffi.so.6(ffi_call+0x1f5)[0x7f67c784a6f5]
+/root/huihan/venv/lib64/python2.7/lib-dynload/_ctypes.so(_ctypes_callproc+0x30b)[0x7f67c7a5dbeb]
+/root/huihan/venv/lib64/python2.7/lib-dynload/_ctypes.so(+0xa9e5)[0x7f67c7a579e5]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x2336)[0x7f67cef67236]
+/lib64/libpython2.7.so.1.0(PyEval_EvalCodeEx+0x7ed)[0x7f67cef6e03d]
+/lib64/libpython2.7.so.1.0(+0x70978)[0x7f67ceef7978]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(+0x5aa55)[0x7f67ceee1a55]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(+0xa2e27)[0x7f67cef29e27]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x2336)[0x7f67cef67236]
+/lib64/libpython2.7.so.1.0(PyEval_EvalCodeEx+0x7ed)[0x7f67cef6e03d]
+/lib64/libpython2.7.so.1.0(+0x70a6d)[0x7f67ceef7a6d]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x17fd)[0x7f67cef666fd]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x67bd)[0x7f67cef6b6bd]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x67bd)[0x7f67cef6b6bd]
+/lib64/libpython2.7.so.1.0(PyEval_EvalCodeEx+0x7ed)[0x7f67cef6e03d]
+/lib64/libpython2.7.so.1.0(+0x70978)[0x7f67ceef7978]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(+0x5aa55)[0x7f67ceee1a55]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(+0xa2a87)[0x7f67cef29a87]
+/lib64/libpython2.7.so.1.0(+0xa179f)[0x7f67cef2879f]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x2336)[0x7f67cef67236]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x67bd)[0x7f67cef6b6bd]
+/lib64/libpython2.7.so.1.0(PyEval_EvalCodeEx+0x7ed)[0x7f67cef6e03d]
+/lib64/libpython2.7.so.1.0(+0x70a6d)[0x7f67ceef7a6d]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x17fd)[0x7f67cef666fd]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x67bd)[0x7f67cef6b6bd]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x67bd)[0x7f67cef6b6bd]
+/lib64/libpython2.7.so.1.0(PyEval_EvalCodeEx+0x7ed)[0x7f67cef6e03d]
+/lib64/libpython2.7.so.1.0(+0x70978)[0x7f67ceef7978]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(+0x5aa55)[0x7f67ceee1a55]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(+0xa2a87)[0x7f67cef29a87]
+/lib64/libpython2.7.so.1.0(+0xa179f)[0x7f67cef2879f]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+======= Memory map: ========
+00400000-00401000 r-xp 00000000 08:04 59008152                           /root/huihan/venv/bin/python
+00600000-00601000 r--p 00000000 08:04 59008152                           /root/huihan/venv/bin/python
+00601000-00602000 rw-p 00001000 08:04 59008152                           /root/huihan/venv/bin/python
+00602000-00cad000 rw-p 00000000 00:00 0                                  [heap]
+00cad000-00cee000 rw-p 00000000 00:00 0                                  [heap]
+7f67a4000000-7f67a4021000 rw-p 00000000 00:00 0 
+7f67a4021000-7f67a8000000 ---p 00000000 00:00 0 
+7f67aa7fd000-7f67aa800000 r-xp 00000000 08:04 33292707                   /tmp/tmpVRUmAI/tmp_func_808d81e7587acdee.tar.so
+7f67aa800000-7f67aa9ff000 ---p 00003000 08:04 33292707                   /tmp/tmpVRUmAI/tmp_func_808d81e7587acdee.tar.so
+7f67aa9ff000-7f67aaa00000 r--p 00002000 08:04 33292707                   /tmp/tmpVRUmAI/tmp_func_808d81e7587acdee.tar.so
+7f67aaa00000-7f67aaa01000 rw-p 00003000 08:04 33292707                   /tmp/tmpVRUmAI/tmp_func_808d81e7587acdee.tar.so
+7f67aaa01000-7f67aaa41000 rw-p 00000000 00:00 0 
+7f67aaa41000-7f67aaa4d000 r-xp 00000000 08:04 3674814                    /usr/lib64/libnss_files-2.17.so
+7f67aaa4d000-7f67aac4c000 ---p 0000c000 08:04 3674814                    /usr/lib64/libnss_files-2.17.so
+7f67aac4c000-7f67aac4d000 r--p 0000b000 08:04 3674814                    /usr/lib64/libnss_files-2.17.so
+7f67aac4d000-7f67aac4e000 rw-p 0000c000 08:04 3674814                    /usr/lib64/libnss_files-2.17.so
+7f67aac4e000-7f67aac54000 rw-p 00000000 00:00 0 
+7f67aac54000-7f67aac67000 r-xp 00000000 08:04 3943266                    /usr/lib64/python2.7/lib-dynload/_ssl.so
+7f67aac67000-7f67aae66000 ---p 00013000 08:04 3943266                    /usr/lib64/python2.7/lib-dynload/_ssl.so
+7f67aae66000-7f67aae67000 r--p 00012000 08:04 3943266                    /usr/lib64/python2.7/lib-dynload/_ssl.so
+7f67aae67000-7f67aae6b000 rw-p 00013000 08:04 3943266                    /usr/lib64/python2.7/lib-dynload/_ssl.so
+7f67aae6b000-7f67aae7a000 r-xp 00000000 08:04 3943264                    /usr/lib64/python2.7/lib-dynload/_socketmodule.so
+7f67aae7a000-7f67ab079000 ---p 0000f000 08:04 3943264                    /usr/lib64/python2.7/lib-dynload/_socketmodule.so
+7f67ab079000-7f67ab07a000 r--p 0000e000 08:04 3943264                    /usr/lib64/python2.7/lib-dynload/_socketmodule.so
+7f67ab07a000-7f67ab07f000 rw-p 0000f000 08:04 3943264                    /usr/lib64/python2.7/lib-dynload/_socketmodule.so
+7f67ab07f000-7f67ab0bf000 rw-p 00000000 00:00 0 
+7f67ab0bf000-7f67ab0c5000 r-xp 00000000 08:04 3934856                    /usr/lib64/python2.7/lib-dynload/_multiprocessing.so
+7f67ab0c5000-7f67ab2c4000 ---p 00006000 08:04 3934856                    /usr/lib64/python2.7/lib-dynload/_multiprocessing.so
+7f67ab2c4000-7f67ab2c5000 r--p 00005000 08:04 3934856                    /usr/lib64/python2.7/lib-dynload/_multiprocessing.so
+7f67ab2c5000-7f67ab2c6000 rw-p 00006000 08:04 3934856                    /usr/lib64/python2.7/lib-dynload/_multiprocessing.so
+7f67ab2c6000-7f67ab3c6000 rw-p 00000000 00:00 0 
+7f67ab3c6000-7f67ab3cb000 r-xp 00000000 08:04 3934888                    /usr/lib64/python2.7/lib-dynload/selectmodule.so
+7f67ab3cb000-7f67ab5ca000 ---p 00005000 08:04 3934888                    /usr/lib64/python2.7/lib-dynload/selectmodule.so
+7f67ab5ca000-7f67ab5cb000 r--p 00004000 08:04 3934888                    /usr/lib64/python2.7/lib-dynload/selectmodule.so
+7f67ab5cb000-7f67ab5cd000 rw-p 00005000 08:04 3934888                    /usr/lib64/python2.7/lib-dynload/selectmodule.so
+7f67ab5cd000-7f67ab60d000 rw-p 00000000 00:00 0 
+7f67ab60d000-7f67ab615000 r-xp 00000000 08:04 3943261                    /usr/lib64/python2.7/lib-dynload/_json.so
+7f67ab615000-7f67ab814000 ---p 00008000 08:04 3943261                    /usr/lib64/python2.7/lib-dynload/_json.so
+7f67ab814000-7f67ab815000 r--p 00007000 08:04 3943261                    /usr/lib64/python2.7/lib-dynload/_json.so
+7f67ab815000-7f67ab816000 rw-p 00008000 08:04 3943261                    /usr/lib64/python2.7/lib-dynload/_json.so
+7f67ab816000-7f67ab856000 rw-p 00000000 00:00 0 
+7f67ab856000-7f67ab87b000 r-xp 00000000 08:04 3674735                    /usr/lib64/libgomp.so.1.0.0
+7f67ab87b000-7f67aba7a000 ---p 00025000 08:04 3674735                    /usr/lib64/libgomp.so.1.0.0
+7f67aba7a000-7f67aba7b000 r--p 00024000 08:04 3674735                    /usr/lib64/libgomp.so.1.0.0
+7f67aba7b000-7f67aba7c000 rw-p 00025000 08:04 3674735                    /usr/lib64/libgomp.so.1.0.0
+7f67aba7c000-7f67abb65000 r-xp 00000000 08:04 3674876                    /usr/lib64/libstdc++.so.6.0.19
+7f67abb65000-7f67abd64000 ---p 000e9000 08:04 3674876                    /usr/lib64/libstdc++.so.6.0.19
+7f67abd64000-7f67abd6c000 r--p 000e8000 08:04 3674876                    /usr/lib64/libstdc++.so.6.0.19
+7f67abd6c000-7f67abd6e000 rw-p 000f0000 08:04 3674876                    /usr/lib64/libstdc++.so.6.0.19
+7f67abd6e000-7f67abd83000 rw-p 00000000 00:00 0 
+7f67abd83000-7f67acdfe000 r-xp 00000000 08:04 58852729                   /root/huihan/FBGEMM/install/lib/libfbgemm.so
+7f67acdfe000-7f67acffe000 ---p 0107b000 08:04 58852729                   /root/huihan/FBGEMM/install/lib/libfbgemm.so
+7f67acffe000-7f67ad006000 r--p 0107b000 08:04 58852729                   /root/huihan/FBGEMM/install/lib/libfbgemm.so
+7f67ad006000-7f67ad00a000 rw-p 01083000 08:04 58852729                   /root/huihan/FBGEMM/install/lib/libfbgemm.so
+7f67ad00a000-7f67ad011000 r-xp 00000000 08:04 3674856                    /usr/lib64/librt-2.17.so
+7f67ad011000-7f67ad210000 ---p 00007000 08:04 3674856                    /usr/lib64/librt-2.17.so
+7f67ad210000-7f67ad211000 r--p 00006000 08:04 3674856                    /usr/lib64/librt-2.17.so
+7f67ad211000-7f67ad212000 rw-p 00007000 08:04 3674856                    /usr/lib64/librt-2.17.so
+7f67ad212000-7f67b1451000 r-xp 00000000 08:04 59123231                   /root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so
+7f67b1451000-7f67b1651000 ---p 0423f000 08:04 59123231                   /root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so
+7f67b1651000-7f67b1ae3000 r--p 0423f000 08:04 59123231                   /root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so
+7f67b1ae3000-7f67b1b1d000 rw-p 046d1000 08:04 59123231                   /root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so
+7f67b1b1d000-7f67b1b72000 rw-p 00000000 00:00 0 
+7f67b1b72000-7f67b26d3000 r-xp 00000000 08:04 58857173                   /root/huihan/venv/lib/libmkl_vml_avx512.so
+7f67b26d3000-7f67b28d3000 ---p 00b61000 08:04 58857173                   /root/huihan/venv/lib/libmkl_vml_avx512.so
+7f67b28d3000-7f67b28d6000 r--p 00b61000 08:04 58857173                   /root/huihan/venv/lib/libmkl_vml_avx512.so
+7f67b28d6000-7f67b28eb000 rw-p 00b64000 08:04 58857173                   /root/huihan/venv/lib/libmkl_vml_avx512.so
+7f67b28eb000-7f67b28ec000 rw-p 00000000 00:00 0 
+7f67b28ec000-7f67b680c000 r-xp 00000000 08:04 58857076                   /root/huihan/venv/lib/libmkl_avx512.so
+7f67b680c000-7f67b6a0b000 ---p 03f20000 08:04 58857076                   /root/huihan/venv/lib/libmkl_avx512.so
+7f67b6a0b000-7f67b6a13000 r--p 03f1f000 08:04 58857076                   /root/huihan/venv/lib/libmkl_avx512.so
+7f67b6a13000-7f67b6a21000 rw-p 03f27000 08:04 58857076                   /root/huihan/venv/lib/libmkl_avx512.so
+7f67b6a21000-7f67b6a27000 rw-p 00000000 00:00 0 
+7f67b6a27000-7f67b733f000 r-xp 00000000 08:04 58857097                   /root/huihan/venv/lib/libmkl_intel_lp64.so
+7f67b733f000-7f67b753f000 ---p 00918000 08:04 58857097                   /root/huihan/venv/lib/libmkl_intel_lp64.so
+7f67b753f000-7f67b7540000 r--p 00918000 08:04 58857097                   /root/huihan/venv/lib/libmkl_intel_lp64.so
+7f67b7540000-7f67b7553000 rw-p 00919000 08:04 58857097                   /root/huihan/venv/lib/libmkl_intel_lp64.so
+7f67b7553000-7f67b7558000 rw-p 00000000 00:00 0 
+7f67b7558000-7f67b95c2000 r-xp 00000000 08:04 58856955                   /root/huihan/venv/lib/libmkl_intel_thread.so
+7f67b95c2000-7f67b97c1000 ---p 0206a000 08:04 58856955                   /root/huihan/venv/lib/libmkl_intel_thread.so
+7f67b97c1000-7f67b97c5000 r--p 02069000 08:04 58856955                   /root/huihan/venv/lib/libmkl_intel_thread.so
+7f67b97c5000-7f67b9a2f000 rw-p 0206d000 08:04 58856955                   /root/huihan/venv/lib/libmkl_intel_thread.so
+7f67b9a2f000-7f67b9a38000 rw-p 00000000 00:00 0 
+7f67b9a38000-7f67bd8fd000 r-xp 00000000 08:04 58857181                   /root/huihan/venv/lib/libmkl_core.so
+7f67bd8fd000-7f67bdafd000 ---p 03ec5000 08:04 58857181                   /root/huihan/venv/lib/libmkl_core.so
+7f67bdafd000-7f67bdb04000 r--p 03ec5000 08:04 58857181                   /root/huihan/venv/lib/libmkl_core.so
+7f67bdb04000-7f67bdb32000 rw-p 03ecc000 08:04 58857181                   /root/huihan/venv/lib/libmkl_core.so
+7f67bdb32000-7f67bdbb1000 rw-p 00000000 00:00 0 
+7f67bdbef000-7f67bdc2f000 rw-p 00000000 00:00 0 
+7f67bdc2f000-7f67bdce5000 r-xp 00000000 08:04 61868143                   /root/huihan/venv/lib/python2.7/site-packages/numpy/random/mtrand.so
+7f67bdce5000-7f67bdee5000 ---p 000b6000 08:04 61868143                   /root/huihan/venv/lib/python2.7/site-packages/numpy/random/mtrand.so
+7f67bdee5000-7f67bdee6000 r--p 000b6000 08:04 61868143                   /root/huihan/venv/lib/python2.7/site-packages/numpy/random/mtrand.so
+7f67bdee6000-7f67bdf0b000 rw-p 000b7000 08:04 61868143                   /root/huihan/venv/lib/python2.7/site-packages/numpy/random/mtrand.so
+7f67bdf0b000-7f67bdf4c000 rw-p 00000000 00:00 0 
+7f67bdf4c000-7f67bdf51000 r-xp 00000000 08:04 3934890                    /usr/lib64/python2.7/lib-dynload/stropmodule.so
+7f67bdf51000-7f67be150000 ---p 00005000 08:04 3934890                    /usr/lib64/python2.7/lib-dynload/stropmodule.so
+7f67be150000-7f67be151000 r--p 00004000 08:04 3934890                    /usr/lib64/python2.7/lib-dynload/stropmodule.so
+7f67be151000-7f67be153000 rw-p 00005000 08:04 3934890                    /usr/lib64/python2.7/lib-dynload/stropmodule.so
+7f67be153000-7f67be193000 rw-p 00000000 00:00 0 
+7f67be193000-7f67be22e000 r-xp 00000000 08:04 61343338                   /root/huihan/venv/lib/python2.7/site-packages/mkl_fft/_pydfti.so
+7f67be22e000-7f67be42e000 ---p 0009b000 08:04 61343338                   /root/huihan/venv/lib/python2.7/site-packages/mkl_fft/_pydfti.so
+7f67be42e000-7f67be42f000 r--p 0009b000 08:04 61343338                   /root/huihan/venv/lib/python2.7/site-packages/mkl_fft/_pydfti.so
+7f67be42f000-7f67be432000 rw-p 0009c000 08:04 61343338                   /root/huihan/venv/lib/python2.7/site-packages/mkl_fft/_pydfti.so
+7f67be432000-7f67be433000 rw-p 00000000 00:00 0 
+7f67be433000-7f67be452000 r-xp 00000000 08:04 61868162                   /root/huihan/venv/lib/python2.7/site-packages/numpy/fft/fftpack_lite.so
+7f67be452000-7f67be651000 ---p 0001f000 08:04 61868162                   /root/huihan/venv/lib/python2.7/site-packages/numpy/fft/fftpack_lite.so
+7f67be651000-7f67be652000 r--p 0001e000 08:04 61868162                   /root/huihan/venv/lib/python2.7/site-packages/numpy/fft/fftpack_lite.so
+7f67be652000-7f67be653000 rw-p 0001f000 08:04 61868162                   /root/huihan/venv/lib/python2.7/site-packages/numpy/fft/fftpack_lite.so
+7f67be653000-7f67be7fb000 r-xp 00000000 08:04 58853564                   /root/huihan/venv/lib/libiomp5.so
+7f67be7fb000-7f67be9fa000 ---p 001a8000 08:04 58853564                   /root/huihan/venv/lib/libiomp5.so
+7f67be9fa000-7f67be9fd000 r--p 001a7000 08:04 58853564                   /root/huihan/venv/lib/libiomp5.so
+7f67be9fd000-7f67bea07000 rw-p 001aa000 08:04 58853564                   /root/huihan/venv/lib/libiomp5.so
+7f67bea07000-7f67bea36000 rw-p 00000000 00:00 0 
+7f67bea36000-7f67bea38000 r-xp 00000000 08:04 61605711                   /root/huihan/venv/lib/python2.7/site-packages/numpy/_mklinit.so
+7f67bea38000-7f67bec37000 ---p 00002000 08:04 61605711                   /root/huihan/venv/lib/python2.7/site-packages/numpy/_mklinit.so
+7f67bec37000-7f67bec38000 r--p 00001000 08:04 61605711                   /root/huihan/venv/lib/python2.7/site-packages/numpy/_mklinit.so
+7f67bec38000-7f67bec39000 rw-p 00000000 00:00 0 
+7f67bec39000-7f67bec66000 r-xp 00000000 08:04 61605795                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/_multiarray_tests.so
+7f67bec66000-7f67bee66000 ---p 0002d000 08:04 61605795                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/_multiarray_tests.so
+7f67bee66000-7f67bee67000 r--p 0002d000 08:04 61605795                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/_multiarray_tests.so
+7f67bee67000-7f67bee68000 rw-p 0002e000 08:04 61605795                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/_multiarray_tests.so
+7f67bee68000-7f67bee6c000 r-xp 00000000 08:04 3943262                    /usr/lib64/python2.7/lib-dynload/_localemodule.so
+7f67bee6c000-7f67bf06b000 ---p 00004000 08:04 3943262                    /usr/lib64/python2.7/lib-dynload/_localemodule.so
+7f67bf06b000-7f67bf06c000 r--p 00003000 08:04 3943262                    /usr/lib64/python2.7/lib-dynload/_localemodule.so
+7f67bf06c000-7f67bf06d000 rw-p 00004000 08:04 3943262                    /usr/lib64/python2.7/lib-dynload/_localemodule.so
+7f67bf06d000-7f67bf12d000 rw-p 00000000 00:00 0 
+7f67bf12d000-7f67bf12e000 r-xp 00000000 08:04 3943275                    /usr/lib64/python2.7/lib-dynload/future_builtins.so
+7f67bf12e000-7f67bf32d000 ---p 00001000 08:04 3943275                    /usr/lib64/python2.7/lib-dynload/future_builtins.so
+7f67bf32d000-7f67bf32e000 r--p 00000000 08:04 3943275                    /usr/lib64/python2.7/lib-dynload/future_builtins.so
+7f67bf32e000-7f67bf32f000 rw-p 00001000 08:04 3943275                    /usr/lib64/python2.7/lib-dynload/future_builtins.so
+7f67bf32f000-7f67bf36f000 rw-p 00000000 00:00 0 
+7f67bf36f000-7f67bf3f4000 r-xp 00000000 08:04 61868175                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/_umath_linalg.so
+7f67bf3f4000-7f67bf5f4000 ---p 00085000 08:04 61868175                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/_umath_linalg.so
+7f67bf5f4000-7f67bf5f5000 r--p 00085000 08:04 61868175                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/_umath_linalg.so
+7f67bf5f5000-7f67bf5f6000 rw-p 00086000 08:04 61868175                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/_umath_linalg.so
+7f67bf5f6000-7f67bf5fb000 r-xp 00000000 08:04 61868180                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/lapack_lite.so
+7f67bf5fb000-7f67bf7fa000 ---p 00005000 08:04 61868180                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/lapack_lite.so
+7f67bf7fa000-7f67bf7fb000 r--p 00004000 08:04 61868180                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/lapack_lite.so
+7f67bf7fb000-7f67bf7fc000 rw-p 00005000 08:04 61868180                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/lapack_lite.so
+7f67bf7fc000-7f67bf83c000 rw-p 00000000 00:00 0 
+7f67bf83c000-7f67bf83e000 r-xp 00000000 08:04 3934872                    /usr/lib64/python2.7/lib-dynload/fcntlmodule.so
+7f67bf83e000-7f67bfa3e000 ---p 00002000 08:04 3934872                    /usr/lib64/python2.7/lib-dynload/fcntlmodule.so
+7f67bfa3e000-7f67bfa3f000 r--p 00002000 08:04 3934872                    /usr/lib64/python2.7/lib-dynload/fcntlmodule.so
+7f67bfa3f000-7f67bfa40000 rw-p 00003000 08:04 3934872                    /usr/lib64/python2.7/lib-dynload/fcntlmodule.so
+7f67bfa40000-7f67bfa43000 r-xp 00000000 08:04 3934857                    /usr/lib64/python2.7/lib-dynload/_randommodule.so
+7f67bfa43000-7f67bfc42000 ---p 00003000 08:04 3934857                    /usr/lib64/python2.7/lib-dynload/_randommodule.so
+7f67bfc42000-7f67bfc43000 r--p 00002000 08:04 3934857                    /usr/lib64/python2.7/lib-dynload/_randommodule.so
+7f67bfc43000-7f67bfc44000 rw-p 00003000 08:04 3934857                    /usr/lib64/python2.7/lib-dynload/_randommodule.so
+7f67bfc44000-7f67bfca4000 r-xp 00000000 08:04 3675114                    /usr/lib64/libpcre.so.1.2.0
+7f67bfca4000-7f67bfea4000 ---p 00060000 08:04 3675114                    /usr/lib64/libpcre.so.1.2.0
+7f67bfea4000-7f67bfea5000 r--p 00060000 08:04 3675114                    /usr/lib64/libpcre.so.1.2.0
+7f67bfea5000-7f67bfea6000 rw-p 00061000 08:04 3675114                    /usr/lib64/libpcre.so.1.2.0
+7f67bfea6000-7f67bfeca000 r-xp 00000000 08:04 3674969                    /usr/lib64/libselinux.so.1
+7f67bfeca000-7f67c00c9000 ---p 00024000 08:04 3674969                    /usr/lib64/libselinux.so.1
+7f67c00c9000-7f67c00ca000 r--p 00023000 08:04 3674969                    /usr/lib64/libselinux.so.1
+7f67c00ca000-7f67c00cb000 rw-p 00024000 08:04 3674969                    /usr/lib64/libselinux.so.1
+7f67c00cb000-7f67c00cd000 rw-p 00000000 00:00 0 
+7f67c00cd000-7f67c00e3000 r-xp 00000000 08:04 3674852                    /usr/lib64/libresolv-2.17.so
+7f67c00e3000-7f67c02e2000 ---p 00016000 08:04 3674852                    /usr/lib64/libresolv-2.17.so
+7f67c02e2000-7f67c02e3000 r--p 00015000 08:04 3674852                    /usr/lib64/libresolv-2.17.so
+7f67c02e3000-7f67c02e4000 rw-p 00016000 08:04 3674852                    /usr/lib64/libresolv-2.17.so
+7f67c02e4000-7f67c02e6000 rw-p 00000000 00:00 0 
+7f67c02e6000-7f67c02e9000 r-xp 00000000 08:04 3675045                    /usr/lib64/libkeyutils.so.1.5
+7f67c02e9000-7f67c04e8000 ---p 00003000 08:04 3675045                    /usr/lib64/libkeyutils.so.1.5
+7f67c04e8000-7f67c04e9000 r--p 00002000 08:04 3675045                    /usr/lib64/libkeyutils.so.1.5
+7f67c04e9000-7f67c04ea000 rw-p 00003000 08:04 3675045                    /usr/lib64/libkeyutils.so.1.5
+7f67c04ea000-7f67c04f7000 r-xp 00000000 08:04 3674784                    /usr/lib64/libkrb5support.so.0.1
+7f67c04f7000-7f67c06f7000 ---p 0000d000 08:04 3674784                    /usr/lib64/libkrb5support.so.0.1
+7f67c06f7000-7f67c06f8000 r--p 0000d000 08:04 3674784                    /usr/lib64/libkrb5support.so.0.1
+7f67c06f8000-7f67c06f9000 rw-p 0000e000 08:04 3674784                    /usr/lib64/libkrb5support.so.0.1
+7f67c06f9000-7f67c070e000 r-xp 00000000 08:04 3674904                    /usr/lib64/libz.so.1.2.7
+7f67c070e000-7f67c090d000 ---p 00015000 08:04 3674904                    /usr/lib64/libz.so.1.2.7
+7f67c090d000-7f67c090e000 r--p 00014000 08:04 3674904                    /usr/lib64/libz.so.1.2.7
+7f67c090e000-7f67c090f000 rw-p 00015000 08:04 3674904                    /usr/lib64/libz.so.1.2.7
+7f67c090f000-7f67c0928000 r-xp 00000000 08:04 3674772                    /usr/lib64/libk5crypto.so.3.1
+7f67c0928000-7f67c0b27000 ---p 00019000 08:04 3674772                    /usr/lib64/libk5crypto.so.3.1
+7f67c0b27000-7f67c0b29000 r--p 00018000 08:04 3674772                    /usr/lib64/libk5crypto.so.3.1
+7f67c0b29000-7f67c0b2a000 rw-p 0001a000 08:04 3674772                    /usr/lib64/libk5crypto.so.3.1
+7f67c0b2a000-7f67c0b2d000 r-xp 00000000 08:04 3674947                    /usr/lib64/libcom_err.so.2.1
+7f67c0b2d000-7f67c0d2c000 ---p 00003000 08:04 3674947                    /usr/lib64/libcom_err.so.2.1
+7f67c0d2c000-7f67c0d2d000 r--p 00002000 08:04 3674947                    /usr/lib64/libcom_err.so.2.1
+7f67c0d2d000-7f67c0d2e000 rw-p 00003000 08:04 3674947                    /usr/lib64/libcom_err.so.2.1
+7f67c0d2e000-7f67c0e07000 r-xp 00000000 08:04 3674783                    /usr/lib64/libkrb5.so.3.3
+7f67c0e07000-7f67c1006000 ---p 000d9000 08:04 3674783                    /usr/lib64/libkrb5.so.3.3
+7f67c1006000-7f67c1014000 r--p 000d8000 08:04 3674783                    /usr/lib64/libkrb5.so.3.3
+7f67c1014000-7f67c1017000 rw-p 000e6000 08:04 3674783                    /usr/lib64/libkrb5.so.3.3
+7f67c1017000-7f67c1061000 r-xp 00000000 08:04 3674738                    /usr/lib64/libgssapi_krb5.so.2.2
+7f67c1061000-7f67c1261000 ---p 0004a000 08:04 3674738                    /usr/lib64/libgssapi_krb5.so.2.2
+7f67c1261000-7f67c1262000 r--p 0004a000 08:04 3674738                    /usr/lib64/libgssapi_krb5.so.2.2
+7f67c1262000-7f67c1264000 rw-p 0004b000 08:04 3674738                    /usr/lib64/libgssapi_krb5.so.2.2
+7f67c1264000-7f67c1498000 r-xp 00000000 08:04 3674645                    /usr/lib64/libcrypto.so.1.0.2k
+7f67c1498000-7f67c1698000 ---p 00234000 08:04 3674645                    /usr/lib64/libcrypto.so.1.0.2k
+7f67c1698000-7f67c16b4000 r--p 00234000 08:04 3674645                    /usr/lib64/libcrypto.so.1.0.2k
+7f67c16b4000-7f67c16c1000 rw-p 00250000 08:04 3674645                    /usr/lib64/libcrypto.so.1.0.2k
+7f67c16c1000-7f67c16c5000 rw-p 00000000 00:00 0 
+7f67c16c5000-7f67c172c000 r-xp 00000000 08:04 3674684                    /usr/lib64/libssl.so.1.0.2k
+7f67c172c000-7f67c192c000 ---p 00067000 08:04 3674684                    /usr/lib64/libssl.so.1.0.2k
+7f67c192c000-7f67c1930000 r--p 00067000 08:04 3674684                    /usr/lib64/libssl.so.1.0.2k
+7f67c1930000-7f67c1937000 rw-p 0006b000 08:04 3674684                    /usr/lib64/libssl.so.1.0.2k
+7f67c1937000-7f67c193b000 r-xp 00000000 08:04 3942964                    /usr/lib64/python2.7/lib-dynload/_hashlib.so
+7f67c193b000-7f67c1b3a000 ---p 00004000 08:04 3942964                    /usr/lib64/python2.7/lib-dynload/_hashlib.so
+7f67c1b3a000-7f67c1b3b000 r--p 00003000 08:04 3942964                    /usr/lib64/python2.7/lib-dynload/_hashlib.so
+7f67c1b3b000-7f67c1b3c000 rw-p 00004000 08:04 3942964                    /usr/lib64/python2.7/lib-dynload/_hashlib.so
+7f67c1b3c000-7f67c1b7d000 rw-p 00000000 00:00 0 
+7f67c1b7d000-7f67c1b82000 r-xp 00000000 08:04 3934864                    /usr/lib64/python2.7/lib-dynload/binascii.so
+7f67c1b82000-7f67c1d81000 ---p 00005000 08:04 3934864                    /usr/lib64/python2.7/lib-dynload/binascii.so
+7f67c1d81000-7f67c1d82000 r--p 00004000 08:04 3934864                    /usr/lib64/python2.7/lib-dynload/binascii.so
+7f67c1d82000-7f67c1d83000 rw-p 00005000 08:04 3934864                    /usr/lib64/python2.7/lib-dynload/binascii.so
+7f67c1d83000-7f67c1d9f000 r-xp 00000000 08:04 3934851                    /usr/lib64/python2.7/lib-dynload/_io.so
+7f67c1d9f000-7f67c1f9e000 ---p 0001c000 08:04 3934851                    /usr/lib64/python2.7/lib-dynload/_io.so
+7f67c1f9e000-7f67c1f9f000 r--p 0001b000 08:04 3934851                    /usr/lib64/python2.7/lib-dynload/_io.so
+7f67c1f9f000-7f67c1fa9000 rw-p 0001c000 08:04 3934851                    /usr/lib64/python2.7/lib-dynload/_io.so
+7f67c1fa9000-7f67c1fab000 r-xp 00000000 08:04 3934875                    /usr/lib64/python2.7/lib-dynload/grpmodule.so
+7f67c1fab000-7f67c21aa000 ---p 00002000 08:04 3934875                    /usr/lib64/python2.7/lib-dynload/grpmodule.so
+7f67c21aa000-7f67c21ab000 r--p 00001000 08:04 3934875                    /usr/lib64/python2.7/lib-dynload/grpmodule.so
+7f67c21ab000-7f67c21ac000 rw-p 00002000 08:04 3934875                    /usr/lib64/python2.7/lib-dynload/grpmodule.so
+7f67c21ac000-7f67c21ec000 rw-p 00000000 00:00 0 
+7f67c21ec000-7f67c21f0000 r-xp 00000000 08:04 3943283                    /usr/lib64/python2.7/lib-dynload/timemodule.so
+7f67c21f0000-7f67c23ef000 ---p 00004000 08:04 3943283                    /usr/lib64/python2.7/lib-dynload/timemodule.so
+7f67c23ef000-7f67c23f0000 r--p 00003000 08:04 3943283                    /usr/lib64/python2.7/lib-dynload/timemodule.so
+7f67c23f0000-7f67c23f2000 rw-p 00004000 08:04 3943283                    /usr/lib64/python2.7/lib-dynload/timemodule.so
+7f67c23f2000-7f67c2533000 rw-p 00000000 00:00 0 
+7f67c2533000-7f67c2536000 r-xp 00000000 08:04 3935844                    /usr/lib64/python2.7/lib-dynload/_functoolsmodule.so
+7f67c2536000-7f67c2735000 ---p 00003000 08:04 3935844                    /usr/lib64/python2.7/lib-dynload/_functoolsmodule.so
+7f67c2735000-7f67c2736000 r--p 00002000 08:04 3935844                    /usr/lib64/python2.7/lib-dynload/_functoolsmodule.so
+7f67c2736000-7f67c2737000 rw-p 00003000 08:04 3935844                    /usr/lib64/python2.7/lib-dynload/_functoolsmodule.so
+7f67c2737000-7f67c2777000 rw-p 00000000 00:00 0 
+7f67c2777000-7f67c277b000 r-xp 00000000 08:04 3943272                    /usr/lib64/python2.7/lib-dynload/cStringIO.so
+7f67c277b000-7f67c297a000 ---p 00004000 08:04 3943272                    /usr/lib64/python2.7/lib-dynload/cStringIO.so
+7f67c297a000-7f67c297b000 r--p 00003000 08:04 3943272                    /usr/lib64/python2.7/lib-dynload/cStringIO.so
+7f67c297b000-7f67c297d000 rw-p 00004000 08:04 3943272                    /usr/lib64/python2.7/lib-dynload/cStringIO.so
+7f67c297d000-7f67c298f000 r-xp 00000000 08:04 3943271                    /usr/lib64/python2.7/lib-dynload/cPickle.so
+7f67c298f000-7f67c2b8f000 ---p 00012000 08:04 3943271                    /usr/lib64/python2.7/lib-dynload/cPickle.so
+7f67c2b8f000-7f67c2b90000 r--p 00012000 08:04 3943271                    /usr/lib64/python2.7/lib-dynload/cPickle.so
+7f67c2b90000-7f67c2b91000 rw-p 00013000 08:04 3943271                    /usr/lib64/python2.7/lib-dynload/cPickle.so
+7f67c2b91000-7f67c2b94000 r-xp 00000000 08:04 3942980                    /usr/lib64/python2.7/lib-dynload/_heapq.so
+7f67c2b94000-7f67c2d93000 ---p 00003000 08:04 3942980                    /usr/lib64/python2.7/lib-dynload/_heapq.so
+7f67c2d93000-7f67c2d94000 r--p 00002000 08:04 3942980                    /usr/lib64/python2.7/lib-dynload/_heapq.so
+7f67c2d94000-7f67c2d96000 rw-p 00003000 08:04 3942980                    /usr/lib64/python2.7/lib-dynload/_heapq.so
+7f67c2d96000-7f67c2da0000 r-xp 00000000 08:04 3934877                    /usr/lib64/python2.7/lib-dynload/itertoolsmodule.so
+7f67c2da0000-7f67c2f9f000 ---p 0000a000 08:04 3934877                    /usr/lib64/python2.7/lib-dynload/itertoolsmodule.so
+7f67c2f9f000-7f67c2fa0000 r--p 00009000 08:04 3934877                    /usr/lib64/python2.7/lib-dynload/itertoolsmodule.so
+7f67c2fa0000-7f67c2fa5000 rw-p 0000a000 08:04 3934877                    /usr/lib64/python2.7/lib-dynload/itertoolsmodule.so
+7f67c2fa5000-7f67c2fae000 r-xp 00000000 08:04 3934882                    /usr/lib64/python2.7/lib-dynload/operator.so
+7f67c2fae000-7f67c31ad000 ---p 00009000 08:04 3934882                    /usr/lib64/python2.7/lib-dynload/operator.so
+7f67c31ad000-7f67c31ae000 r--p 00008000 08:04 3934882                    /usr/lib64/python2.7/lib-dynload/operator.so
+7f67c31ae000-7f67c31b0000 rw-p 00009000 08:04 3934882                    /usr/lib64/python2.7/lib-dynload/operator.so
+7f67c31b0000-7f67c31b6000 r-xp 00000000 08:04 3934840                    /usr/lib64/python2.7/lib-dynload/_collectionsmodule.so
+7f67c31b6000-7f67c33b5000 ---p 00006000 08:04 3934840                    /usr/lib64/python2.7/lib-dynload/_collectionsmodule.so
+7f67c33b5000-7f67c33b6000 r--p 00005000 08:04 3934840                    /usr/lib64/python2.7/lib-dynload/_collectionsmodule.so
+7f67c33b6000-7f67c33b8000 rw-p 00006000 08:04 3934840                    /usr/lib64/python2.7/lib-dynload/_collectionsmodule.so
+7f67c33b8000-7f67c33f8000 rw-p 00000000 00:00 0 
+7f67c33f8000-7f67c3a55000 r-xp 00000000 08:04 61605799                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/umath.so
+7f67c3a55000-7f67c3c55000 ---p 0065d000 08:04 61605799                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/umath.so
+7f67c3c55000-7f67c3c57000 r--p 0065d000 08:04 61605799                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/umath.so
+7f67c3c57000-7f67c3c5d000 rw-p 0065f000 08:04 61605799                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/umath.so
+7f67c3c5d000-7f67c3c5f000 rw-p 00000000 00:00 0 
+7f67c3c5f000-7f67c3c70000 r-xp 00000000 08:04 3934869                    /usr/lib64/python2.7/lib-dynload/datetime.so
+7f67c3c70000-7f67c3e6f000 ---p 00011000 08:04 3934869                    /usr/lib64/python2.7/lib-dynload/datetime.so
+7f67c3e6f000-7f67c3e70000 r--p 00010000 08:04 3934869                    /usr/lib64/python2.7/lib-dynload/datetime.so
+7f67c3e70000-7f67c3e74000 rw-p 00011000 08:04 3934869                    /usr/lib64/python2.7/lib-dynload/datetime.so
+7f67c3e74000-7f67c3ee2000 r-xp 00000000 08:04 58857219                   /root/huihan/venv/lib/libintlc.so.5
+7f67c3ee2000-7f67c40e2000 ---p 0006e000 08:04 58857219                   /root/huihan/venv/lib/libintlc.so.5
+7f67c40e2000-7f67c40e3000 r--p 0006e000 08:04 58857219                   /root/huihan/venv/lib/libintlc.so.5
+7f67c40e3000-7f67c40e4000 rw-p 0006f000 08:04 58857219                   /root/huihan/venv/lib/libintlc.so.5
+7f67c40e4000-7f67c40e6000 rw-p 00000000 00:00 0 
+7f67c40e6000-7f67c40fb000 r-xp 00000000 08:04 3670996                    /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7f67c40fb000-7f67c42fa000 ---p 00015000 08:04 3670996                    /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7f67c42fa000-7f67c42fb000 r--p 00014000 08:04 3670996                    /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7f67c42fb000-7f67c42fc000 rw-p 00015000 08:04 3670996                    /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7f67c42fc000-7f67c445a000 r-xp 00000000 08:04 58857188                   /root/huihan/venv/lib/libirng.so
+7f67c445a000-7f67c465a000 ---p 0015e000 08:04 58857188                   /root/huihan/venv/lib/libirng.so
+7f67c465a000-7f67c465b000 r--p 0015e000 08:04 58857188                   /root/huihan/venv/lib/libirng.so
+7f67c465b000-7f67c466e000 rw-p 0015f000 08:04 58857188                   /root/huihan/venv/lib/libirng.so
+7f67c466e000-7f67c5d8e000 r-xp 00000000 08:04 58857213                   /root/huihan/venv/lib/libsvml.so
+7f67c5d8e000-7f67c5f8d000 ---p 01720000 08:04 58857213                   /root/huihan/venv/lib/libsvml.so
+7f67c5f8d000-7f67c5fdd000 r--p 0171f000 08:04 58857213                   /root/huihan/venv/lib/libsvml.so
+7f67c5fdd000-7f67c6011000 rw-p 0176f000 08:04 58857213                   /root/huihan/venv/lib/libsvml.so
+7f67c6011000-7f67c6354000 r-xp 00000000 08:04 58857193                   /root/huihan/venv/lib/libimf.so
+7f67c6354000-7f67c6554000 ---p 00343000 08:04 58857193                   /root/huihan/venv/lib/libimf.so
+7f67c6554000-7f67c655b000 r--p 00343000 08:04 58857193                   /root/huihan/venv/lib/libimf.so
+7f67c655b000-7f67c65b1000 rw-p 0034a000 08:04 58857193                   /root/huihan/venv/lib/libimf.so
+7f67c65b1000-7f67c6a62000 r-xp 00000000 08:04 58853612                   /root/huihan/venv/lib/libmkl_rt.so
+7f67c6a62000-7f67c6c62000 ---p 004b1000 08:04 58853612                   /root/huihan/venv/lib/libmkl_rt.so
+7f67c6c62000-7f67c6c68000 r--p 004b1000 08:04 58853612                   /root/huihan/venv/lib/libmkl_rt.so
+7f67c6c68000-7f67c6c6a000 rw-p 004b7000 08:04 58853612                   /root/huihan/venv/lib/libmkl_rt.so
+7f67c6c6a000-7f67c6c7c000 rw-p 00000000 00:00 0 
+7f67c6c7c000-7f67c71fa000 r-xp 00000000 08:04 61605791                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/multiarray.so
+7f67c71fa000-7f67c73f9000 ---p 0057e000 08:04 61605791                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/multiarray.so
+7f67c73f9000-7f67c73fc000 r--p 0057d000 08:04 61605791                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/multiarray.so
+7f67c73fc000-7f67c7413000 rw-p 00580000 08:04 61605791                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/multiarray.so
+7f67c7413000-7f67c7433000 rw-p 00000000 00:00 0 
+7f67c7433000-7f67c743a000 r-xp 00000000 08:04 3934879                    /usr/lib64/python2.7/lib-dynload/math.so
+7f67c743a000-7f67c7639000 ---p 00007000 08:04 3934879                    /usr/lib64/python2.7/lib-dynload/math.so
+7f67c7639000-7f67c763a000 r--p 00006000 08:04 3934879                    /usr/lib64/python2.7/lib-dynload/math.so
+7f67c763a000-7f67c763c000 rw-p 00007000 08:04 3934879                    /usr/lib64/python2.7/lib-dynload/math.so
+7f67c763c000-7f67c7643000 r-xp 00000000 08:04 3943267                    /usr/lib64/python2.7/lib-dynload/_struct.so
+7f67c7643000-7f67c7842000 ---p 00007000 08:04 3943267                    /usr/lib64/python2.7/lib-dynload/_struct.so
+7f67c7842000-7f67c7843000 r--p 00006000 08:04 3943267                    /usr/lib64/python2.7/lib-dynload/_struct.so
+7f67c7843000-7f67c7845000 rw-p 00007000 08:04 3943267                    /usr/lib64/python2.7/lib-dynload/_struct.so
+7f67c7845000-7f67c784c000 r-xp 00000000 08:04 3674982                    /usr/lib64/libffi.so.6.0.1
+7f67c784c000-7f67c7a4b000 ---p 00007000 08:04 3674982                    /usr/lib64/libffi.so.6.0.1
+7f67c7a4b000-7f67c7a4c000 r--p 00006000 08:04 3674982                    /usr/lib64/libffi.so.6.0.1
+7f67c7a4c000-7f67c7a4d000 rw-p 00007000 08:04 3674982                    /usr/lib64/libffi.so.6.0.1
+7f67c7a4d000-7f67c7a67000 r-xp 00000000 08:04 3934843                    /usr/lib64/python2.7/lib-dynload/_ctypes.so
+7f67c7a67000-7f67c7c66000 ---p 0001a000 08:04 3934843                    /usr/lib64/python2.7/lib-dynload/_ctypes.so
+7f67c7c66000-7f67c7c67000 r--p 00019000 08:04 3934843                    /usr/lib64/python2.7/lib-dynload/_ctypes.so
+7f67c7c67000-7f67c7c6b000 rw-p 0001a000 08:04 3934843                    /usr/lib64/python2.7/lib-dynload/_ctypes.so
+7f67c7c6b000-7f67ce195000 r--p 00000000 08:04 3805410                    /usr/lib/locale/locale-archive
+7f67ce195000-7f67ce357000 r-xp 00000000 08:04 3674662                    /usr/lib64/libc-2.17.so
+7f67ce357000-7f67ce557000 ---p 001c2000 08:04 3674662                    /usr/lib64/libc-2.17.so
+7f67ce557000-7f67ce55b000 r--p 001c2000 08:04 3674662                    /usr/lib64/libc-2.17.so
+7f67ce55b000-7f67ce55d000 rw-p 001c6000 08:04 3674662                    /usr/lib64/libc-2.17.so
+7f67ce55d000-7f67ce562000 rw-p 00000000 00:00 0 
+7f67ce562000-7f67ce663000 r-xp 00000000 08:04 3674692                    /usr/lib64/libm-2.17.so
+7f67ce663000-7f67ce862000 ---p 00101000 08:04 3674692                    /usr/lib64/libm-2.17.so
+7f67ce862000-7f67ce863000 r--p 00100000 08:04 3674692                    /usr/lib64/libm-2.17.so
+7f67ce863000-7f67ce864000 rw-p 00101000 08:04 3674692                    /usr/lib64/libm-2.17.so
+7f67ce864000-7f67ce866000 r-xp 00000000 08:04 3674884                    /usr/lib64/libutil-2.17.so
+7f67ce866000-7f67cea65000 ---p 00002000 08:04 3674884                    /usr/lib64/libutil-2.17.so
+7f67cea65000-7f67cea66000 r--p 00001000 08:04 3674884                    /usr/lib64/libutil-2.17.so
+7f67cea66000-7f67cea67000 rw-p 00002000 08:04 3674884                    /usr/lib64/libutil-2.17.so
+7f67cea67000-7f67cea69000 r-xp 00000000 08:04 3674683                    /usr/lib64/libdl-2.17.so
+7f67cea69000-7f67cec69000 ---p 00002000 08:04 3674683                    /usr/lib64/libdl-2.17.so
+7f67cec69000-7f67cec6a000 r--p 00002000 08:04 3674683                    /usr/lib64/libdl-2.17.so
+7f67cec6a000-7f67cec6b000 rw-p 00003000 08:04 3674683                    /usr/lib64/libdl-2.17.so
+7f67cec6b000-7f67cec82000 r-xp 00000000 08:04 3674819                    /usr/lib64/libpthread-2.17.so
+7f67cec82000-7f67cee81000 ---p 00017000 08:04 3674819                    /usr/lib64/libpthread-2.17.so
+7f67cee81000-7f67cee82000 r--p 00016000 08:04 3674819                    /usr/lib64/libpthread-2.17.so
+7f67cee82000-7f67cee83000 rw-p 00017000 08:04 3674819                    /usr/lib64/libpthread-2.17.so
+7f67cee83000-7f67cee87000 rw-p 00000000 00:00 0 
+7f67cee87000-7f67cf005000 r-xp 00000000 08:04 3674626                    /usr/lib64/libpython2.7.so.1.0
+7f67cf005000-7f67cf204000 ---p 0017e000 08:04 3674626                    /usr/lib64/libpython2.7.so.1.0
+7f67cf204000-7f67cf206000 r--p 0017d000 08:04 3674626                    /usr/lib64/libpython2.7.so.1.0
+7f67cf206000-7f67cf244000 rw-p 0017f000 08:04 3674626                    /usr/lib64/libpython2.7.so.1.0
+7f67cf244000-7f67cf253000 rw-p 00000000 00:00 0 
+7f67cf253000-7f67cf275000 r-xp 00000000 08:04 3670534                    /usr/lib64/ld-2.17.so
+7f67cf275000-7f67cf375000 rw-p 00000000 00:00 0 
+7f67cf396000-7f67cf3a6000 rwxp 00000000 00:00 0 
+7f67cf3a6000-7f67cf46b000 rw-p 00000000 00:00 0 
+7f67cf470000-7f67cf472000 rw-p 00000000 00:00 0 
+7f67cf472000-7f67cf473000 rwxp 00000000 00:00 0 
+7f67cf473000-7f67cf474000 rw-p 00000000 00:00 0 
+7f67cf474000-7f67cf475000 r--p 00021000 08:04 3670534                    /usr/lib64/ld-2.17.so
+7f67cf475000-7f67cf476000 rw-p 00022000 08:04 3670534                    /usr/lib64/ld-2.17.so
+7f67cf476000-7f67cf477000 rw-p 00000000 00:00 0 
+7ffe53f0e000-7ffe53f88000 rw-p 00000000 00:00 0                          [stack]
+7ffe53fd3000-7ffe53fd6000 r--p 00000000 00:00 0                          [vvar]
+7ffe53fd6000-7ffe53fd8000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+No: 2	GFLOPS: 0.00/0.00	result: MeasureResult(costs=(RuntimeError('[17:46:30] /root/huihan/tvm-hhl/src/runtime/rpc/rpc_session.cc:952: Check failed: code == RPCCode::kReturn code=4\n\n',),), error_no=4, all_cost=0.9531750679016113, timestamp=1562978790.17961)	[('VAL_CNFG', (240, 16, 704, 12, 16, 16, 4))],,None,1514
+finish column offsets
+144 16 960 8 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+*** Error in `/root/huihan/venv/bin/python': double free or corruption (!prev): 0x0000000000679670 ***
+======= Backtrace: =========
+/lib64/libc.so.6(+0x81489)[0x7f67ce216489]
+/root/huihan/FBGEMM/install/lib/libfbgemm.so(_ZN6fbgemm10fbgemmConvINS_16ReQuantizeOutputILb0ELNS_23QuantizationGranularityE0EhiNS_9DoNothingIhhEEEELi2EiEEiRKNS_12conv_param_tIXT0_EEEPKhRNS_18PackWeightsForConvIXT0_EaT1_EEPNT_7outTypeEPiRSG_iiPKNS_15BlockingFactorsE+0x4fb)[0x7f67abe8888b]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(+0x11840fe)[0x7f67ae3960fe]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(+0x1184851)[0x7f67ae396851]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(TVMFuncCall+0x48)[0x7f67ae3374d8]
+/tmp/tmpN_H1mL/tmp_func_7f4f1cd34852966b.tar.so(+0xee8)[0x7f67aa7fdee8]
+/tmp/tmpN_H1mL/tmp_func_7f4f1cd34852966b.tar.so(default_function+0x280)[0x7f67aa7fda30]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(+0x1138621)[0x7f67ae34a621]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(+0x1168cb5)[0x7f67ae37acb5]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(+0x1169087)[0x7f67ae37b087]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(_ZN3tvm7runtime10RPCSession12EventHandler16HandlePackedCallEv+0x59b)[0x7f67ae3776cb]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(_ZN3tvm7runtime10RPCSession12EventHandler13SwitchToStateENS2_5StateE+0x335)[0x7f67ae37d8e5]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(_ZN3tvm7runtime10RPCSession12EventHandler22HandleRecvPackedSeqArgEv+0x1f8)[0x7f67ae37ebe8]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(_ZN3tvm7runtime10RPCSession12EventHandler15HandleNextEventEPNS0_11TVMRetValueEbPKNS0_10PackedFuncE+0x268)[0x7f67ae37f478]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(_ZN3tvm7runtime10RPCSession22HandleUntilReturnEventEPNS0_11TVMRetValueEbPKNS0_10PackedFuncE+0x16c)[0x7f67ae378d4c]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(_ZN3tvm7runtime10RPCSession10ServerLoopEv+0xe9)[0x7f67ae378fd9]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(_ZN3tvm7runtime13RPCServerLoopEi+0x9a)[0x7f67ae38392a]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(+0x1172caa)[0x7f67ae384caa]
+/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so(TVMFuncCall+0x48)[0x7f67ae3374d8]
+/lib64/libffi.so.6(ffi_call_unix64+0x4c)[0x7f67c784adcc]
+/lib64/libffi.so.6(ffi_call+0x1f5)[0x7f67c784a6f5]
+/root/huihan/venv/lib64/python2.7/lib-dynload/_ctypes.so(_ctypes_callproc+0x30b)[0x7f67c7a5dbeb]
+/root/huihan/venv/lib64/python2.7/lib-dynload/_ctypes.so(+0xa9e5)[0x7f67c7a579e5]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x2336)[0x7f67cef67236]
+/lib64/libpython2.7.so.1.0(PyEval_EvalCodeEx+0x7ed)[0x7f67cef6e03d]
+/lib64/libpython2.7.so.1.0(+0x70978)[0x7f67ceef7978]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(+0x5aa55)[0x7f67ceee1a55]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(+0xa2e27)[0x7f67cef29e27]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x2336)[0x7f67cef67236]
+/lib64/libpython2.7.so.1.0(PyEval_EvalCodeEx+0x7ed)[0x7f67cef6e03d]
+/lib64/libpython2.7.so.1.0(+0x70a6d)[0x7f67ceef7a6d]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x17fd)[0x7f67cef666fd]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x67bd)[0x7f67cef6b6bd]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x67bd)[0x7f67cef6b6bd]
+/lib64/libpython2.7.so.1.0(PyEval_EvalCodeEx+0x7ed)[0x7f67cef6e03d]
+/lib64/libpython2.7.so.1.0(+0x70978)[0x7f67ceef7978]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(+0x5aa55)[0x7f67ceee1a55]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(+0xa2a87)[0x7f67cef29a87]
+/lib64/libpython2.7.so.1.0(+0xa179f)[0x7f67cef2879f]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x2336)[0x7f67cef67236]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x67bd)[0x7f67cef6b6bd]
+/lib64/libpython2.7.so.1.0(PyEval_EvalCodeEx+0x7ed)[0x7f67cef6e03d]
+/lib64/libpython2.7.so.1.0(+0x70a6d)[0x7f67ceef7a6d]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x17fd)[0x7f67cef666fd]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x67bd)[0x7f67cef6b6bd]
+/lib64/libpython2.7.so.1.0(PyEval_EvalFrameEx+0x67bd)[0x7f67cef6b6bd]
+/lib64/libpython2.7.so.1.0(PyEval_EvalCodeEx+0x7ed)[0x7f67cef6e03d]
+/lib64/libpython2.7.so.1.0(+0x70978)[0x7f67ceef7978]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(+0x5aa55)[0x7f67ceee1a55]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+/lib64/libpython2.7.so.1.0(+0xa2a87)[0x7f67cef29a87]
+/lib64/libpython2.7.so.1.0(+0xa179f)[0x7f67cef2879f]
+/lib64/libpython2.7.so.1.0(PyObject_Call+0x43)[0x7f67ceed2a63]
+======= Memory map: ========
+00400000-00401000 r-xp 00000000 08:04 59008152                           /root/huihan/venv/bin/python
+00600000-00601000 r--p 00000000 08:04 59008152                           /root/huihan/venv/bin/python
+00601000-00602000 rw-p 00001000 08:04 59008152                           /root/huihan/venv/bin/python
+00602000-00cad000 rw-p 00000000 00:00 0                                  [heap]
+00cad000-00ce8000 rw-p 00000000 00:00 0                                  [heap]
+7f67a4000000-7f67a4021000 rw-p 00000000 00:00 0 
+7f67a4021000-7f67a8000000 ---p 00000000 00:00 0 
+7f67aa7fd000-7f67aa800000 r-xp 00000000 08:04 33292712                   /tmp/tmpN_H1mL/tmp_func_7f4f1cd34852966b.tar.so
+7f67aa800000-7f67aa9ff000 ---p 00003000 08:04 33292712                   /tmp/tmpN_H1mL/tmp_func_7f4f1cd34852966b.tar.so
+7f67aa9ff000-7f67aaa00000 r--p 00002000 08:04 33292712                   /tmp/tmpN_H1mL/tmp_func_7f4f1cd34852966b.tar.so
+7f67aaa00000-7f67aaa01000 rw-p 00003000 08:04 33292712                   /tmp/tmpN_H1mL/tmp_func_7f4f1cd34852966b.tar.so
+7f67aaa01000-7f67aaa41000 rw-p 00000000 00:00 0 
+7f67aaa41000-7f67aaa4d000 r-xp 00000000 08:04 3674814                    /usr/lib64/libnss_files-2.17.so
+7f67aaa4d000-7f67aac4c000 ---p 0000c000 08:04 3674814                    /usr/lib64/libnss_files-2.17.so
+7f67aac4c000-7f67aac4d000 r--p 0000b000 08:04 3674814                    /usr/lib64/libnss_files-2.17.so
+7f67aac4d000-7f67aac4e000 rw-p 0000c000 08:04 3674814                    /usr/lib64/libnss_files-2.17.so
+7f67aac4e000-7f67aac54000 rw-p 00000000 00:00 0 
+7f67aac54000-7f67aac67000 r-xp 00000000 08:04 3943266                    /usr/lib64/python2.7/lib-dynload/_ssl.so
+7f67aac67000-7f67aae66000 ---p 00013000 08:04 3943266                    /usr/lib64/python2.7/lib-dynload/_ssl.so
+7f67aae66000-7f67aae67000 r--p 00012000 08:04 3943266                    /usr/lib64/python2.7/lib-dynload/_ssl.so
+7f67aae67000-7f67aae6b000 rw-p 00013000 08:04 3943266                    /usr/lib64/python2.7/lib-dynload/_ssl.so
+7f67aae6b000-7f67aae7a000 r-xp 00000000 08:04 3943264                    /usr/lib64/python2.7/lib-dynload/_socketmodule.so
+7f67aae7a000-7f67ab079000 ---p 0000f000 08:04 3943264                    /usr/lib64/python2.7/lib-dynload/_socketmodule.so
+7f67ab079000-7f67ab07a000 r--p 0000e000 08:04 3943264                    /usr/lib64/python2.7/lib-dynload/_socketmodule.so
+7f67ab07a000-7f67ab07f000 rw-p 0000f000 08:04 3943264                    /usr/lib64/python2.7/lib-dynload/_socketmodule.so
+7f67ab07f000-7f67ab0bf000 rw-p 00000000 00:00 0 
+7f67ab0bf000-7f67ab0c5000 r-xp 00000000 08:04 3934856                    /usr/lib64/python2.7/lib-dynload/_multiprocessing.so
+7f67ab0c5000-7f67ab2c4000 ---p 00006000 08:04 3934856                    /usr/lib64/python2.7/lib-dynload/_multiprocessing.so
+7f67ab2c4000-7f67ab2c5000 r--p 00005000 08:04 3934856                    /usr/lib64/python2.7/lib-dynload/_multiprocessing.so
+7f67ab2c5000-7f67ab2c6000 rw-p 00006000 08:04 3934856                    /usr/lib64/python2.7/lib-dynload/_multiprocessing.so
+7f67ab2c6000-7f67ab3c6000 rw-p 00000000 00:00 0 
+7f67ab3c6000-7f67ab3cb000 r-xp 00000000 08:04 3934888                    /usr/lib64/python2.7/lib-dynload/selectmodule.so
+7f67ab3cb000-7f67ab5ca000 ---p 00005000 08:04 3934888                    /usr/lib64/python2.7/lib-dynload/selectmodule.so
+7f67ab5ca000-7f67ab5cb000 r--p 00004000 08:04 3934888                    /usr/lib64/python2.7/lib-dynload/selectmodule.so
+7f67ab5cb000-7f67ab5cd000 rw-p 00005000 08:04 3934888                    /usr/lib64/python2.7/lib-dynload/selectmodule.so
+7f67ab5cd000-7f67ab60d000 rw-p 00000000 00:00 0 
+7f67ab60d000-7f67ab615000 r-xp 00000000 08:04 3943261                    /usr/lib64/python2.7/lib-dynload/_json.so
+7f67ab615000-7f67ab814000 ---p 00008000 08:04 3943261                    /usr/lib64/python2.7/lib-dynload/_json.so
+7f67ab814000-7f67ab815000 r--p 00007000 08:04 3943261                    /usr/lib64/python2.7/lib-dynload/_json.so
+7f67ab815000-7f67ab816000 rw-p 00008000 08:04 3943261                    /usr/lib64/python2.7/lib-dynload/_json.so
+7f67ab816000-7f67ab856000 rw-p 00000000 00:00 0 
+7f67ab856000-7f67ab87b000 r-xp 00000000 08:04 3674735                    /usr/lib64/libgomp.so.1.0.0
+7f67ab87b000-7f67aba7a000 ---p 00025000 08:04 3674735                    /usr/lib64/libgomp.so.1.0.0
+7f67aba7a000-7f67aba7b000 r--p 00024000 08:04 3674735                    /usr/lib64/libgomp.so.1.0.0
+7f67aba7b000-7f67aba7c000 rw-p 00025000 08:04 3674735                    /usr/lib64/libgomp.so.1.0.0
+7f67aba7c000-7f67abb65000 r-xp 00000000 08:04 3674876                    /usr/lib64/libstdc++.so.6.0.19
+7f67abb65000-7f67abd64000 ---p 000e9000 08:04 3674876                    /usr/lib64/libstdc++.so.6.0.19
+7f67abd64000-7f67abd6c000 r--p 000e8000 08:04 3674876                    /usr/lib64/libstdc++.so.6.0.19
+7f67abd6c000-7f67abd6e000 rw-p 000f0000 08:04 3674876                    /usr/lib64/libstdc++.so.6.0.19
+7f67abd6e000-7f67abd83000 rw-p 00000000 00:00 0 
+7f67abd83000-7f67acdfe000 r-xp 00000000 08:04 58852729                   /root/huihan/FBGEMM/install/lib/libfbgemm.so
+7f67acdfe000-7f67acffe000 ---p 0107b000 08:04 58852729                   /root/huihan/FBGEMM/install/lib/libfbgemm.so
+7f67acffe000-7f67ad006000 r--p 0107b000 08:04 58852729                   /root/huihan/FBGEMM/install/lib/libfbgemm.so
+7f67ad006000-7f67ad00a000 rw-p 01083000 08:04 58852729                   /root/huihan/FBGEMM/install/lib/libfbgemm.so
+7f67ad00a000-7f67ad011000 r-xp 00000000 08:04 3674856                    /usr/lib64/librt-2.17.so
+7f67ad011000-7f67ad210000 ---p 00007000 08:04 3674856                    /usr/lib64/librt-2.17.so
+7f67ad210000-7f67ad211000 r--p 00006000 08:04 3674856                    /usr/lib64/librt-2.17.so
+7f67ad211000-7f67ad212000 rw-p 00007000 08:04 3674856                    /usr/lib64/librt-2.17.so
+7f67ad212000-7f67b1451000 r-xp 00000000 08:04 59123231                   /root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so
+7f67b1451000-7f67b1651000 ---p 0423f000 08:04 59123231                   /root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so
+7f67b1651000-7f67b1ae3000 r--p 0423f000 08:04 59123231                   /root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so
+7f67b1ae3000-7f67b1b1d000 rw-p 046d1000 08:04 59123231                   /root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/libtvm.so
+7f67b1b1d000-7f67b1b72000 rw-p 00000000 00:00 0 
+7f67b1b72000-7f67b26d3000 r-xp 00000000 08:04 58857173                   /root/huihan/venv/lib/libmkl_vml_avx512.so
+7f67b26d3000-7f67b28d3000 ---p 00b61000 08:04 58857173                   /root/huihan/venv/lib/libmkl_vml_avx512.so
+7f67b28d3000-7f67b28d6000 r--p 00b61000 08:04 58857173                   /root/huihan/venv/lib/libmkl_vml_avx512.so
+7f67b28d6000-7f67b28eb000 rw-p 00b64000 08:04 58857173                   /root/huihan/venv/lib/libmkl_vml_avx512.so
+7f67b28eb000-7f67b28ec000 rw-p 00000000 00:00 0 
+7f67b28ec000-7f67b680c000 r-xp 00000000 08:04 58857076                   /root/huihan/venv/lib/libmkl_avx512.so
+7f67b680c000-7f67b6a0b000 ---p 03f20000 08:04 58857076                   /root/huihan/venv/lib/libmkl_avx512.so
+7f67b6a0b000-7f67b6a13000 r--p 03f1f000 08:04 58857076                   /root/huihan/venv/lib/libmkl_avx512.so
+7f67b6a13000-7f67b6a21000 rw-p 03f27000 08:04 58857076                   /root/huihan/venv/lib/libmkl_avx512.so
+7f67b6a21000-7f67b6a27000 rw-p 00000000 00:00 0 
+7f67b6a27000-7f67b733f000 r-xp 00000000 08:04 58857097                   /root/huihan/venv/lib/libmkl_intel_lp64.so
+7f67b733f000-7f67b753f000 ---p 00918000 08:04 58857097                   /root/huihan/venv/lib/libmkl_intel_lp64.so
+7f67b753f000-7f67b7540000 r--p 00918000 08:04 58857097                   /root/huihan/venv/lib/libmkl_intel_lp64.so
+7f67b7540000-7f67b7553000 rw-p 00919000 08:04 58857097                   /root/huihan/venv/lib/libmkl_intel_lp64.so
+7f67b7553000-7f67b7558000 rw-p 00000000 00:00 0 
+7f67b7558000-7f67b95c2000 r-xp 00000000 08:04 58856955                   /root/huihan/venv/lib/libmkl_intel_thread.so
+7f67b95c2000-7f67b97c1000 ---p 0206a000 08:04 58856955                   /root/huihan/venv/lib/libmkl_intel_thread.so
+7f67b97c1000-7f67b97c5000 r--p 02069000 08:04 58856955                   /root/huihan/venv/lib/libmkl_intel_thread.so
+7f67b97c5000-7f67b9a2f000 rw-p 0206d000 08:04 58856955                   /root/huihan/venv/lib/libmkl_intel_thread.so
+7f67b9a2f000-7f67b9a38000 rw-p 00000000 00:00 0 
+7f67b9a38000-7f67bd8fd000 r-xp 00000000 08:04 58857181                   /root/huihan/venv/lib/libmkl_core.so
+7f67bd8fd000-7f67bdafd000 ---p 03ec5000 08:04 58857181                   /root/huihan/venv/lib/libmkl_core.so
+7f67bdafd000-7f67bdb04000 r--p 03ec5000 08:04 58857181                   /root/huihan/venv/lib/libmkl_core.so
+7f67bdb04000-7f67bdb32000 rw-p 03ecc000 08:04 58857181                   /root/huihan/venv/lib/libmkl_core.so
+7f67bdb32000-7f67bdbb1000 rw-p 00000000 00:00 0 
+7f67bdbef000-7f67bdc2f000 rw-p 00000000 00:00 0 
+7f67bdc2f000-7f67bdce5000 r-xp 00000000 08:04 61868143                   /root/huihan/venv/lib/python2.7/site-packages/numpy/random/mtrand.so
+7f67bdce5000-7f67bdee5000 ---p 000b6000 08:04 61868143                   /root/huihan/venv/lib/python2.7/site-packages/numpy/random/mtrand.so
+7f67bdee5000-7f67bdee6000 r--p 000b6000 08:04 61868143                   /root/huihan/venv/lib/python2.7/site-packages/numpy/random/mtrand.so
+7f67bdee6000-7f67bdf0b000 rw-p 000b7000 08:04 61868143                   /root/huihan/venv/lib/python2.7/site-packages/numpy/random/mtrand.so
+7f67bdf0b000-7f67bdf4c000 rw-p 00000000 00:00 0 
+7f67bdf4c000-7f67bdf51000 r-xp 00000000 08:04 3934890                    /usr/lib64/python2.7/lib-dynload/stropmodule.so
+7f67bdf51000-7f67be150000 ---p 00005000 08:04 3934890                    /usr/lib64/python2.7/lib-dynload/stropmodule.so
+7f67be150000-7f67be151000 r--p 00004000 08:04 3934890                    /usr/lib64/python2.7/lib-dynload/stropmodule.so
+7f67be151000-7f67be153000 rw-p 00005000 08:04 3934890                    /usr/lib64/python2.7/lib-dynload/stropmodule.so
+7f67be153000-7f67be193000 rw-p 00000000 00:00 0 
+7f67be193000-7f67be22e000 r-xp 00000000 08:04 61343338                   /root/huihan/venv/lib/python2.7/site-packages/mkl_fft/_pydfti.so
+7f67be22e000-7f67be42e000 ---p 0009b000 08:04 61343338                   /root/huihan/venv/lib/python2.7/site-packages/mkl_fft/_pydfti.so
+7f67be42e000-7f67be42f000 r--p 0009b000 08:04 61343338                   /root/huihan/venv/lib/python2.7/site-packages/mkl_fft/_pydfti.so
+7f67be42f000-7f67be432000 rw-p 0009c000 08:04 61343338                   /root/huihan/venv/lib/python2.7/site-packages/mkl_fft/_pydfti.so
+7f67be432000-7f67be433000 rw-p 00000000 00:00 0 
+7f67be433000-7f67be452000 r-xp 00000000 08:04 61868162                   /root/huihan/venv/lib/python2.7/site-packages/numpy/fft/fftpack_lite.so
+7f67be452000-7f67be651000 ---p 0001f000 08:04 61868162                   /root/huihan/venv/lib/python2.7/site-packages/numpy/fft/fftpack_lite.so
+7f67be651000-7f67be652000 r--p 0001e000 08:04 61868162                   /root/huihan/venv/lib/python2.7/site-packages/numpy/fft/fftpack_lite.so
+7f67be652000-7f67be653000 rw-p 0001f000 08:04 61868162                   /root/huihan/venv/lib/python2.7/site-packages/numpy/fft/fftpack_lite.so
+7f67be653000-7f67be7fb000 r-xp 00000000 08:04 58853564                   /root/huihan/venv/lib/libiomp5.so
+7f67be7fb000-7f67be9fa000 ---p 001a8000 08:04 58853564                   /root/huihan/venv/lib/libiomp5.so
+7f67be9fa000-7f67be9fd000 r--p 001a7000 08:04 58853564                   /root/huihan/venv/lib/libiomp5.so
+7f67be9fd000-7f67bea07000 rw-p 001aa000 08:04 58853564                   /root/huihan/venv/lib/libiomp5.so
+7f67bea07000-7f67bea36000 rw-p 00000000 00:00 0 
+7f67bea36000-7f67bea38000 r-xp 00000000 08:04 61605711                   /root/huihan/venv/lib/python2.7/site-packages/numpy/_mklinit.so
+7f67bea38000-7f67bec37000 ---p 00002000 08:04 61605711                   /root/huihan/venv/lib/python2.7/site-packages/numpy/_mklinit.so
+7f67bec37000-7f67bec38000 r--p 00001000 08:04 61605711                   /root/huihan/venv/lib/python2.7/site-packages/numpy/_mklinit.so
+7f67bec38000-7f67bec39000 rw-p 00000000 00:00 0 
+7f67bec39000-7f67bec66000 r-xp 00000000 08:04 61605795                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/_multiarray_tests.so
+7f67bec66000-7f67bee66000 ---p 0002d000 08:04 61605795                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/_multiarray_tests.so
+7f67bee66000-7f67bee67000 r--p 0002d000 08:04 61605795                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/_multiarray_tests.so
+7f67bee67000-7f67bee68000 rw-p 0002e000 08:04 61605795                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/_multiarray_tests.so
+7f67bee68000-7f67bee6c000 r-xp 00000000 08:04 3943262                    /usr/lib64/python2.7/lib-dynload/_localemodule.so
+7f67bee6c000-7f67bf06b000 ---p 00004000 08:04 3943262                    /usr/lib64/python2.7/lib-dynload/_localemodule.so
+7f67bf06b000-7f67bf06c000 r--p 00003000 08:04 3943262                    /usr/lib64/python2.7/lib-dynload/_localemodule.so
+7f67bf06c000-7f67bf06d000 rw-p 00004000 08:04 3943262                    /usr/lib64/python2.7/lib-dynload/_localemodule.so
+7f67bf06d000-7f67bf12d000 rw-p 00000000 00:00 0 
+7f67bf12d000-7f67bf12e000 r-xp 00000000 08:04 3943275                    /usr/lib64/python2.7/lib-dynload/future_builtins.so
+7f67bf12e000-7f67bf32d000 ---p 00001000 08:04 3943275                    /usr/lib64/python2.7/lib-dynload/future_builtins.so
+7f67bf32d000-7f67bf32e000 r--p 00000000 08:04 3943275                    /usr/lib64/python2.7/lib-dynload/future_builtins.so
+7f67bf32e000-7f67bf32f000 rw-p 00001000 08:04 3943275                    /usr/lib64/python2.7/lib-dynload/future_builtins.so
+7f67bf32f000-7f67bf36f000 rw-p 00000000 00:00 0 
+7f67bf36f000-7f67bf3f4000 r-xp 00000000 08:04 61868175                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/_umath_linalg.so
+7f67bf3f4000-7f67bf5f4000 ---p 00085000 08:04 61868175                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/_umath_linalg.so
+7f67bf5f4000-7f67bf5f5000 r--p 00085000 08:04 61868175                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/_umath_linalg.so
+7f67bf5f5000-7f67bf5f6000 rw-p 00086000 08:04 61868175                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/_umath_linalg.so
+7f67bf5f6000-7f67bf5fb000 r-xp 00000000 08:04 61868180                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/lapack_lite.so
+7f67bf5fb000-7f67bf7fa000 ---p 00005000 08:04 61868180                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/lapack_lite.so
+7f67bf7fa000-7f67bf7fb000 r--p 00004000 08:04 61868180                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/lapack_lite.so
+7f67bf7fb000-7f67bf7fc000 rw-p 00005000 08:04 61868180                   /root/huihan/venv/lib/python2.7/site-packages/numpy/linalg/lapack_lite.so
+7f67bf7fc000-7f67bf83c000 rw-p 00000000 00:00 0 
+7f67bf83c000-7f67bf83e000 r-xp 00000000 08:04 3934872                    /usr/lib64/python2.7/lib-dynload/fcntlmodule.so
+7f67bf83e000-7f67bfa3e000 ---p 00002000 08:04 3934872                    /usr/lib64/python2.7/lib-dynload/fcntlmodule.so
+7f67bfa3e000-7f67bfa3f000 r--p 00002000 08:04 3934872                    /usr/lib64/python2.7/lib-dynload/fcntlmodule.so
+7f67bfa3f000-7f67bfa40000 rw-p 00003000 08:04 3934872                    /usr/lib64/python2.7/lib-dynload/fcntlmodule.so
+7f67bfa40000-7f67bfa43000 r-xp 00000000 08:04 3934857                    /usr/lib64/python2.7/lib-dynload/_randommodule.so
+7f67bfa43000-7f67bfc42000 ---p 00003000 08:04 3934857                    /usr/lib64/python2.7/lib-dynload/_randommodule.so
+7f67bfc42000-7f67bfc43000 r--p 00002000 08:04 3934857                    /usr/lib64/python2.7/lib-dynload/_randommodule.so
+7f67bfc43000-7f67bfc44000 rw-p 00003000 08:04 3934857                    /usr/lib64/python2.7/lib-dynload/_randommodule.so
+7f67bfc44000-7f67bfca4000 r-xp 00000000 08:04 3675114                    /usr/lib64/libpcre.so.1.2.0
+7f67bfca4000-7f67bfea4000 ---p 00060000 08:04 3675114                    /usr/lib64/libpcre.so.1.2.0
+7f67bfea4000-7f67bfea5000 r--p 00060000 08:04 3675114                    /usr/lib64/libpcre.so.1.2.0
+7f67bfea5000-7f67bfea6000 rw-p 00061000 08:04 3675114                    /usr/lib64/libpcre.so.1.2.0
+7f67bfea6000-7f67bfeca000 r-xp 00000000 08:04 3674969                    /usr/lib64/libselinux.so.1
+7f67bfeca000-7f67c00c9000 ---p 00024000 08:04 3674969                    /usr/lib64/libselinux.so.1
+7f67c00c9000-7f67c00ca000 r--p 00023000 08:04 3674969                    /usr/lib64/libselinux.so.1
+7f67c00ca000-7f67c00cb000 rw-p 00024000 08:04 3674969                    /usr/lib64/libselinux.so.1
+7f67c00cb000-7f67c00cd000 rw-p 00000000 00:00 0 
+7f67c00cd000-7f67c00e3000 r-xp 00000000 08:04 3674852                    /usr/lib64/libresolv-2.17.so
+7f67c00e3000-7f67c02e2000 ---p 00016000 08:04 3674852                    /usr/lib64/libresolv-2.17.so
+7f67c02e2000-7f67c02e3000 r--p 00015000 08:04 3674852                    /usr/lib64/libresolv-2.17.so
+7f67c02e3000-7f67c02e4000 rw-p 00016000 08:04 3674852                    /usr/lib64/libresolv-2.17.so
+7f67c02e4000-7f67c02e6000 rw-p 00000000 00:00 0 
+7f67c02e6000-7f67c02e9000 r-xp 00000000 08:04 3675045                    /usr/lib64/libkeyutils.so.1.5
+7f67c02e9000-7f67c04e8000 ---p 00003000 08:04 3675045                    /usr/lib64/libkeyutils.so.1.5
+7f67c04e8000-7f67c04e9000 r--p 00002000 08:04 3675045                    /usr/lib64/libkeyutils.so.1.5
+7f67c04e9000-7f67c04ea000 rw-p 00003000 08:04 3675045                    /usr/lib64/libkeyutils.so.1.5
+7f67c04ea000-7f67c04f7000 r-xp 00000000 08:04 3674784                    /usr/lib64/libkrb5support.so.0.1
+7f67c04f7000-7f67c06f7000 ---p 0000d000 08:04 3674784                    /usr/lib64/libkrb5support.so.0.1
+7f67c06f7000-7f67c06f8000 r--p 0000d000 08:04 3674784                    /usr/lib64/libkrb5support.so.0.1
+7f67c06f8000-7f67c06f9000 rw-p 0000e000 08:04 3674784                    /usr/lib64/libkrb5support.so.0.1
+7f67c06f9000-7f67c070e000 r-xp 00000000 08:04 3674904                    /usr/lib64/libz.so.1.2.7
+7f67c070e000-7f67c090d000 ---p 00015000 08:04 3674904                    /usr/lib64/libz.so.1.2.7
+7f67c090d000-7f67c090e000 r--p 00014000 08:04 3674904                    /usr/lib64/libz.so.1.2.7
+7f67c090e000-7f67c090f000 rw-p 00015000 08:04 3674904                    /usr/lib64/libz.so.1.2.7
+7f67c090f000-7f67c0928000 r-xp 00000000 08:04 3674772                    /usr/lib64/libk5crypto.so.3.1
+7f67c0928000-7f67c0b27000 ---p 00019000 08:04 3674772                    /usr/lib64/libk5crypto.so.3.1
+7f67c0b27000-7f67c0b29000 r--p 00018000 08:04 3674772                    /usr/lib64/libk5crypto.so.3.1
+7f67c0b29000-7f67c0b2a000 rw-p 0001a000 08:04 3674772                    /usr/lib64/libk5crypto.so.3.1
+7f67c0b2a000-7f67c0b2d000 r-xp 00000000 08:04 3674947                    /usr/lib64/libcom_err.so.2.1
+7f67c0b2d000-7f67c0d2c000 ---p 00003000 08:04 3674947                    /usr/lib64/libcom_err.so.2.1
+7f67c0d2c000-7f67c0d2d000 r--p 00002000 08:04 3674947                    /usr/lib64/libcom_err.so.2.1
+7f67c0d2d000-7f67c0d2e000 rw-p 00003000 08:04 3674947                    /usr/lib64/libcom_err.so.2.1
+7f67c0d2e000-7f67c0e07000 r-xp 00000000 08:04 3674783                    /usr/lib64/libkrb5.so.3.3
+7f67c0e07000-7f67c1006000 ---p 000d9000 08:04 3674783                    /usr/lib64/libkrb5.so.3.3
+7f67c1006000-7f67c1014000 r--p 000d8000 08:04 3674783                    /usr/lib64/libkrb5.so.3.3
+7f67c1014000-7f67c1017000 rw-p 000e6000 08:04 3674783                    /usr/lib64/libkrb5.so.3.3
+7f67c1017000-7f67c1061000 r-xp 00000000 08:04 3674738                    /usr/lib64/libgssapi_krb5.so.2.2
+7f67c1061000-7f67c1261000 ---p 0004a000 08:04 3674738                    /usr/lib64/libgssapi_krb5.so.2.2
+7f67c1261000-7f67c1262000 r--p 0004a000 08:04 3674738                    /usr/lib64/libgssapi_krb5.so.2.2
+7f67c1262000-7f67c1264000 rw-p 0004b000 08:04 3674738                    /usr/lib64/libgssapi_krb5.so.2.2
+7f67c1264000-7f67c1498000 r-xp 00000000 08:04 3674645                    /usr/lib64/libcrypto.so.1.0.2k
+7f67c1498000-7f67c1698000 ---p 00234000 08:04 3674645                    /usr/lib64/libcrypto.so.1.0.2k
+7f67c1698000-7f67c16b4000 r--p 00234000 08:04 3674645                    /usr/lib64/libcrypto.so.1.0.2k
+7f67c16b4000-7f67c16c1000 rw-p 00250000 08:04 3674645                    /usr/lib64/libcrypto.so.1.0.2k
+7f67c16c1000-7f67c16c5000 rw-p 00000000 00:00 0 
+7f67c16c5000-7f67c172c000 r-xp 00000000 08:04 3674684                    /usr/lib64/libssl.so.1.0.2k
+7f67c172c000-7f67c192c000 ---p 00067000 08:04 3674684                    /usr/lib64/libssl.so.1.0.2k
+7f67c192c000-7f67c1930000 r--p 00067000 08:04 3674684                    /usr/lib64/libssl.so.1.0.2k
+7f67c1930000-7f67c1937000 rw-p 0006b000 08:04 3674684                    /usr/lib64/libssl.so.1.0.2k
+7f67c1937000-7f67c193b000 r-xp 00000000 08:04 3942964                    /usr/lib64/python2.7/lib-dynload/_hashlib.so
+7f67c193b000-7f67c1b3a000 ---p 00004000 08:04 3942964                    /usr/lib64/python2.7/lib-dynload/_hashlib.so
+7f67c1b3a000-7f67c1b3b000 r--p 00003000 08:04 3942964                    /usr/lib64/python2.7/lib-dynload/_hashlib.so
+7f67c1b3b000-7f67c1b3c000 rw-p 00004000 08:04 3942964                    /usr/lib64/python2.7/lib-dynload/_hashlib.so
+7f67c1b3c000-7f67c1b7d000 rw-p 00000000 00:00 0 
+7f67c1b7d000-7f67c1b82000 r-xp 00000000 08:04 3934864                    /usr/lib64/python2.7/lib-dynload/binascii.so
+7f67c1b82000-7f67c1d81000 ---p 00005000 08:04 3934864                    /usr/lib64/python2.7/lib-dynload/binascii.so
+7f67c1d81000-7f67c1d82000 r--p 00004000 08:04 3934864                    /usr/lib64/python2.7/lib-dynload/binascii.so
+7f67c1d82000-7f67c1d83000 rw-p 00005000 08:04 3934864                    /usr/lib64/python2.7/lib-dynload/binascii.so
+7f67c1d83000-7f67c1d9f000 r-xp 00000000 08:04 3934851                    /usr/lib64/python2.7/lib-dynload/_io.so
+7f67c1d9f000-7f67c1f9e000 ---p 0001c000 08:04 3934851                    /usr/lib64/python2.7/lib-dynload/_io.so
+7f67c1f9e000-7f67c1f9f000 r--p 0001b000 08:04 3934851                    /usr/lib64/python2.7/lib-dynload/_io.so
+7f67c1f9f000-7f67c1fa9000 rw-p 0001c000 08:04 3934851                    /usr/lib64/python2.7/lib-dynload/_io.so
+7f67c1fa9000-7f67c1fab000 r-xp 00000000 08:04 3934875                    /usr/lib64/python2.7/lib-dynload/grpmodule.so
+7f67c1fab000-7f67c21aa000 ---p 00002000 08:04 3934875                    /usr/lib64/python2.7/lib-dynload/grpmodule.so
+7f67c21aa000-7f67c21ab000 r--p 00001000 08:04 3934875                    /usr/lib64/python2.7/lib-dynload/grpmodule.so
+7f67c21ab000-7f67c21ac000 rw-p 00002000 08:04 3934875                    /usr/lib64/python2.7/lib-dynload/grpmodule.so
+7f67c21ac000-7f67c21ec000 rw-p 00000000 00:00 0 
+7f67c21ec000-7f67c21f0000 r-xp 00000000 08:04 3943283                    /usr/lib64/python2.7/lib-dynload/timemodule.so
+7f67c21f0000-7f67c23ef000 ---p 00004000 08:04 3943283                    /usr/lib64/python2.7/lib-dynload/timemodule.so
+7f67c23ef000-7f67c23f0000 r--p 00003000 08:04 3943283                    /usr/lib64/python2.7/lib-dynload/timemodule.so
+7f67c23f0000-7f67c23f2000 rw-p 00004000 08:04 3943283                    /usr/lib64/python2.7/lib-dynload/timemodule.so
+7f67c23f2000-7f67c2533000 rw-p 00000000 00:00 0 
+7f67c2533000-7f67c2536000 r-xp 00000000 08:04 3935844                    /usr/lib64/python2.7/lib-dynload/_functoolsmodule.so
+7f67c2536000-7f67c2735000 ---p 00003000 08:04 3935844                    /usr/lib64/python2.7/lib-dynload/_functoolsmodule.so
+7f67c2735000-7f67c2736000 r--p 00002000 08:04 3935844                    /usr/lib64/python2.7/lib-dynload/_functoolsmodule.so
+7f67c2736000-7f67c2737000 rw-p 00003000 08:04 3935844                    /usr/lib64/python2.7/lib-dynload/_functoolsmodule.so
+7f67c2737000-7f67c2777000 rw-p 00000000 00:00 0 
+7f67c2777000-7f67c277b000 r-xp 00000000 08:04 3943272                    /usr/lib64/python2.7/lib-dynload/cStringIO.so
+7f67c277b000-7f67c297a000 ---p 00004000 08:04 3943272                    /usr/lib64/python2.7/lib-dynload/cStringIO.so
+7f67c297a000-7f67c297b000 r--p 00003000 08:04 3943272                    /usr/lib64/python2.7/lib-dynload/cStringIO.so
+7f67c297b000-7f67c297d000 rw-p 00004000 08:04 3943272                    /usr/lib64/python2.7/lib-dynload/cStringIO.so
+7f67c297d000-7f67c298f000 r-xp 00000000 08:04 3943271                    /usr/lib64/python2.7/lib-dynload/cPickle.so
+7f67c298f000-7f67c2b8f000 ---p 00012000 08:04 3943271                    /usr/lib64/python2.7/lib-dynload/cPickle.so
+7f67c2b8f000-7f67c2b90000 r--p 00012000 08:04 3943271                    /usr/lib64/python2.7/lib-dynload/cPickle.so
+7f67c2b90000-7f67c2b91000 rw-p 00013000 08:04 3943271                    /usr/lib64/python2.7/lib-dynload/cPickle.so
+7f67c2b91000-7f67c2b94000 r-xp 00000000 08:04 3942980                    /usr/lib64/python2.7/lib-dynload/_heapq.so
+7f67c2b94000-7f67c2d93000 ---p 00003000 08:04 3942980                    /usr/lib64/python2.7/lib-dynload/_heapq.so
+7f67c2d93000-7f67c2d94000 r--p 00002000 08:04 3942980                    /usr/lib64/python2.7/lib-dynload/_heapq.so
+7f67c2d94000-7f67c2d96000 rw-p 00003000 08:04 3942980                    /usr/lib64/python2.7/lib-dynload/_heapq.so
+7f67c2d96000-7f67c2da0000 r-xp 00000000 08:04 3934877                    /usr/lib64/python2.7/lib-dynload/itertoolsmodule.so
+7f67c2da0000-7f67c2f9f000 ---p 0000a000 08:04 3934877                    /usr/lib64/python2.7/lib-dynload/itertoolsmodule.so
+7f67c2f9f000-7f67c2fa0000 r--p 00009000 08:04 3934877                    /usr/lib64/python2.7/lib-dynload/itertoolsmodule.so
+7f67c2fa0000-7f67c2fa5000 rw-p 0000a000 08:04 3934877                    /usr/lib64/python2.7/lib-dynload/itertoolsmodule.so
+7f67c2fa5000-7f67c2fae000 r-xp 00000000 08:04 3934882                    /usr/lib64/python2.7/lib-dynload/operator.so
+7f67c2fae000-7f67c31ad000 ---p 00009000 08:04 3934882                    /usr/lib64/python2.7/lib-dynload/operator.so
+7f67c31ad000-7f67c31ae000 r--p 00008000 08:04 3934882                    /usr/lib64/python2.7/lib-dynload/operator.so
+7f67c31ae000-7f67c31b0000 rw-p 00009000 08:04 3934882                    /usr/lib64/python2.7/lib-dynload/operator.so
+7f67c31b0000-7f67c31b6000 r-xp 00000000 08:04 3934840                    /usr/lib64/python2.7/lib-dynload/_collectionsmodule.so
+7f67c31b6000-7f67c33b5000 ---p 00006000 08:04 3934840                    /usr/lib64/python2.7/lib-dynload/_collectionsmodule.so
+7f67c33b5000-7f67c33b6000 r--p 00005000 08:04 3934840                    /usr/lib64/python2.7/lib-dynload/_collectionsmodule.so
+7f67c33b6000-7f67c33b8000 rw-p 00006000 08:04 3934840                    /usr/lib64/python2.7/lib-dynload/_collectionsmodule.so
+7f67c33b8000-7f67c33f8000 rw-p 00000000 00:00 0 
+7f67c33f8000-7f67c3a55000 r-xp 00000000 08:04 61605799                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/umath.so
+7f67c3a55000-7f67c3c55000 ---p 0065d000 08:04 61605799                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/umath.so
+7f67c3c55000-7f67c3c57000 r--p 0065d000 08:04 61605799                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/umath.so
+7f67c3c57000-7f67c3c5d000 rw-p 0065f000 08:04 61605799                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/umath.so
+7f67c3c5d000-7f67c3c5f000 rw-p 00000000 00:00 0 
+7f67c3c5f000-7f67c3c70000 r-xp 00000000 08:04 3934869                    /usr/lib64/python2.7/lib-dynload/datetime.so
+7f67c3c70000-7f67c3e6f000 ---p 00011000 08:04 3934869                    /usr/lib64/python2.7/lib-dynload/datetime.so
+7f67c3e6f000-7f67c3e70000 r--p 00010000 08:04 3934869                    /usr/lib64/python2.7/lib-dynload/datetime.so
+7f67c3e70000-7f67c3e74000 rw-p 00011000 08:04 3934869                    /usr/lib64/python2.7/lib-dynload/datetime.so
+7f67c3e74000-7f67c3ee2000 r-xp 00000000 08:04 58857219                   /root/huihan/venv/lib/libintlc.so.5
+7f67c3ee2000-7f67c40e2000 ---p 0006e000 08:04 58857219                   /root/huihan/venv/lib/libintlc.so.5
+7f67c40e2000-7f67c40e3000 r--p 0006e000 08:04 58857219                   /root/huihan/venv/lib/libintlc.so.5
+7f67c40e3000-7f67c40e4000 rw-p 0006f000 08:04 58857219                   /root/huihan/venv/lib/libintlc.so.5
+7f67c40e4000-7f67c40e6000 rw-p 00000000 00:00 0 
+7f67c40e6000-7f67c40fb000 r-xp 00000000 08:04 3670996                    /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7f67c40fb000-7f67c42fa000 ---p 00015000 08:04 3670996                    /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7f67c42fa000-7f67c42fb000 r--p 00014000 08:04 3670996                    /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7f67c42fb000-7f67c42fc000 rw-p 00015000 08:04 3670996                    /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7f67c42fc000-7f67c445a000 r-xp 00000000 08:04 58857188                   /root/huihan/venv/lib/libirng.so
+7f67c445a000-7f67c465a000 ---p 0015e000 08:04 58857188                   /root/huihan/venv/lib/libirng.so
+7f67c465a000-7f67c465b000 r--p 0015e000 08:04 58857188                   /root/huihan/venv/lib/libirng.so
+7f67c465b000-7f67c466e000 rw-p 0015f000 08:04 58857188                   /root/huihan/venv/lib/libirng.so
+7f67c466e000-7f67c5d8e000 r-xp 00000000 08:04 58857213                   /root/huihan/venv/lib/libsvml.so
+7f67c5d8e000-7f67c5f8d000 ---p 01720000 08:04 58857213                   /root/huihan/venv/lib/libsvml.so
+7f67c5f8d000-7f67c5fdd000 r--p 0171f000 08:04 58857213                   /root/huihan/venv/lib/libsvml.so
+7f67c5fdd000-7f67c6011000 rw-p 0176f000 08:04 58857213                   /root/huihan/venv/lib/libsvml.so
+7f67c6011000-7f67c6354000 r-xp 00000000 08:04 58857193                   /root/huihan/venv/lib/libimf.so
+7f67c6354000-7f67c6554000 ---p 00343000 08:04 58857193                   /root/huihan/venv/lib/libimf.so
+7f67c6554000-7f67c655b000 r--p 00343000 08:04 58857193                   /root/huihan/venv/lib/libimf.so
+7f67c655b000-7f67c65b1000 rw-p 0034a000 08:04 58857193                   /root/huihan/venv/lib/libimf.so
+7f67c65b1000-7f67c6a62000 r-xp 00000000 08:04 58853612                   /root/huihan/venv/lib/libmkl_rt.so
+7f67c6a62000-7f67c6c62000 ---p 004b1000 08:04 58853612                   /root/huihan/venv/lib/libmkl_rt.so
+7f67c6c62000-7f67c6c68000 r--p 004b1000 08:04 58853612                   /root/huihan/venv/lib/libmkl_rt.so
+7f67c6c68000-7f67c6c6a000 rw-p 004b7000 08:04 58853612                   /root/huihan/venv/lib/libmkl_rt.so
+7f67c6c6a000-7f67c6c7c000 rw-p 00000000 00:00 0 
+7f67c6c7c000-7f67c71fa000 r-xp 00000000 08:04 61605791                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/multiarray.so
+7f67c71fa000-7f67c73f9000 ---p 0057e000 08:04 61605791                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/multiarray.so
+7f67c73f9000-7f67c73fc000 r--p 0057d000 08:04 61605791                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/multiarray.so
+7f67c73fc000-7f67c7413000 rw-p 00580000 08:04 61605791                   /root/huihan/venv/lib/python2.7/site-packages/numpy/core/multiarray.so
+7f67c7413000-7f67c7433000 rw-p 00000000 00:00 0 
+7f67c7433000-7f67c743a000 r-xp 00000000 08:04 3934879                    /usr/lib64/python2.7/lib-dynload/math.so
+7f67c743a000-7f67c7639000 ---p 00007000 08:04 3934879                    /usr/lib64/python2.7/lib-dynload/math.so
+7f67c7639000-7f67c763a000 r--p 00006000 08:04 3934879                    /usr/lib64/python2.7/lib-dynload/math.so
+7f67c763a000-7f67c763c000 rw-p 00007000 08:04 3934879                    /usr/lib64/python2.7/lib-dynload/math.so
+7f67c763c000-7f67c7643000 r-xp 00000000 08:04 3943267                    /usr/lib64/python2.7/lib-dynload/_struct.so
+7f67c7643000-7f67c7842000 ---p 00007000 08:04 3943267                    /usr/lib64/python2.7/lib-dynload/_struct.so
+7f67c7842000-7f67c7843000 r--p 00006000 08:04 3943267                    /usr/lib64/python2.7/lib-dynload/_struct.so
+7f67c7843000-7f67c7845000 rw-p 00007000 08:04 3943267                    /usr/lib64/python2.7/lib-dynload/_struct.so
+7f67c7845000-7f67c784c000 r-xp 00000000 08:04 3674982                    /usr/lib64/libffi.so.6.0.1
+7f67c784c000-7f67c7a4b000 ---p 00007000 08:04 3674982                    /usr/lib64/libffi.so.6.0.1
+7f67c7a4b000-7f67c7a4c000 r--p 00006000 08:04 3674982                    /usr/lib64/libffi.so.6.0.1
+7f67c7a4c000-7f67c7a4d000 rw-p 00007000 08:04 3674982                    /usr/lib64/libffi.so.6.0.1
+7f67c7a4d000-7f67c7a67000 r-xp 00000000 08:04 3934843                    /usr/lib64/python2.7/lib-dynload/_ctypes.so
+7f67c7a67000-7f67c7c66000 ---p 0001a000 08:04 3934843                    /usr/lib64/python2.7/lib-dynload/_ctypes.so
+7f67c7c66000-7f67c7c67000 r--p 00019000 08:04 3934843                    /usr/lib64/python2.7/lib-dynload/_ctypes.so
+7f67c7c67000-7f67c7c6b000 rw-p 0001a000 08:04 3934843                    /usr/lib64/python2.7/lib-dynload/_ctypes.so
+7f67c7c6b000-7f67ce195000 r--p 00000000 08:04 3805410                    /usr/lib/locale/locale-archive
+7f67ce195000-7f67ce357000 r-xp 00000000 08:04 3674662                    /usr/lib64/libc-2.17.so
+7f67ce357000-7f67ce557000 ---p 001c2000 08:04 3674662                    /usr/lib64/libc-2.17.so
+7f67ce557000-7f67ce55b000 r--p 001c2000 08:04 3674662                    /usr/lib64/libc-2.17.so
+7f67ce55b000-7f67ce55d000 rw-p 001c6000 08:04 3674662                    /usr/lib64/libc-2.17.so
+7f67ce55d000-7f67ce562000 rw-p 00000000 00:00 0 
+7f67ce562000-7f67ce663000 r-xp 00000000 08:04 3674692                    /usr/lib64/libm-2.17.so
+7f67ce663000-7f67ce862000 ---p 00101000 08:04 3674692                    /usr/lib64/libm-2.17.so
+7f67ce862000-7f67ce863000 r--p 00100000 08:04 3674692                    /usr/lib64/libm-2.17.so
+7f67ce863000-7f67ce864000 rw-p 00101000 08:04 3674692                    /usr/lib64/libm-2.17.so
+7f67ce864000-7f67ce866000 r-xp 00000000 08:04 3674884                    /usr/lib64/libutil-2.17.so
+7f67ce866000-7f67cea65000 ---p 00002000 08:04 3674884                    /usr/lib64/libutil-2.17.so
+7f67cea65000-7f67cea66000 r--p 00001000 08:04 3674884                    /usr/lib64/libutil-2.17.so
+7f67cea66000-7f67cea67000 rw-p 00002000 08:04 3674884                    /usr/lib64/libutil-2.17.so
+7f67cea67000-7f67cea69000 r-xp 00000000 08:04 3674683                    /usr/lib64/libdl-2.17.so
+7f67cea69000-7f67cec69000 ---p 00002000 08:04 3674683                    /usr/lib64/libdl-2.17.so
+7f67cec69000-7f67cec6a000 r--p 00002000 08:04 3674683                    /usr/lib64/libdl-2.17.so
+7f67cec6a000-7f67cec6b000 rw-p 00003000 08:04 3674683                    /usr/lib64/libdl-2.17.so
+7f67cec6b000-7f67cec82000 r-xp 00000000 08:04 3674819                    /usr/lib64/libpthread-2.17.so
+7f67cec82000-7f67cee81000 ---p 00017000 08:04 3674819                    /usr/lib64/libpthread-2.17.so
+7f67cee81000-7f67cee82000 r--p 00016000 08:04 3674819                    /usr/lib64/libpthread-2.17.so
+7f67cee82000-7f67cee83000 rw-p 00017000 08:04 3674819                    /usr/lib64/libpthread-2.17.so
+7f67cee83000-7f67cee87000 rw-p 00000000 00:00 0 
+7f67cee87000-7f67cf005000 r-xp 00000000 08:04 3674626                    /usr/lib64/libpython2.7.so.1.0
+7f67cf005000-7f67cf204000 ---p 0017e000 08:04 3674626                    /usr/lib64/libpython2.7.so.1.0
+7f67cf204000-7f67cf206000 r--p 0017d000 08:04 3674626                    /usr/lib64/libpython2.7.so.1.0
+7f67cf206000-7f67cf244000 rw-p 0017f000 08:04 3674626                    /usr/lib64/libpython2.7.so.1.0
+7f67cf244000-7f67cf253000 rw-p 00000000 00:00 0 
+7f67cf253000-7f67cf275000 r-xp 00000000 08:04 3670534                    /usr/lib64/ld-2.17.so
+7f67cf275000-7f67cf375000 rw-p 00000000 00:00 0 
+7f67cf396000-7f67cf3a6000 rwxp 00000000 00:00 0 
+7f67cf3a6000-7f67cf46b000 rw-p 00000000 00:00 0 
+7f67cf470000-7f67cf472000 rw-p 00000000 00:00 0 
+7f67cf472000-7f67cf473000 rwxp 00000000 00:00 0 
+7f67cf473000-7f67cf474000 rw-p 00000000 00:00 0 
+7f67cf474000-7f67cf475000 r--p 00021000 08:04 3670534                    /usr/lib64/ld-2.17.so
+7f67cf475000-7f67cf476000 rw-p 00022000 08:04 3670534                    /usr/lib64/ld-2.17.so
+7f67cf476000-7f67cf477000 rw-p 00000000 00:00 0 
+7ffe53f0e000-7ffe53f88000 rw-p 00000000 00:00 0                          [stack]
+7ffe53fd3000-7ffe53fd6000 r--p 00000000 00:00 0                          [vvar]
+7ffe53fd6000-7ffe53fd8000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+No: 3	GFLOPS: 0.00/0.00	result: MeasureResult(costs=(RuntimeError('[17:46:31] /root/huihan/tvm-hhl/src/runtime/rpc/rpc_session.cc:952: Check failed: code == RPCCode::kReturn code=4\n\n',),), error_no=4, all_cost=0.9512896537780762, timestamp=1562978791.385995)	[('VAL_CNFG', (144, 16, 960, 8, 16, 16, 4))],,None,467
+finish column offsets
+192 48 704 8 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+Process Process-1:
+Traceback (most recent call last):
+  File "/usr/lib64/python2.7/multiprocessing/process.py", line 258, in _bootstrap
+Traceback (most recent call last):
+  File "tests/python/contrib/test_fbgemm_conv_autotuned.py", line 516, in <module>
+    self.run()
+  File "/usr/lib64/python2.7/multiprocessing/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/rpc/tracker.py", line 339, in _tracker_server
+    callbacks=[autotvm.callback.log_to_file(log_file_name)])
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/autotvm/tuner/tuner.py", line 109, in tune
+    results = measure_batch(inputs)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/autotvm/measure/measure.py", line 247, in measure_batch
+    results = runner.run(measure_inputs, build_results)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/autotvm/measure/measure_methods.py", line 253, in run
+    handler.run()
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/rpc/tracker.py", line 335, in run
+    self._ioloop.start()
+      File "/root/huihan/venv/lib/python2.7/site-packages/tornado/ioloop.py", line 1048, in start
+res = future.get()
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/autotvm/measure/local_executor.py", line 77, in get
+    res = self._queue.get(block=True, timeout=timeout)
+  File "/usr/lib64/python2.7/multiprocessing/queues.py", line 117, in get
+    res = self._recv()
+KeyboardInterrupt
+    event_pairs = self._impl.poll(poll_timeout)
+KeyboardInterrupt
+Process Process-9:1:
+Traceback (most recent call last):
+  File "/usr/lib64/python2.7/multiprocessing/process.py", line 258, in _bootstrap
+    self.run()
+  File "/usr/lib64/python2.7/multiprocessing/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/autotvm/measure/local_executor.py", line 35, in _execute_func
+    res = func(*args, **kwargs)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/autotvm/measure/measure_methods.py", line 454, in run_through_rpc
+    costs = time_f(*args).results
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/module.py", line 178, in evaluator
+    blob = feval(*args)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/_ffi/_ctypes/function.py", line 189, in __call__
+    ctypes.byref(ret_val), ctypes.byref(ret_tcode)))
+KeyboardInterrupt
+Process Process-9:
+Traceback (most recent call last):
+  File "/usr/lib64/python2.7/multiprocessing/process.py", line 258, in _bootstrap
+    self.run()
+  File "/usr/lib64/python2.7/multiprocessing/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/autotvm/measure/local_executor.py", line 47, in call_with_timeout
+    p.join(timeout=timeout)
+  File "/usr/lib64/python2.7/multiprocessing/process.py", line 145, in join
+    res = self._popen.wait(timeout)
+  File "/usr/lib64/python2.7/multiprocessing/forking.py", line 165, in wait
+    time.sleep(delay)
+KeyboardInterrupt

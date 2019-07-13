@@ -46,8 +46,6 @@ def tune_fbgemm_packed_weights(m, n, k):
                     for nr in NRs:
                         if (isValidConfig(mcb, ncb, kcb, mr, nr, 16, 4)):
 		            valid_configs.append((mcb, ncb, kcb, mr, nr, 16, 4))
-    with open('out_b.txt', 'w') as f:
-        print >> f, valid_configs
    #adding the default search point
     valid_configs.append((56,32,256,14,32,16,4))
 

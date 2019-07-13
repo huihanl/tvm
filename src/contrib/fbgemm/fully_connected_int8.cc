@@ -761,16 +761,15 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     CHECK_EQ(conv_p.OC % conv_p.G, 0);
 
     BlockingFactors params;
-    if(args.size() > cntr + 15) {
-        params.MCB = args[cntr + 14];
-        params.NCB = args[cntr + 15];
-        params.KCB = args[cntr + 16];
-        params.MR = args[cntr + 17];
-        params.NR = args[cntr + 18];
-        params.NR_MIN = args[cntr + 19];
-        params.ROW_INTERLEAVE = args[cntr + 20];
+    if(args.size() > cntr + 16) {
+        params.MCB = args[cntr + 15];
+        params.NCB = args[cntr + 16];
+        params.KCB = args[cntr + 17];
+        params.MR = args[cntr + 18];
+        params.NR = args[cntr + 19];
+        params.NR_MIN = args[cntr + 20];
+        params.ROW_INTERLEAVE = args[cntr + 21];
     }
-
     int kernel_dim =
         accumulate(conv_p.K.begin(), conv_p.K.end(), 1, multiplies<int>());
 
@@ -799,14 +798,15 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
             conv_p.OC);
     }
     }
-
     std::vector<std::int32_t>* Y_int32_ =
     new std::vector<int32_t>(conv_p.MB * im_out_dim * conv_p.OC);
 
-if (args.size() > cntr + 15) {
+std::cout << "reach 1" << std::endl;
+
+if (args.size() > cntr + 16) {
 
     static PackWeightsForConv<2> packedBmat(conv_p, reinterpret_cast<std::int8_t*>(B->data), &params);
-    
+std::cout << "reach 2" << std::endl;
     // no-op output process objects
     DoNothing<> doNothingObj{};
     ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
@@ -820,7 +820,7 @@ if (args.size() > cntr + 15) {
         nullptr, // bias
         conv_p.OC,
         conv_p.G);
-    
+std::cout << "reach 3" << std::endl;
     fbgemmConv(
         conv_p,
         reinterpret_cast<const std::uint8_t*>(A->data),
@@ -830,7 +830,7 @@ if (args.size() > cntr + 15) {
         outputProcObj,
         0,
         1, &params);
-
+std::cout << "reach 4" << std::endl;
 } else {
 
     // no-op output process objects
