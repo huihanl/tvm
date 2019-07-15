@@ -82,7 +82,7 @@ def tune_fbgemm_packed_weights(m, n, k):
     return s, [X, W, B, C]
 
 def fbgemm_packed_weights(m, n, k):
-
+    """
     MCB = 56
     NCB = 32
     KCB = 256
@@ -90,22 +90,25 @@ def fbgemm_packed_weights(m, n, k):
     NR = 32
     NR_MIN = 16
     ROW_INTERLEAVE = 4
-
-    MCB = 48
+#(144, 16, 320, 6, 16, 16, 4)
+    MCB = 144
     NCB = 16
-    KCB = 640
-    MR = 24
+    KCB = 320
+    MR = 6
     NR = 16
     NR_MIN = 16
     ROW_INTERLEAVE = 4
-
+    """
+    MCB, NCB, KCB, MR, NR, NR_MIN, ROW_INTERLEAVE = 144, 64, 1024, 4, 16, 16, 4
+    #48, 32, 448, 8, 16, 16, 4
+    #144, 16, 960, 1, 16, 16, 4
 
     ctx = tvm.cpu(0)
     W = tvm.placeholder((k, n), name='W', dtype="uint8")
     w = tvm.nd.array(np.random.uniform(3, 3, size=(k, n)).astype(W.dtype), ctx)
 
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8")
-    ww = my_packedw(w, 1,
+    ww = my_packedw(w, 1, False,
                     MCB,
                     NCB,
                     KCB,
@@ -119,7 +122,7 @@ def fbgemm_packed_weights(m, n, k):
 
     get_co_offsets = tvm.get_global_func(
         "tvm.contrib.fbgemm.compute_col_offsets_int8")
-    co = get_co_offsets(w, 1, 1)
+    co = get_co_offsets(w, 1, 1, False)
     print_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.print_col_offsets")
 
     X = tvm.placeholder((m, k), name='X', dtype="int8")
@@ -298,6 +301,7 @@ def test_fbgemm_conv_int8(MBi, ICi, OCi, IN_DIM_lst, G, K_lst, stride_lst, pad_l
     tvm.testing.assert_allclose(y2.asnumpy(), y_ref, rtol=1e-5)
     print("y2")
 if __name__ == "__main__":
+    """
     shapes = (
         [64, 800, 320],
         [64, 768, 512],
@@ -356,17 +360,15 @@ if __name__ == "__main__":
         [1, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]],
         [2, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]]]
 
-<<<<<<< HEAD
-    for i in range(configs):
-	    config = configs[i]
-=======
     for i in range(1):
 	config = configs[i]
->>>>>>> a4c67a5fb0e180dd19a4fd1aca7bbefeec14e09b
         test_fbgemm_conv_int8(config[0], config[1], config[2], config[3],
                               config[4], config[5], config[6], config[7])
     """
     if True:
+        #fbgemm_packed_weights(144, 32, 288)
+	test_fbgemm_packed_weights_with_requant(144, 32, 288, 2.0, 3.0, 0.0, False, False)
+    """
 	 shapes = (
 		[4, 8, 2],
 		[2, 16, 1],

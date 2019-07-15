@@ -140,9 +140,9 @@ def fully_connected_int8(X, X_qparams, W, W_qparams, B, Y_qparams, nthreads=1,
 def conv_int8(Y_shape, X, X_zero_point, W, Wmat, W_zero_point,
               Y_zero_point, C_multiplier, column_offset,
 			  MB, IC, OC, IN_DIM, G, K, stride, pad, nthreads=1,
-              autotune = False, MCB = 56, NCB = 32, KCB = 256,
-              MR = 14, NR = 32, NR_MIN = 16, ROW_INTERLEAVE = 4):
-
+              autotune = True, MCB = 144, NCB = 16, KCB = 320,
+              MR = 6, NR = 16, NR_MIN = 16, ROW_INTERLEAVE = 4):
+#(144, 16, 320, 6, 16, 16, 4)
     if autotune:
          return _api.extern(
              Y_shape, [X, Wmat],

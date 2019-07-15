@@ -1,0 +1,495 @@
+finish column offsets
+1836
+Get devices for measurement successfully!
+finish column offsets
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 128 448 1 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+No: 1	GFLOPS: 6.34/6.34	result: MeasureResult(costs=(0.00041873950000000007,), error_no=0, all_cost=4.474167108535767, timestamp=1563209767.56903)	[('VAL_CNFG', (48, 128, 448, 1, 16, 16, 4))],,None,249
+finish column offsets
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+Process Process-1:
+Traceback (most recent call last):
+  File "/usr/lib64/python2.7/multiprocessing/process.py", line 258, in _bootstrap
+Traceback (most recent call last):
+    self.run()
+  File "tests/python/contrib/test_fbgemm_conv_autotuned.py", line 515, in <module>
+  File "/usr/lib64/python2.7/multiprocessing/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/rpc/tracker.py", line 339, in _tracker_server
+    callbacks=[autotvm.callback.log_to_file(log_file_name)])
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/autotvm/tuner/tuner.py", line 109, in tune
+    results = measure_batch(inputs)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/autotvm/measure/measure.py", line 247, in measure_batch
+    handler.run()
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/rpc/tracker.py", line 335, in run
+    self._ioloop.start()
+    results = runner.run(measure_inputs, build_results)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tornado/ioloop.py", line 1048, in start
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/autotvm/measure/measure_methods.py", line 253, in run
+    res = future.get()
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/autotvm/measure/local_executor.py", line 77, in get
+    res = self._queue.get(block=True, timeout=timeout)
+  File "/usr/lib64/python2.7/multiprocessing/queues.py", line 117, in get
+    res = self._recv()
+KeyboardInterrupt
+    event_pairs = self._impl.poll(poll_timeout)
+KeyboardInterrupt
+Process Process-5:1:
+Traceback (most recent call last):
+  File "/usr/lib64/python2.7/multiprocessing/process.py", line 258, in _bootstrap
+    self.run()
+  File "/usr/lib64/python2.7/multiprocessing/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/autotvm/measure/local_executor.py", line 35, in _execute_func
+    res = func(*args, **kwargs)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/autotvm/measure/measure_methods.py", line 454, in run_through_rpc
+    costs = time_f(*args).results
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/module.py", line 178, in evaluator
+    blob = feval(*args)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/_ffi/_ctypes/function.py", line 189, in __call__
+    ctypes.byref(ret_val), ctypes.byref(ret_tcode)))
+KeyboardInterrupt
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+48 64 320 6 16 16 4
+reach 1
+reach 2
+reach 3
+reach 44
+reach 45
+reach 4
+Process Process-5:
+Traceback (most recent call last):
+  File "/usr/lib64/python2.7/multiprocessing/process.py", line 258, in _bootstrap
+    self.run()
+  File "/usr/lib64/python2.7/multiprocessing/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/autotvm/measure/local_executor.py", line 47, in call_with_timeout
+    p.join(timeout=timeout)
+  File "/usr/lib64/python2.7/multiprocessing/process.py", line 145, in join
+    res = self._popen.wait(timeout)
+  File "/usr/lib64/python2.7/multiprocessing/forking.py", line 165, in wait
+    time.sleep(delay)
+KeyboardInterrupt

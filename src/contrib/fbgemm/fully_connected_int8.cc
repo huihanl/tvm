@@ -804,7 +804,6 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
 std::cout << "reach 1" << std::endl;
 
 if (args.size() > cntr + 16) {
-
     static PackWeightsForConv<2> packedBmat(conv_p, reinterpret_cast<std::int8_t*>(B->data), &params);
 std::cout << "reach 2" << std::endl;
     // no-op output process objects
