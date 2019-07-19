@@ -801,11 +801,9 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     std::vector<std::int32_t>* Y_int32_ =
     new std::vector<int32_t>(conv_p.MB * im_out_dim * conv_p.OC);
 
-std::cout << "reach 1" << std::endl;
 
 if (args.size() > cntr + 16) {
     static PackWeightsForConv<2> packedBmat(conv_p, reinterpret_cast<std::int8_t*>(B->data), &params);
-std::cout << "reach 2" << std::endl;
     // no-op output process objects
     DoNothing<> doNothingObj{};
     ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
@@ -819,7 +817,6 @@ std::cout << "reach 2" << std::endl;
         nullptr, // bias
         conv_p.OC,
         conv_p.G);
-std::cout << "reach 3" << std::endl;
     fbgemmConv(
         conv_p,
         reinterpret_cast<const std::uint8_t*>(A->data),
@@ -829,7 +826,6 @@ std::cout << "reach 3" << std::endl;
         outputProcObj,
         0,
         1, &params);
-std::cout << "reach 4" << std::endl;
 } else {
 
     // no-op output process objects

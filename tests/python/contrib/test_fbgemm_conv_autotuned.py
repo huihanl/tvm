@@ -221,9 +221,7 @@ def isValidConfig(mcb, ncb, kcb, mr, nr, nr_min, row_interleave):
         return False
     if (ncb % nr):
         return False
-    if (mr * (ncb/nr) > 24):
-        return False
-    if mr * nr * 32 / 512 > 24:
+    if mr * nr / nr_min > 28:
         return False
     return True
 
@@ -232,14 +230,12 @@ def test_fbgemm_conv_int8_autotuned(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst
 
 
     ROW_INTERLEAVE = 4
-
     MCBs = [48, 98, 144, 192, 240]
     NCBs = [16, 32, 64, 128, 48, 98, 192, 384]
     KCBs = [256, 320, 384, 448, 512, 576, 640, 704, 768, 832, 960, 1024]
     MRs = [1, 2, 4, 8, 3, 6, 12, 24]
     NRs = [16, 32]
     NR_MINs = [16]
-
     valid_configs = []
     for mcb in MCBs:
         for ncb in NCBs:
@@ -248,10 +244,8 @@ def test_fbgemm_conv_int8_autotuned(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst
                     for nr in NRs:
                         #if (isValidConfig(mcb, ncb, kcb, mr, nr, 16, 4)):
 		        valid_configs.append((mcb, ncb, kcb, mr, nr, 16, 4))
-
    #adding the default search point
-    valid_configs.append((56,32,256,14,32,16,4))
-
+    valid_configs.append((140,16,512,28,16,16,4))
     configs = autotvm.get_config()
     validate_func = lambda conf: isValidConfig(conf[0], conf[1], conf[2], conf[3], conf[4], conf[5], conf[6])
     configs.define_knob("VAL_CNFG", valid_configs, validate_func=validate_func)
@@ -316,7 +310,6 @@ def test_fbgemm_conv_int8_autotuned(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst
     co = get_co_offsets(w, W_zero_point,
                         MB, IC, OC, IN_DIM_lst[0], IN_DIM_lst[1], G, K_lst[0], K_lst[1],
                         stride_lst[0], stride_lst[1], pad_lst[0], pad_lst[1], pad_lst[2], pad_lst[3])
-    print("finish column offsets")
 
     C_multiplier = 0.0878014
 
@@ -488,15 +481,15 @@ if __name__ == "__main__":
 
     else:
       im2col_configs = [
-#[1, 32, 32, [14, 14], 1, [3, 3], [1, 1], [0, 0, 0, 0]],
-#[1, 32, 16, [12, 14], 4, [3, 3], [1, 1], [0, 0, 0, 0]],
-#[1, 8, 8, [4, 4], 1, [3, 3], [1, 1], [1, 1, 0, 0]],
-#[1, 32, 32, [14, 14], 1, [3, 3], [1, 1], [0, 0, 0, 0]],
-#[1, 32, 32, [14, 14], 1, [3, 3], [1, 1], [1, 1, 1, 1]],
-#[2, 32, 32, [14, 14], 1, [3, 3], [1, 1], [0, 0, 0, 0]],
-#[2, 32, 32, [28, 14], 1, [3, 3], [1, 1], [1, 1, 0, 0]],
-#[1, 32, 16, [12, 14], 4, [3, 3], [1, 1], [0, 0, 0, 0]],
-#[2, 32, 16, [16, 14], 4, [3, 3], [1, 1], [0, 0, 0, 0]],
+[1, 32, 32, [14, 14], 1, [3, 3], [1, 1], [0, 0, 0, 0]],
+[1, 32, 16, [12, 14], 4, [3, 3], [1, 1], [0, 0, 0, 0]],
+[1, 8, 8, [4, 4], 1, [3, 3], [1, 1], [1, 1, 0, 0]],
+[1, 32, 32, [14, 14], 1, [3, 3], [1, 1], [0, 0, 0, 0]],
+[1, 32, 32, [14, 14], 1, [3, 3], [1, 1], [1, 1, 1, 1]],
+[2, 32, 32, [14, 14], 1, [3, 3], [1, 1], [0, 0, 0, 0]],
+[2, 32, 32, [28, 14], 1, [3, 3], [1, 1], [1, 1, 0, 0]],
+[1, 32, 16, [12, 14], 4, [3, 3], [1, 1], [0, 0, 0, 0]],
+[2, 32, 16, [16, 14], 4, [3, 3], [1, 1], [0, 0, 0, 0]],
 [1, 544, 544, [14, 14], 1, [3, 3], [2, 2], [1, 1, 1, 1]],
 [1, 8, 8, [4, 4], 1, [3, 3], [1, 1], [1, 1, 0, 0]],
 [1, 3, 64, [224, 224], 1, [7, 7], [2, 2], [3, 3, 3, 3]]
@@ -527,7 +520,7 @@ if __name__ == "__main__":
               runner=autotvm.LocalRunner(number=10, timeout=100000))
           tuner = autotvm.tuner.RandomTuner(task)
           name = str(config)
-          log_file_name = "fbgemm_results_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.log"\
+          log_file_name = "fbgemm_good_results_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.log"\
 	  .format(config[0], config[1], config[2], config[3][0], config[3][1],
                  config[4], config[5][0], config[5][1], config[6][0], config[6][1], 
 		 config[7][0], config[7][1], config[7][2], config[7][3])
