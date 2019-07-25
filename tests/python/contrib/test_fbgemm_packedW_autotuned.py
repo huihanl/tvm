@@ -220,10 +220,6 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val, A_tran
     #print(y.asnumpy())
     #print(np.matmul(x1, w1) + b.asnumpy())
     Cint32_ref = np.matmul(x1, w1) + b.asnumpy()
-    reference_solution_gemm(np.reshape(Cint32_ref, (m*n,)).tolist(), m, n, k, xa, 0, 
-    correct = np.reshape(requantize_u8acc32_ref(np.matmul(x1, w1) + b.asnumpy()), (m, n))
-    tvm.testing.assert_allclose(
-           y.asnumpy(), correct, rtol=1e-5)
 
 
 def test_fbgemm_conv_int8(MBi, ICi, OCi, IN_DIM_lst, G, K_lst, stride_lst, pad_lst):
@@ -307,7 +303,6 @@ def test_fbgemm_conv_int8(MBi, ICi, OCi, IN_DIM_lst, G, K_lst, stride_lst, pad_l
     tvm.testing.assert_allclose(y2.asnumpy(), y_ref, rtol=1e-5)
     print("y2")
 if __name__ == "__main__":
-    """
     shapes = (
         [64, 800, 320],
         [64, 768, 512],
@@ -371,49 +366,6 @@ if __name__ == "__main__":
         test_fbgemm_conv_int8(config[0], config[1], config[2], config[3],
                               config[4], config[5], config[6], config[7])
     """
-    if True:
-        #fbgemm_packed_weights(144, 32, 288)
-	#test_fbgemm_packed_weights_with_requant(4, 8, 2, 2.0, 3.0, 0.0, False, False)
-    
-	 shapes = (
-		[4, 8, 2],
-		[2, 16, 1],
-		[4, 4, 2],
-		[1, 8, 4],
-		[16, 1, 1],
-		[16, 2, 2],
-		[8, 2, 4],
-		[2, 2, 8])
-	 shapes = (
-        [1,    800,    3200],
-        [1,    800,    8000],
-        [16,    256,    1500],
-        [16,    256,    1567],
-        [1,    128,    2876],
-        [16,    128,    1567],
-        [1,    128,    2722])
-
-	 values = (
-		[1.0, 2.0, 0.0],
-		[2.0, 2.0, 0.0],
-		[3.0, 1.0, 0.0],
-		[2.0, 3.0, 0.0],
-		[1.0, 3.0, 0.0],
-		[2.0, 3.0, 3.0],
-		[2.0, 1.0, 2.0])
-	 comb = []
-	 for shape in shapes:
-		for value in values:
-			c = shape + value
-			comb.append(c)
-         for c in comb:
-	 #	test_fbgemm_packed_weights_with_requant(c[0], c[1], c[2], c[3], c[4], c[5], True, True)
-          #      test_fbgemm_packed_weights_with_requant(c[0], c[1], c[2], c[3], c[4], c[5], True, False)
-           #     test_fbgemm_packed_weights_with_requant(c[0], c[1], c[2], c[3], c[4], c[5], False, True)
-                test_fbgemm_packed_weights_with_requant(c[0], c[1], c[2], c[3], c[4], c[5], False, False)
-         #fbgemm_packed_weights(16, 4, 8)
-         #for shape in shapes_others:
-         #     fbgemm_packed_weights(shape[0], shape[1], shape[2])
     else:
          for shape in shapes_others:
               task = autotvm.task.create(
@@ -432,3 +384,4 @@ if __name__ == "__main__":
               tuner.tune(n_trial=150,
                          measure_option=measure_option,
                          callbacks=[autotvm.callback.log_to_file(log_file_name)])
+    """

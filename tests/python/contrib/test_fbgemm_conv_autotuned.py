@@ -406,14 +406,15 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
     x = tvm.nd.array(np.reshape(np.array(xa), input_shape).astype(X.dtype), ctx)
     y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
 
-    f_evaluator = f.time_evaluator(f.entry_name, ctx, 10)
+    #f_evaluator = f.time_evaluator(f.entry_name, ctx, 10)
 
     f(x, w, y)
-    result = f_evaluator(x,w,y)
-    gops_per_mm = 2 * KDim * MDim * NDim
-    gops_per_sec = gops_per_mm/result.mean/1e9
+    
+    #result = f_evaluator(x,w,y)
+    #gops_per_mm = 2 * KDim * MDim * NDim
+    #gops_per_sec = gops_per_mm/result.mean/1e9
     #print("M:{}, N:{}, K:{}".format(m,n,k))
-    print(gops_per_sec)
+    #print(gops_per_sec)
     y_ref = reference_solution(xa, X_zero_point, wa, MB, IC, OC, IN_DIM_lst,
                                OUT_DIM, G, K_lst, stride_lst, pad_lst, [C_multiplier],
                                [W_zero_point], Y_zero_point)
@@ -441,7 +442,7 @@ if __name__ == "__main__":
         [1, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]],
         [2, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]]]
 
-    if False:
+    if True:
 
       im2col_configs = [
             [1, 64, 256, [56, 56], 1, [1, 1], [1, 1], [0, 0, 0, 0]],
@@ -469,8 +470,8 @@ if __name__ == "__main__":
             [1, 512, 512, [7, 7], 1, [3, 3], [1, 1], [1, 1, 1, 1]]
               ]
 
-      for i in range(len(im2col_configs)):
-          config = im2col_configs[i]
+      for i in range(len(configs)):
+          config = configs[i]
           test_fbgemm_conv_int8(config[0], config[1], config[2], config[3],
                                 config[4], config[5], config[6], config[7])
 
