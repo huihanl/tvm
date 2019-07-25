@@ -693,7 +693,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
       params.NR_MIN = args[cntr + 5];
       params.ROW_INTERLEAVE = args[cntr + 6];
       PackWeightsForConv<2>* packedB =
-      new PackWeightsForConv<2>(conv_p, reinterpret_cast<std::int8_t*>(W->data), &params);
+      new PackWeightsForConv<2>(conv_p, reinterpret_cast<std::int8_t*>(W->data));
       *ret = packedB;
 
     } else {
@@ -761,15 +761,16 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     CHECK_EQ(conv_p.OC % conv_p.G, 0);
 
     BlockingFactors params;
-    if(args.size() > cntr + 16) {
-        params.MCB = args[cntr + 15];
-        params.NCB = args[cntr + 16];
-        params.KCB = args[cntr + 17];
-        params.MR = args[cntr + 18];
-        params.NR = args[cntr + 19];
-        params.NR_MIN = args[cntr + 20];
-        params.ROW_INTERLEAVE = args[cntr + 21];
+    if(args.size() > cntr + 15) {
+        params.MCB = args[cntr + 14];
+        params.NCB = args[cntr + 15];
+        params.KCB = args[cntr + 16];
+        params.MR = args[cntr + 17];
+        params.NR = args[cntr + 18];
+        params.NR_MIN = args[cntr + 19];
+        params.ROW_INTERLEAVE = args[cntr + 20];
     }
+
     int kernel_dim =
         accumulate(conv_p.K.begin(), conv_p.K.end(), 1, multiplies<int>());
 
@@ -782,7 +783,7 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
     int KDim = kernel_dim * conv_p.IC;
     int KDimPerGroup = KDim / conv_p.G;
     int OC_per_G = conv_p.OC / conv_p.G;
-/*
+
     static int count = 1;
     static std::vector<int32_t> col_offsets(conv_p.OC);
     if (count == 1) {
@@ -798,16 +799,17 @@ TVM_REGISTER_GLOBAL("tvm.contrib.fbgemm.conv_int8")
             conv_p.OC);
     }
     }
-    */
+
     std::vector<std::int32_t>* Y_int32_ =
     new std::vector<int32_t>(conv_p.MB * im_out_dim * conv_p.OC);
 
+if (args.size() > cntr + 15) {
 
-if (args.size() > cntr + 16) {
     static PackWeightsForConv<2> packedBmat(conv_p, reinterpret_cast<std::int8_t*>(B->data), &params);
+
     // no-op output process objects
     DoNothing<> doNothingObj{};
-/*    ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
+    ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
         doNothingObj,
         C_multiplier.data(),
         C_zero_point,
@@ -818,6 +820,7 @@ if (args.size() > cntr + 16) {
         nullptr, // bias
         conv_p.OC,
         conv_p.G);
+
     fbgemmConv(
         conv_p,
         reinterpret_cast<const std::uint8_t*>(A->data),
@@ -826,9 +829,10 @@ if (args.size() > cntr + 16) {
         Y_int32_->data(),
         outputProcObj,
         0,
-        1, &params);*/
+        1, &params);
+
 } else {
-	std::cout << "should reach 2" << endl;
+
     // no-op output process objects
     DoNothing<> doNothingObj{};
     ReQuantizeOutput<false, QuantizationGranularity::TENSOR> outputProcObj(
