@@ -2,7 +2,6 @@
 A reference solution of convolution with requantization used to check
 correctness of test_fbgemm_conv_int8(), which calls FBGEMM convolution
 operator from TVM. This is called directly from the TVM python interface.
-
 This is a python reimplementation of c++ reference solution from FBGEMM:
 https://github.com/pytorch/FBGEMM/blob/master/src/RefImplementations.cc
 """
@@ -88,7 +87,7 @@ def requantize_u8acc32_ref(M1, K1, ld1, Aint81, length1, KDimPerGroup1, G,
             for j in range(N):
                 raw = inp[NDim * g + i * ld + j]
                 if A_zero_point:
-                    raw -= A_zero_point * col_offsets[j + NDim * g];
+                    raw -= A_zero_point * col_offsets[j + NDim * g]
                 raw -= B_zero_point[j / ncols_per_quant_group + NDim_OC * g] \
                        * row_offsets[i]
                 result = raw * C_multiplier[NDim_OC * g + j / ncols_per_quant_group]
@@ -107,11 +106,33 @@ def col_offsets_with_zero_pt_s8acc32_ref(K, N, ld, OC, Bint8, B_zero_point,
                 total += Bint8[g * w_lead + k * ld + j]
             col_offsets[g * col_lead + j] = total - \
             B_zero_point[j / ncols_per_quant_group] * K
+
     return col_offsets
+
+def transposeConvWeights(IC, OC, G, K, src):
+    IC_per_G = IC / G
+    OC_per_G = OC / G
+
+    R = K[0]
+    S = K[1]
+
+    dest = [0 for i in range(len(src))]
+    
+    #Transforms weights from  G K/G (R S C/G) to G (R S C/G) K/G format.
+    for r in range(R):
+      for s in range(S):
+        for k in range(OC_per_G):
+          for g in range(G):
+            for c in range(IC_per_G):
+              dest[(((g * R + r) * S + s) * IC_per_G + c) * OC_per_G + k] = \
+                  src[(((g * OC_per_G + k) * R + r) * S + s) * IC_per_G + c]
+    return dest
 
 
 def reference_solution(A, A_zero_point, W, MB, IC, OC, IN_DIM, OUT_DIM, G, K,
                        stride, pad, C_multiplier, B_zero_point, C_zero_point):
+
+    W = transposeConvWeights(IC, OC, G, K, W)
     Cint32_ref = conv_ref(MB, IC, OC, IN_DIM, OUT_DIM, G, K, stride, pad,
                  A, A_zero_point, W)
 
@@ -144,65 +165,3 @@ def reference_solution(A, A_zero_point, W, MB, IC, OC, IN_DIM, OUT_DIM, G, K,
                                     OC, NDim, NDim_OC)
 
     return output
-
-
-"""Reference solution for GEMM."""
-
-"""
-def requantize_u8acc32_ref_gemm(M, N, ld, inp, C_multiplier, 
-                           C_zero_point, A_zero_point, B_zero_point, 
-                           row_offsets, col_offsets, bias, 
-                           ncols_per_quant_group):
-                           
-    out = [0 for i in range(len(inp))]
-    for i in range(M):
-        for j in range(N):
-            raw = inp[i * ld + j]
-            if A_zero_point:
-                raw -= A_zero_point * col_offsets[j]
-            raw -= B_zero_point[j / ncols_per_quant_group] * row_offsets[i]
-            if bias:
-                raw += bias[j]
-                
-            result = raw * C_multiplier[j / ncols_per_quant_group]
-            rounded = round(result) + C_zero_point
-            out[i * ld + j] = max(0, min(255, rounded))
-    return out 
-
-
-def row_offsets_u8acc32_ref_gemm(M, K, ld, Aint8):
-    row_offsets = []
-    for i in range(M):
-        sum = 0
-        for k in range(K):
-            sum += Aint8[i * ld + k]
-        row_offsets[i] = sum
-    return row_offsets
-
-
-def col_offsets_with_zero_pt_s8acc32_ref_gemm(K, N, ld, Bint8, 
-                                         B_zero_point, 
-                                         ncols_per_quant_group):
-    col_offsets = [0 for i in range(N)]
-    for j in range(N):
-        sum = 0
-        for k in range(K):
-            sum += Bint8[k * ld + j]
-        col_offsets[j] = sum - B_zero_point[j / ncols_per_quant_group] * K
-
-    return col_offsets
-
-
-def reference_solution_gemm(Cint32_ref, M, N, K, Aint8, A_zero_point, Bint8_ref, C_multiplier, 
-			    B_zero_point, C_zero_point):
-
-    col_offsets = \                     
-    col_offsets_with_zero_pt_s8acc32_ref_gemm(K, N, N, Bint8_ref, Bint8_zero_point, N)
-                                       
-    row_offsets = row_offsets_u8acc32_ref_gemm(M, K, K, Aint8)
-    output = requantize_u8acc32_ref_gemm(M, N, N, Cint32_ref, C_multiplier, C_zero_point, 
-				    A_zero_point, B_zero_point, row_offsets, 
-				    col_offsets, N)
-
-    return output
-"""

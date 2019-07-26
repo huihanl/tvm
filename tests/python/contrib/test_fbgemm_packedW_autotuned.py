@@ -236,20 +236,21 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
 
     # shapes
     input_shape = (MB, IN_DIM_lst[0], IN_DIM_lst[1], IC) #NHWC
-    W_shape = (K_lst[0], K_lst[1], IC, OC / G) #RSCK
+    W_shape = (OC, K_lst[0], K_lst[1], IC/G) #KRSC
     Y_shape = (MB, OUT_DIM[0], OUT_DIM[1], OC) #NHWK
     # weight
     W = tvm.placeholder(W_shape, name='W', dtype="int8")
     wa_length = K_lst[0] * K_lst[1] * IC * OC / G
     wa = [random.randint(-4, 4) for i in range(wa_length)]
+    print("w:")
+    print(wa)
+    #wa = [2 for i in range(wa_length)]
     w = tvm.nd.array(np.reshape(np.array(wa), W_shape).astype(W.dtype), ctx)
 
     # packing of weight
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
 
-    ww = my_packedw(w, MB, IC, OC,
-                    IN_DIM0, IN_DIM1, G, K0, K1, stride0, stride1,
-                    pad0, pad1, pad2, pad3)
+    ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
 
     # input (X)
     X = tvm.placeholder(input_shape, name='X', dtype="uint8")
@@ -264,50 +265,42 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
     # column offset
     get_co_offsets = \
     tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
-    co = get_co_offsets(w, W_zero_point, MB, IC, OC,
-                        IN_DIM0, IN_DIM1, G, K0, K1, stride0, stride1,
-                        pad0, pad1, pad2, pad3)
+    co = get_co_offsets(w, W_zero_point, spatial_dim,
+                        MB, IC, OC, IN_DIM, G, K, stride, pad)
 
     C_multiplier = 0.0878014
 
-<<<<<<< HEAD
     in_dim_v = create_pointer_vector_int(IN_DIM, 2)
     k_v = create_pointer_vector_int(K, 2)
     stride_v = create_pointer_vector_int(stride, 2)
     pad_v = create_pointer_vector_int(pad, 4)
 
-    C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww, W,
-=======
     C = fbgemm.conv_int8(Y_shape, X, X_zero_point, ww,
->>>>>>> cf0b0a40e79f7cd66199ad3f5c19a4eed86a2695
                          W_zero_point, Y_zero_point, C_multiplier, co,
-                         MB, IC, OC,
-                         IN_DIM0, IN_DIM1, G, K0, K1, stride0, stride1,
-                         pad0, pad1, pad2, pad3)
+                         MB, IC, OC, in_dim_v, G, k_v, stride_v, pad_v)
     s = tvm.create_schedule(C.op)
-    f = tvm.build(s, [X, W, C], target="llvm", name="conv_int8")
+    f = tvm.build(s, [X, C], target="llvm", name="conv_int8")
 
     x_length = MB * IN_DIM_lst[0] * IN_DIM_lst[1] * IC
     xa = [random.randint(0, 5) for i in range(x_length)]
+    print("x:")
+    print(xa)
+     #xa = [1 for i in range(x_length)]
     x = tvm.nd.array(np.reshape(np.array(xa), input_shape).astype(X.dtype), ctx)
     y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
-    y1 = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
-    y2 = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
-    f(x, w, y)
-    f(x, w, y1)
-    f(x, w, y2)
-
+    f(x,y)
+    
     y_ref = reference_solution(xa, X_zero_point, wa, MB, IC, OC, IN_DIM_lst,
                                OUT_DIM, G, K_lst, stride_lst, pad_lst, [C_multiplier],
                                [W_zero_point], Y_zero_point)
     y_ref = np.reshape(np.array(y_ref), Y_shape)
-
+    print("y_ref:")
+    print(y_ref)
+    print("actual result:")
+    print(y.asnumpy())
     tvm.testing.assert_allclose(y.asnumpy(), y_ref, rtol=1e-5)
-    print("y")
-    tvm.testing.assert_allclose(y1.asnumpy(), y_ref, rtol=1e-5)
-    print("y1")
-    tvm.testing.assert_allclose(y2.asnumpy(), y_ref, rtol=1e-5)
-    print("y2")
+
+
 if __name__ == "__main__":
     shapes = (
         [64, 800, 320],
@@ -367,7 +360,7 @@ if __name__ == "__main__":
         [1, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]],
         [2, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]]]
 
-    for i in range(1):
+    for i in range(len(configs)):
 	config = configs[i]
         test_fbgemm_conv_int8(config[0], config[1], config[2], config[3],
                               config[4], config[5], config[6], config[7])

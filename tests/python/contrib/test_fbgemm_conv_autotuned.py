@@ -333,7 +333,7 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
 
     # shapes
     input_shape = (MB, IN_DIM_lst[0], IN_DIM_lst[1], IC) #NHWC
-    W_shape = (K_lst[0], K_lst[1], IC, OC / G) #RSCK
+    W_shape = (OC, K_lst[0], K_lst[1], IC/G) #KRSC
     Y_shape = (MB, OUT_DIM[0], OUT_DIM[1], OC) #NHWK
     # weight
     W = tvm.placeholder(W_shape, name='W', dtype="int8")
@@ -344,7 +344,8 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
     # packing of weight
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8_conv")
 
-    ww = my_packedw(w, spatial_dim, MB, IC, OC, IN_DIM, G, K, stride, pad)
+    ww = my_packedw(w, MB, IC, OC, IN_DIM_lst[0], IN_DIM_lst[1], G, K_lst[0], K_lst[1], 
+		    stride_lst[0], stride_lst[1], pad_lst[0], pad_lst[1], pad_lst[2], pad_lst[3])
 
     # input (X)
     X = tvm.placeholder(input_shape, name='X', dtype="uint8")
@@ -359,8 +360,9 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
     # column offset
     get_co_offsets = \
     tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8_conv")
-    co = get_co_offsets(w, W_zero_point, spatial_dim,
-                        MB, IC, OC, IN_DIM, G, K, stride, pad)
+    co = get_co_offsets(w, W_zero_point,
+                        MB, IC, OC, IN_DIM_lst[0], IN_DIM_lst[1], G, K_lst[0], K_lst[1],
+                        stride_lst[0], stride_lst[1], pad_lst[0], pad_lst[1], pad_lst[2], pad_lst[3])
 
     C_multiplier = 0.0878014
 
@@ -416,6 +418,7 @@ if __name__ == "__main__":
     if True:
 
         for i in range(len(configs)):
+                print(configs[i])
         	config = configs[i]
                 test_fbgemm_conv_int8(config[0], config[1], config[2], config[3],
                                       config[4], config[5], config[6], config[7])
