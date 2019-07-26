@@ -1,0 +1,28 @@
+(1, 32, 32, [3, 3], 8, [3, 3], [1, 1], [1, 1, 1, 1])
+1.31757529546
+(1, 32, 32, [4, 4], 8, [3, 3], [1, 1], [1, 1, 1, 1])
+2.02957596045
+(1, 32, 32, [3, 5], 8, [3, 3], [1, 1], [1, 1, 1, 1])
+2.26266858714
+(1, 32, 32, [5, 3], 8, [3, 3], [1, 1], [1, 1, 1, 1])
+1.80029067193
+(1, 8, 8, [5, 5], 2, [3, 3], [1, 1], [1, 1, 1, 1])
+0.364524662372
+(1, 128, 128, [56, 48], 32, [3, 3], [1, 1], [1, 1, 1, 1])
+13.000999035
+(1, 128, 128, [48, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1])
+15.3829762224
+(1, 64, 64, [3, 3], 8, [3, 3], [1, 1], [1, 1, 1, 1])
+3.94201796493
+(1, 64, 64, [4, 4], 8, [3, 3], [1, 1], [1, 1, 1, 1])
+5.98937431965
+Traceback (most recent call last):
+  File "tests/python/contrib/test_fbgemm_conv_autotuned.py", line 476, in <module>
+    config[4], config[5], config[6], config[7])
+  File "tests/python/contrib/test_fbgemm_conv_autotuned.py", line 413, in test_fbgemm_conv_int8
+    result = f_evaluator(x,w,y)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/module.py", line 178, in evaluator
+    blob = feval(*args)
+  File "/root/huihan/venv/lib/python2.7/site-packages/tvm-0.5.dev0-py2.7-linux-x86_64.egg/tvm/_ffi/_ctypes/function.py", line 189, in __call__
+    ctypes.byref(ret_val), ctypes.byref(ret_tcode)))
+KeyboardInterrupt

@@ -352,7 +352,7 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
     MDim = MB * OUT_DIM[0] * OUT_DIM[1];
     NDim = OC / G
     KDim = K_lst[0] * K_lst[1] * IC
-    print(MDim, NDim, KDim)
+    #print(MDim, NDim, KDim)
     # shapes
     input_shape = (MB, IN_DIM_lst[0], IN_DIM_lst[1], IC) #NHWC
     W_shape = (K_lst[0], K_lst[1], IC, OC / G) #RSCK
@@ -406,15 +406,15 @@ def test_fbgemm_conv_int8(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
     x = tvm.nd.array(np.reshape(np.array(xa), input_shape).astype(X.dtype), ctx)
     y = tvm.nd.array(np.zeros(Y_shape, dtype=C.dtype), ctx)
 
-    #f_evaluator = f.time_evaluator(f.entry_name, ctx, 10)
+    f_evaluator = f.time_evaluator(f.entry_name, ctx, 10)
 
     f(x, w, y)
 
-    #result = f_evaluator(x,w,y)
-    #gops_per_mm = 2 * KDim * MDim * NDim
-    #gops_per_sec = gops_per_mm/result.mean/1e9
-    #print("M:{}, N:{}, K:{}".format(m,n,k))
-    #print(gops_per_sec)
+    result = f_evaluator(x,w,y)
+    gops_per_mm = 2 * KDim * MDim * NDim
+    gops_per_sec = gops_per_mm/result.mean/1e9
+    print(MB, IC, OC, IN_DIM_lst, G, K_lst, stride_lst, pad_lst)
+    print(gops_per_sec)
     y_ref = reference_solution(xa, X_zero_point, wa, MB, IC, OC, IN_DIM_lst,
                                OUT_DIM, G, K_lst, stride_lst, pad_lst, [C_multiplier],
                                [W_zero_point], Y_zero_point)
@@ -442,7 +442,7 @@ if __name__ == "__main__":
         [1, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]],
         [2, 256, 256, [56, 56], 32, [3, 3], [1, 1], [1, 1, 1, 1]]]
 
-    if True:
+    if False:
 
       im2col_configs = [
             [1, 64, 256, [56, 56], 1, [1, 1], [1, 1], [0, 0, 0, 0]],
