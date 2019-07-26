@@ -135,35 +135,37 @@ def fully_connected_int8(X, X_qparams, W, W_qparams, B, Y_qparams, nthreads=1,
 
 
 
-def conv_int8(Y_shape, X, X_zero_point, W, W_zero_point,
+def conv_int8(Y_shape, X, X_zero_point, W, Wmat, W_zero_point,
               Y_zero_point, C_multiplier, column_offset,
 			  MB, IC, OC, IN_DIM, G, K, stride, pad, nthreads=1,
-              autotune = False, MCB = 56, NCB = 32, KCB = 256,
-              MR = 14, NR = 32, NR_MIN = 16, ROW_INTERLEAVE = 4):
-
+              autotune = False, MCB = 144, NCB = 16, KCB = 320,
+              MR = 6, NR = 16, NR_MIN = 16, ROW_INTERLEAVE = 4):
+#(144, 16, 320, 6, 16, 16, 4)
     if autotune:
          return _api.extern(
-             Y_shape, [X],
+             Y_shape, [X, Wmat],
              lambda ins, outs: _intrin.call_packed(
          	    "tvm.contrib.fbgemm.conv_int8",
                 ins[0], W, outs[0], X_zero_point, W_zero_point,
                 Y_zero_point,
                 C_multiplier,
-                column_offset,
-                MB, IC, OC, IN_DIM, G, K, stride, pad,
+                column_offset, ins[1],
+                MB, IC, OC, IN_DIM[0], IN_DIM[1], G, K[0], K[1],
+		stride[0], stride[1], pad[0], pad[1], pad[2], pad[3],
                 nthreads,
                 MCB, NCB, KCB, MR, NR, NR_MIN, ROW_INTERLEAVE),
                 name="C", dtype="uint8")
     else:
          return _api.extern(
-             Y_shape, [X],
+             Y_shape, [X, Wmat],
              lambda ins, outs: _intrin.call_packed(
          	    "tvm.contrib.fbgemm.conv_int8",
                 ins[0], W, outs[0], X_zero_point, W_zero_point,
                 Y_zero_point,
                 C_multiplier,
-                column_offset,
-	            MB, IC, OC, IN_DIM, G, K, stride, pad,
-	            nthreads), name="C", dtype="uint8")
+                column_offset, ins[1],
+                MB, IC, OC, IN_DIM[0], IN_DIM[1], G, K[0], K[1],
+                stride[0], stride[1], pad[0], pad[1], pad[2], pad[3],
+	        nthreads), name="C", dtype="uint8")
 
 _init_api("tvm.contrib.fbgemm")
