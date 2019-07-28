@@ -204,12 +204,12 @@ def test_fbgemm_packed_weights_with_requant(m, n, k, w_val, x_val, b_val, A_tran
     y = tvm.nd.array(np.zeros((m, n), dtype=C.dtype), ctx)
     f(x,b,y)
 
-    #result = f_evaluator(x,b,y)
-    #print(result)
-    #gops_per_mm = 2*m*n*k
-    #gops_per_sec = gops_per_mm/result.mean/1e9
+    result = f_evaluator(x,b,y)
+    print(result)
+    gops_per_mm = 2*m*n*k
+    gops_per_sec = gops_per_mm/result.mean/1e9
     print("M:{}, N:{}, K:{}".format(m,n,k))
-    #print(gops_per_sec)
+    print(gops_per_sec)
     #print(y.asnumpy())
     #print(np.matmul(x1, w1) + b.asnumpy())
 
@@ -476,6 +476,8 @@ if __name__ == "__main__":
                                 config[4], config[5], config[6], config[7])
 
     else:
+      test_fbgemm_packed_weights_with_requant(32, 16, 2, 1, 2, 1, False, False)
+      """
       im2col_configs = [
 
              [1, 64, 256, [56, 56], 1, [1, 1], [1, 1], [0, 0, 0, 0]],
@@ -526,3 +528,4 @@ if __name__ == "__main__":
           tuner.tune(n_trial=150,
                      measure_option=measure_option,
                      callbacks=[autotvm.callback.log_to_file(log_file_name)])
+     """

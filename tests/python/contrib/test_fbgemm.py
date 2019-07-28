@@ -75,10 +75,10 @@ def test_fbgemm_packed_weights(m, n, k):
     W = tvm.placeholder((k, n), name='W', dtype="uint8")
     w = tvm.nd.array(np.random.uniform(1, 1, size=(k, n)).astype(W.dtype), ctx)
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8")
-    ww = my_packedw(w, 1)
+    ww = my_packedw(w, 1, False)
 
     get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8")
-    co = get_co_offsets(w,1,1)
+    co = get_co_offsets(w,1,1, False)
 
     X = tvm.placeholder((m, k), name='X', dtype="int8")
     B = tvm.placeholder((n,), name='B', dtype="int")
@@ -107,13 +107,13 @@ def test_fbgemm_packed_weights(m, n, k):
     gops_per_sec = gops_per_mm/result.mean/1e9
     print("M:{}, N:{}, K:{}".format(m,n,k))
     print(gops_per_sec)
-    print(y.asnumpy())
-    print(x.asnumpy())
-    print(w.asnumpy())
-    print(b.asnumpy())
-    print(np.matmul(x.asnumpy(), w.asnumpy()) + b.asnumpy())
-    print(np.allclose(
-           y.asnumpy(), np.matmul(x.asnumpy(), w.asnumpy()) + b.asnumpy(), rtol=1e-5))
+    #print(y.asnumpy())
+    #print(x.asnumpy())
+    #print(w.asnumpy())
+    #print(b.asnumpy())
+    #print(np.matmul(x.asnumpy(), w.asnumpy()) + b.asnumpy())
+    #print(np.allclose(
+    #       y.asnumpy(), np.matmul(x.asnumpy(), w.asnumpy()) + b.asnumpy(), rtol=1e-5))
     np.allclose(
            y.asnumpy(), np.matmul(x.asnumpy(), w.asnumpy()) + b.asnumpy(), rtol=1e-5)
 
@@ -123,10 +123,10 @@ def test_fbgemm_packed_weights_with_requant(m, n, k):
     W = tvm.placeholder((k, n), name='W', dtype="uint8")
     w = tvm.nd.array(np.random.uniform(1, 1, size=(k, n)).astype(W.dtype), ctx)
     my_packedw = tvm.get_global_func("tvm.contrib.fbgemm.pack_matrixB_int8")
-    ww = my_packedw(w, 1)
+    ww = my_packedw(w, 1, False)
 
     get_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.compute_col_offsets_int8")
-    co = get_co_offsets(w,1,1)
+    co = get_co_offsets(w,1,1, False)
     print_co_offsets = tvm.get_global_func("tvm.contrib.fbgemm.print_col_offsets")
     print_co_offsets(co)
 
@@ -178,6 +178,7 @@ if __name__ == "__main__":
         [256, 512, 256],
         [1024, 1024, 1024])
 
-    #for shape in shapes:
-    test_fc_int8()
+    for shape in shapes:
+    #test_fc_int8()
+        test_fbgemm_packed_weights(shape[0], shape[1], shape[2])
     #test_fbgemm_packed_weights_with_requant(1024, 1024, 1024)
